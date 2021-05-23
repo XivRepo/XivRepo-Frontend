@@ -16,7 +16,7 @@
         :downloads="mod.downloads.toString()"
         :edit-mode="true"
         :icon-url="mod.icon_url"
-        :is-modrinth="true"
+        :is-xivrepo="true"
         :latest-version="mod.latest_version"
         :name="mod.title"
         :page-url="mod.page_url"
@@ -92,6 +92,8 @@ import axios from 'axios'
 import ModCard from '~/components/ui/ProjectCard'
 import Security from '~/assets/images/illustrations/security.svg?inline'
 
+const vm = this
+
 export default {
   components: {
     ModCard,
@@ -100,16 +102,13 @@ export default {
   async asyncData(data) {
     const mods = (
       await axios.get(
-        `https://api.modrinth.com/api/v1/moderation/mods`,
+        `${vm.$apiUri}/api/v1/moderation/mods`,
         data.$auth.headers
       )
     ).data
 
     const reports = (
-      await axios.get(
-        `https://api.modrinth.com/api/v1/report`,
-        data.$auth.headers
-      )
+      await axios.get(`${vm.$apiUri}/api/v1/report`, data.$auth.headers)
     ).data
 
     return {
@@ -120,7 +119,7 @@ export default {
   methods: {
     async changeModStatus(id, status, index) {
       await axios.patch(
-        `https://api.modrinth.com/api/v1/mod/${id}`,
+        `${vm.$apiUri}/api/v1/mod/${id}`,
         {
           status,
         },
@@ -131,7 +130,7 @@ export default {
     },
     async deleteReport(index) {
       await axios.delete(
-        `https://api.modrinth.com/api/v1/report/${this.reports[index].id}`,
+        `${vm.$apiUri}/api/v1/report/${this.reports[index].id}`,
         this.$auth.headers
       )
 

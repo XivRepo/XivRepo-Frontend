@@ -37,7 +37,7 @@
 export default {
   auth: false,
   head: {
-    title: 'Packs - Modrinth',
+    title: 'Packs - XIVMods',
     meta: [
       {
         hid: 'apple-mobile-web-app-title',
@@ -52,7 +52,7 @@ export default {
       {
         hid: 'og:url',
         name: 'og:url',
-        content: `https://modrinth.com/modpacks`,
+        content: `this.$siteUrl/modpacks`,
       },
     ],
   },

@@ -112,44 +112,10 @@
               ? previewImage
               : mod.icon_url && !iconChanged
               ? mod.icon_url
-              : 'https://cdn.modrinth.com/placeholder.svg'
+              : '{this.$cdnUri}/placeholder.svg'
           "
           alt="preview-image"
         />
-      </div>
-    </section>
-    <section class="game-sides">
-      <h3>Supported environments</h3>
-      <div class="columns">
-        <span>
-          Let others know if your mod is for clients, servers or universal. For
-          example, IC2 will be required + required, while OptiFine will be
-          required + no functionality
-        </span>
-        <div class="labeled-control">
-          <h3>Client</h3>
-          <Multiselect
-            v-model="clientSideType"
-            placeholder="Select one"
-            :options="sideTypes"
-            :searchable="false"
-            :close-on-select="true"
-            :show-labels="false"
-            :allow-empty="false"
-          />
-        </div>
-        <div class="labeled-control">
-          <h3>Server</h3>
-          <Multiselect
-            v-model="serverSideType"
-            placeholder="Select one"
-            :options="sideTypes"
-            :searchable="false"
-            :close-on-select="true"
-            :show-labels="false"
-            :allow-empty="false"
-          />
-        </div>
       </div>
     </section>
     <section class="description">
@@ -206,14 +172,6 @@
         <span>Wiki page</span>
         <input
           v-model="mod.wiki_url"
-          type="url"
-          placeholder="Enter a valid URL"
-        />
-      </label>
-      <label title="An inivitation link to your Discord server.">
-        <span>Discord invite</span>
-        <input
-          v-model="mod.discord_url"
           type="url"
           placeholder="Enter a valid URL"
         />
@@ -319,14 +277,14 @@ export default {
       ] = (
         await Promise.all([
           axios.get(
-            `https://api.modrinth.com/api/v1/mod/${data.params.id}`,
+            `${this.$apiUri}/api/v1/mod/${data.params.id}`,
             data.$auth.headers
           ),
-          axios.get(`https://api.modrinth.com/api/v1/tag/category`),
-          axios.get(`https://api.modrinth.com/api/v1/tag/loader`),
-          axios.get(`https://api.modrinth.com/api/v1/tag/game_version`),
-          axios.get(`https://api.modrinth.com/api/v1/tag/license`),
-          axios.get(`https://api.modrinth.com/api/v1/tag/donation_platform`),
+          axios.get(`${this.$apiUri}/api/v1/tag/category`),
+          axios.get(`${this.$apiUri}/api/v1/tag/loader`),
+          axios.get(`${this.$apiUri}/api/v1/tag/game_version`),
+          axios.get(`${this.$apiUri}/api/v1/tag/license`),
+          axios.get(`${this.$apiUri}/api/v1/tag/donation_platform`),
         ])
       ).map((it) => it.data)
 
@@ -401,7 +359,7 @@ export default {
           this.license_url = ''
           break
         default:
-          this.license_url = `https://cdn.modrinth.com/licenses/${newValue.short}.txt`
+          this.license_url = `{this.$cdnUri}/licenses/${newValue.short}.txt`
       }
     },
   },
@@ -446,14 +404,14 @@ export default {
         }
 
         await axios.patch(
-          `https://api.modrinth.com/api/v1/mod/${this.mod.id}`,
+          `${this.$apiUri}/api/v1/mod/${this.mod.id}`,
           data,
           this.$auth.headers
         )
 
         if (this.iconChanged) {
           await axios.patch(
-            `https://api.modrinth.com/api/v1/mod/${this.mod.id}/icon?ext=${
+            `${this.$apiUri}/api/v1/mod/${this.mod.id}/icon?ext=${
               this.icon.type.split('/')[this.icon.type.split('/').length - 1]
             }`,
             this.icon,

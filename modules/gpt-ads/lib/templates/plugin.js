@@ -15,7 +15,7 @@ function isPersonalizedAdsOn(ctx) {
     const val = e.trim().split('=')
     processed[val[0]] = decodeURI(val[1])
   })
-  const scopes = decodeURIComponent(processed['modrinth-scopes']).split(',')
+  const scopes = decodeURIComponent(processed['xivrepo-scopes']).split(',')
   return scopes !== null && scopes.includes('ads')
 }
 

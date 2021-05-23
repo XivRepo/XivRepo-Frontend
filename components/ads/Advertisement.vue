@@ -14,7 +14,7 @@
     <div v-if="ethical_ad_display && ethicalAdType === 'text'">
       <div
         :class="ethical_ad_style"
-        data-ea-publisher="modrinth-com"
+        data-ea-publisher="xivrepo-com"
         :data-ea-type="ethicalAdType"
         data-ea-manual="true"
       ></div>
@@ -22,7 +22,7 @@
     <div v-else-if="ethical_ad_display" class="ethical-wrapper">
       <div
         :class="ethical_ad_style"
-        data-ea-publisher="modrinth-com"
+        data-ea-publisher="xivrepo-com"
         :data-ea-type="ethicalAdType"
         data-ea-manual="true"
       ></div>

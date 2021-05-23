@@ -34,8 +34,8 @@ export const actions = {
     if (state.state.loaded) {
       return
     }
-    state.commit('set_consent', $cookies.get('modrinth-consent') === true)
-    const scopes = $cookies.get('modrinth-scopes')
+    state.commit('set_consent', $cookies.get('xivrepo-consent') === true)
+    const scopes = $cookies.get('xivrepo-scopes')
     if (!scopes) return
     scopes.split(',').forEach((elem) => {
       state.commit('add_scope', elem)
@@ -43,10 +43,10 @@ export const actions = {
     state.commit('loaded')
   },
   save(state, $cookies) {
-    $cookies.set('modrinth-consent', state.state.is_consent_given, parameters)
-    $cookies.set('modrinth-version', VERSION, parameters)
+    $cookies.set('xivrepo-consent', state.state.is_consent_given, parameters)
+    $cookies.set('xivrepo-version', VERSION, parameters)
     $cookies.set(
-      'modrinth-scopes',
+      'xivrepo-scopes',
       state.state.scopes_allowed.join(','),
       parameters
     )

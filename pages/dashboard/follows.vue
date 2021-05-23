@@ -16,7 +16,7 @@
         :downloads="mod.downloads.toString()"
         :edit-mode="true"
         :icon-url="mod.icon_url"
-        :is-modrinth="true"
+        :is-xivrepo="true"
         :latest-version="mod.latest_version"
         :name="mod.title"
         :page-url="mod.page_url"
@@ -52,6 +52,8 @@ import ModCard from '~/components/ui/ProjectCard'
 import FollowIcon from '~/assets/images/utils/heart.svg?inline'
 import FollowIllustration from '~/assets/images/illustrations/follow_illustration.svg?inline'
 
+const vm = this
+
 export default {
   components: {
     ModCard,
@@ -60,13 +62,13 @@ export default {
   },
   async asyncData(data) {
     const res = await axios.get(
-      `https://api.modrinth.com/api/v1/user/${data.$auth.user.id}/follows`,
+      `${vm.$apiUri}/api/v1/user/${data.$auth.user.id}/follows`,
       data.$auth.headers
     )
 
     const mods = (
       await axios.get(
-        `https://api.modrinth.com/api/v1/mods?ids=${JSON.stringify(res.data)}`
+        `${vm.$apiUri}/api/v1/mods?ids=${JSON.stringify(res.data)}`
       )
     ).data
     return {
@@ -76,7 +78,7 @@ export default {
   methods: {
     async unfavMod(index) {
       await axios.delete(
-        `https://api.modrinth.com/api/v1/mod/${this.mods[index].id}/follow`,
+        `${vm.$apiUri}/api/v1/mod/${this.mods[index].id}/follow`,
         this.$auth.headers
       )
 
@@ -84,7 +86,7 @@ export default {
     },
   },
   head: {
-    title: 'Followed mods - Modrinth',
+    title: 'Followed mods - XIVMods',
   },
 }
 </script>

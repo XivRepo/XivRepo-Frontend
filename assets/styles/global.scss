@@ -1,25 +1,26 @@
 .light-mode {
   --color-icon: #718096;
-  --color-text:#4A5568;
-  --color-text-medium:#2a303d;
-  --color-text-dark:#1A202C;
+  --color-text: #4A5568;
+  --color-text-medium: #2a303d;
+  --color-text-dark: #1A202C;
   --color-heading: #2c313d;
   --color-heading-light: #777e8d;
   --color-bg: #edf2f7;
   --color-raised-bg: #ffffff;
   --color-divider: #eaecef;
   --color-divider-dark: #c8cdd3;
+  --color-bg-decimal: 237, 242, 247;
 
   --color-text-inverted: var(--color-bg);
   --color-bg-inverted: var(--color-text);
 
-  --color-brand: #5da545;
-  --color-brand-hover: #53923e;
-  --color-brand-active: #4b8138;
-  --color-brand-light: #6bac57;
+  --color-brand: #694396;
+  --color-brand-hover: #020301;
+  --color-brand-active: #4f2b7a;
+  --color-brand-light: #764bac;
   --color-brand-inverted: #ffffff;
-  --color-brand-2: #5fa33b;
-  --color-brand-3: #c5ddb7;
+  --color-brand-2: #402C4F;
+  --color-brand-3: #B972C1;
   --color-brand-disabled: #e2e8f0;
 
   --color-button-bg: var(--color-bg);
@@ -72,7 +73,7 @@
 .dark-mode {
   --color-icon: #acacac;
   --color-text: #cecece;
-  --color-text-medium:#e4e4e4;
+  --color-text-medium: #e4e4e4;
   --color-text-dark: #fbf8ec;
   --color-heading: #fbf8ec;
   --color-heading-light: #8a8a8a;
@@ -80,17 +81,18 @@
   --color-raised-bg: #222224;
   --color-divider: #49494d;
   --color-divider-dark: #646468;
+  --color-bg-decimal: 23, 23, 25;
 
   --color-text-inverted: var(--color-bg);
   --color-bg-inverted: var(--color-text);
 
-  --color-brand: #5da545;
-  --color-brand-hover: #6bac57;
-  --color-brand-active: #7fc46a;
-  --color-brand-light: #6bac57;
+  --color-brand: #7D7ED0;
+  --color-brand-hover: #a9aaf5;
+  --color-brand-active: #a9aaf5;
+  --color-brand-light: #9b9cf0;
   --color-brand-inverted: #ffffff;
-  --color-brand-2: #438121;
-  --color-brand-3: #344d26;
+  --color-brand-2: #5B5889;
+  --color-brand-3: #726995;
   --color-brand-disabled: #414146;
 
   --color-button-bg: #343438;
@@ -134,7 +136,7 @@
   --color-badge-yellow-bg: #675027;
   --color-badge-yellow-text: #f6e8c6;
 
-  --color-block-quote:var(--color-code-bg);
+  --color-block-quote: var(--color-code-bg);
   --color-header-underline: var(--color-tooltip-text);
   --color-hr: var(--color-text);
 }
@@ -163,22 +165,22 @@ body {
   --size-rounded-control: 0.25rem;
   --size-rounded-tooltip: 0.25rem;
 
-  --size-navbar-height: 4rem;
+  --size-navbar-height: 6rem;
 
   --spacing-card-lg: 1.5rem;
   --spacing-card-md: 0.75rem;
   --spacing-card-sm: 0.5rem;
 
   // Font Sizes
-  --font-size-xxs: 0.625rem;    //10px
-  --font-size-xs: 0.75rem;    //12px
-  --font-size-sm: 0.875rem;   //14px
-  --font-size-nm: 1rem;       //16px
-  --font-size-md: 1.125rem;   //18px
-  --font-size-lg: 1.25rem;    //20px
-  --font-size-xl: 1.5rem;     //24px
-  --font-size-2xl: 2rem;      //32px
-  --font-size-3xl: 3rem;      //48px
+  --font-size-xxs: 0.625rem; //10px
+  --font-size-xs: 0.75rem; //12px
+  --font-size-sm: 0.875rem; //14px
+  --font-size-nm: 1rem; //16px
+  --font-size-md: 1.125rem; //18px
+  --font-size-lg: 1.25rem; //20px
+  --font-size-xl: 1.5rem; //24px
+  --font-size-2xl: 2rem; //32px
+  --font-size-3xl: 3rem; //48px
 
   // Font Weights
   --font-weight-regular: 400;

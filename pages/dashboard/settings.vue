@@ -19,7 +19,7 @@
       <h3>Username</h3>
       <label>
         <span>
-          The username used on the Modrinth site to identify yourself. This must
+          The username used on the XIVMods site to identify yourself. This must
           be unique.
         </span>
         <input
@@ -31,7 +31,7 @@
       <h3>Name</h3>
       <label>
         <span>
-          Your display name on your Modrinth profile. This does not have to be
+          Your display name on your XIVMods profile. This does not have to be
           unique, can be set to anything, and is optional.
         </span>
         <input v-model="name" type="text" placeholder="Enter your name" />
@@ -56,7 +56,7 @@
       <h3>Theme</h3>
       <label>
         <span
-          >Change the global site theme of Modrinth. You can choose from light
+          >Change the global site theme of XIVMods. You can choose from light
           mode and dark mode. You can switch it using this button or anywhere by
           accessing the theme switcher in the navigation bar dropdown.</span
         >
@@ -72,7 +72,7 @@
       <h3>Authorization token</h3>
       <label>
         <span>
-          Your authorization token can be used with the Modrinth API and for the
+          Your authorization token can be used with the XIVMods API and for the
           Minotaur Gradle plugin. However, it must be kept secret!
         </span>
         <input
@@ -85,8 +85,8 @@
       <h3>Revoke your token</h3>
       <label>
         <span
-          >Beware, this will log you out of Modrinth, and you will have to login
-          again to access Modrinth with a new token.</span
+          >Beware, this will log you out of XIVMods, and you will have to login
+          again to access XIVMods with a new token.</span
         >
         <input
           type="button"
@@ -152,7 +152,7 @@ export default {
       this.$notify({
         group: 'main',
         title: 'Copied to clipboard.',
-        text: 'Copied your Modrinth token to the clipboard.',
+        text: 'Copied your XIVMods token to the clipboard.',
         type: 'success',
       })
     },
@@ -168,7 +168,7 @@ export default {
         }
 
         await axios.patch(
-          `https://api.modrinth.com/api/v1/user/${this.$auth.user.id}`,
+          `${this.$apiUri}/api/v1/user/${this.$auth.user.id}`,
           data,
           this.$auth.headers
         )
@@ -192,7 +192,7 @@ export default {
 
       try {
         await axios.delete(
-          `https://api.modrinth.com/api/v1/user/${this.$auth.user.id}`,
+          `${this.$apiUri}/api/v1/user/${this.$auth.user.id}`,
           this.$auth.headers
         )
       } catch (err) {
@@ -211,7 +211,7 @@ export default {
     },
   },
   head: {
-    title: 'Settings - Modrinth',
+    title: 'Settings - XIVMods',
   },
 }
 </script>

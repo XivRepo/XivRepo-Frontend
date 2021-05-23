@@ -6,9 +6,9 @@
           <NuxtLink to="/">
             <ModrinthLogo
               v-if="$colorMode.value === 'light'"
-              aria-label="modrinth"
+              aria-label="xivrepo"
             />
-            <ModrinthLogoWhite v-else aria-label="modrinth" />
+            <ModrinthLogoWhite v-else aria-label="xivrepo" />
           </NuxtLink>
           <span class="badge yellow">Beta</span>
         </section>
@@ -44,7 +44,7 @@
                 >
                   <button class="control" @click="toggleDropdown">
                     <div class="avatar">
-                      <span>{{ this.$auth.user.username }}</span>
+                      <span>{{ this.$auth.user.name }}</span>
                       <img :src="this.$auth.user.avatar_url" class="icon" />
                     </div>
                     <DropdownIcon class="dropdown-icon" />
@@ -63,12 +63,12 @@
                           <span>Notifications</span>
                         </NuxtLink>
                       </li>
-                      <!--<li v-tooltip="'Not implemented yet'" class="hidden">
-                          <NuxtLink :to="userTeamsUrl" disabled>
-                            <UsersIcon />
-                            <span>Teams</span>
-                          </NuxtLink>
-                        </li>-->
+                      <li>
+                        <NuxtLink to="/dashboard/settings">
+                          <SettingIcon />
+                          <span>Settings</span>
+                        </NuxtLink>
+                      </li>
                       <li>
                         <button @click="changeTheme">
                           <MoonIcon v-if="$colorMode.value === 'light'" />
@@ -98,7 +98,7 @@
                   <SunIcon v-else />
                 </a>
                 <a :href="authUrl" class="log-in-button"
-                  ><GitHubIcon aria-hidden="true" />Sign In with GitHub</a
+                  ><DiscordIcon aria-hidden="true" />Sign In with Discord</a
                 >
               </section>
             </template>
@@ -129,6 +129,7 @@ import ModrinthLogoWhite from '~/assets/images/text-logo-white.svg?inline'
 import HamburgerIcon from '~/assets/images/utils/hamburger.svg?inline'
 
 import NotificationIcon from '~/assets/images/sidebar/notifications.svg?inline'
+import SettingIcon from '~/assets/images/sidebar/settings.svg?inline'
 
 import DropdownIcon from '~/assets/images/utils/dropdown.svg?inline'
 import MoonIcon from '~/assets/images/utils/moon.svg?inline'
@@ -136,7 +137,7 @@ import SunIcon from '~/assets/images/utils/sun.svg?inline'
 
 import UserIcon from '~/assets/images/utils/user.svg?inline'
 import LogOutIcon from '~/assets/images/utils/log-out.svg?inline'
-import GitHubIcon from '~/assets/images/utils/github.svg?inline'
+import DiscordIcon from '~/assets/images/utils/discord.svg?inline'
 
 import CookieConsent from '~/components/ads/CookieConsent'
 
@@ -149,8 +150,9 @@ export default {
     SunIcon,
     UserIcon,
     LogOutIcon,
-    GitHubIcon,
+    DiscordIcon,
     NotificationIcon,
+    SettingIcon,
     HamburgerIcon,
     CookieConsent,
   },
@@ -164,7 +166,7 @@ export default {
   },
   computed: {
     authUrl() {
-      return `https://api.modrinth.com/api/v1/auth/init?url=https://modrinth.com${this.$route.fullPath}`
+      return `${this.$apiUri}/api/v1/auth/init?url=${this.$siteUrl}${this.$route.fullPath}`
     },
     userUrl() {
       return `/user/${this.$auth.user.id}`
@@ -238,7 +240,7 @@ export default {
         margin-left: 1rem;
         color: var(--color-text-dark);
         svg {
-          height: 1.75rem;
+          height: 4rem;
           width: auto;
         }
         .badge {
@@ -353,8 +355,8 @@ export default {
                 flex-grow: 1;
                 .icon {
                   border-radius: 50%;
-                  height: 2rem;
-                  width: 2rem;
+                  height: 3rem;
+                  width: 3rem;
                   margin-left: 0.5rem;
                   margin-right: 0.25rem;
                 }

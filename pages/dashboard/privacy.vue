@@ -4,10 +4,10 @@
     <div class="consent-container">
       <div class="h1">Tweak your privacy settings</div>
       <div>
-        Modrinth relies on different providers and in-house tools to allow us to
-        provide custom-tailored experiences, and personalized advertising. You
-        can at any moment change your privacy settings by going to the setting
-        page, or at the footer of any page.
+        XIVMods relies on different providers and in-house tools to allow us to
+        provide custom-tailored experiences. You can at any moment change your
+        privacy settings by going to the setting page, or at the footer of any
+        page.
       </div>
       <br class="divider" />
       <div class="toggles">
@@ -105,7 +105,7 @@ export default {
     },
   },
   head: {
-    title: 'Privacy Settings - Modrinth',
+    title: 'Privacy Settings - XIVMods',
   },
 }
 </script>

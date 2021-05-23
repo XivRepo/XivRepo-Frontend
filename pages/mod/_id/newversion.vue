@@ -49,47 +49,6 @@
             :allow-empty="false"
           />
         </label>
-        <h3>Loaders</h3>
-        <label>
-          <span>
-            Mark all loaders this version works with. It is essential for search
-          </span>
-          <multiselect
-            v-model="createdVersion.loaders"
-            :options="selectableLoaders"
-            :loading="selectableLoaders.length === 0"
-            :multiple="true"
-            :searchable="false"
-            :show-no-results="false"
-            :close-on-select="true"
-            :clear-on-select="false"
-            :show-labels="false"
-            :limit="6"
-            :hide-selected="true"
-            placeholder="Choose loaders..."
-          />
-        </label>
-        <h3>Game versions</h3>
-        <label>
-          <span>
-            Mark all game version this version supports. It is essential for
-            search
-          </span>
-          <multiselect
-            v-model="createdVersion.game_versions"
-            :options="selectableVersions"
-            :loading="selectableVersions.length === 0"
-            :multiple="true"
-            :searchable="true"
-            :show-no-results="false"
-            :close-on-select="false"
-            :clear-on-select="false"
-            :show-labels="false"
-            :limit="6"
-            :hide-selected="true"
-            placeholder="Choose versions..."
-          />
-        </label>
         <h3>Files</h3>
         <label>
           <span>
@@ -141,8 +100,8 @@ export default {
     try {
       const [selectableLoaders, selectableVersions] = (
         await Promise.all([
-          axios.get(`https://api.modrinth.com/api/v1/tag/loader`),
-          axios.get(`https://api.modrinth.com/api/v1/tag/game_version`),
+          axios.get(`${this.$apiUri}/api/v1/tag/loader`),
+          axios.get(`${this.$apiUri}/api/v1/tag/game_version`),
         ])
       ).map((it) => it.data)
 
@@ -189,7 +148,7 @@ export default {
       try {
         const data = (
           await axios({
-            url: 'https://api.modrinth.com/api/v1/version',
+            url: 'this.$apiUri/api/v1/version',
             method: 'POST',
             data: formData,
             headers: {
@@ -225,9 +184,7 @@ export default {
       this.createdVersion.file_parts = newFileParts
     },
     async downloadFile(hash, url) {
-      await axios.get(
-        `https://api.modrinth.com/api/v1/version_file/${hash}/download`
-      )
+      await axios.get(`${this.$apiUri}/api/v1/version_file/${hash}/download`)
 
       const elem = document.createElement('a')
       elem.download = hash

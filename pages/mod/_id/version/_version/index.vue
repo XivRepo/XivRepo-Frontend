@@ -230,7 +230,7 @@ export default {
       this.$nuxt.$loading.start()
 
       await axios.delete(
-        `https://api.modrinth.com/api/v1/version_file/${hash}`,
+        `${this.$apiUri}/api/v1/version_file/${hash}`,
         this.$auth.headers
       )
 
@@ -241,7 +241,7 @@ export default {
       this.$nuxt.$loading.start()
 
       await axios.patch(
-        `https://api.modrinth.com/api/v1/version/${this.version.id}`,
+        `${this.$apiUri}/api/v1/version/${this.version.id}`,
         {
           primary_file: ['sha1', hash],
         },
@@ -274,7 +274,7 @@ export default {
 
       try {
         await axios({
-          url: `https://api.modrinth.com/api/v1/version/${this.version.id}/file`,
+          url: `${this.$apiUri}/api/v1/version/${this.version.id}/file`,
           method: 'POST',
           data: formData,
           headers: {
@@ -303,7 +303,7 @@ export default {
       this.$nuxt.$loading.start()
 
       await axios.delete(
-        `https://api.modrinth.com/api/v1/version/${this.version.id}`,
+        `${this.$apiUri}/api/v1/version/${this.version.id}`,
         this.$auth.headers
       )
 

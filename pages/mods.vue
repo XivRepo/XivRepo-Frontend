@@ -64,12 +64,6 @@
           ></pagination>
         </section>
         <div class="results column-grow-4">
-          <Advertisement
-            type="banner"
-            small-screen="square"
-            ethical-ads-small
-            ethical-ads-big
-          />
           <div v-if="results === null" class="no-results">
             <p>Loading...</p>
           </div>
@@ -90,7 +84,7 @@
               :page-url="result.page_url"
               :categories="result.categories"
               :is-ad="index === -1"
-              :is-modrinth="result.host === 'modrinth'"
+              :is-xivrepo="result.host === 'xivrepo'"
             />
             <div v-if="results.length === 0" class="no-results">
               <p>No results found for your query!</p>
@@ -138,158 +132,133 @@
             </div>
             <SearchFilter
               :active-filters="facets"
-              display-name="Technology"
-              facet-name="categories:technology"
+              display-name="Face Mod"
+              facet-name="categories:face_mod"
               @toggle="toggleFacet"
             >
-              <TechCategory />
             </SearchFilter>
             <SearchFilter
               :active-filters="facets"
-              display-name="Adventure"
-              facet-name="categories:adventure"
+              display-name="Body Mod"
+              facet-name="categories:body_mod"
               @toggle="toggleFacet"
             >
-              <AdventureCategory />
             </SearchFilter>
             <SearchFilter
               :active-filters="facets"
-              display-name="Magic"
-              facet-name="categories:magic"
+              display-name="Hair Mod"
+              facet-name="categories:hair_mod"
               @toggle="toggleFacet"
             >
-              <MagicCategory />
             </SearchFilter>
             <SearchFilter
               :active-filters="facets"
-              display-name="Utility"
-              facet-name="categories:utility"
+              display-name="Mount Mod"
+              facet-name="categories:mount_mod"
               @toggle="toggleFacet"
             >
-              <UtilityCategory />
             </SearchFilter>
             <SearchFilter
               :active-filters="facets"
-              display-name="Decoration"
-              facet-name="categories:decoration"
+              display-name="Minion Mod"
+              facet-name="categories:minion_mod"
               @toggle="toggleFacet"
             >
-              <DecorationCategory />
             </SearchFilter>
             <SearchFilter
               :active-filters="facets"
-              display-name="Library"
-              facet-name="categories:library"
+              display-name="Furniture Mod"
+              facet-name="categories:furniture_mod"
               @toggle="toggleFacet"
             >
-              <LibraryCategory />
             </SearchFilter>
             <SearchFilter
               :active-filters="facets"
-              display-name="Cursed"
-              facet-name="categories:cursed"
+              display-name="Skin Mod"
+              facet-name="categories:skin_mod"
               @toggle="toggleFacet"
             >
-              <CursedCategory />
             </SearchFilter>
             <SearchFilter
               :active-filters="facets"
-              display-name="World Generation"
-              facet-name="categories:worldgen"
+              display-name="Racial Scale Mod"
+              facet-name="categories:racial_scale_mod"
               @toggle="toggleFacet"
             >
-              <WorldGenCategory />
             </SearchFilter>
+            <h3>Races</h3>
             <SearchFilter
-              :active-filters="facets"
-              display-name="Storage"
-              facet-name="categories:storage"
-              @toggle="toggleFacet"
-            >
-              <StorageCategory />
-            </SearchFilter>
-            <SearchFilter
-              :active-filters="facets"
-              display-name="Food"
-              facet-name="categories:food"
-              @toggle="toggleFacet"
-            >
-              <FoodCategory />
-            </SearchFilter>
-            <SearchFilter
-              :active-filters="facets"
-              display-name="Equipment"
-              facet-name="categories:equipment"
-              @toggle="toggleFacet"
-            >
-              <EquipmentCategory />
-            </SearchFilter>
-            <SearchFilter
-              :active-filters="facets"
-              display-name="Miscellaneous"
-              facet-name="categories:misc"
-              @toggle="toggleFacet"
-            >
-              <MiscCategory />
-            </SearchFilter>
-            <h3>Mod Loaders</h3>
-            <SearchFilter
-              :active-filters="facets"
-              display-name="Fabric"
-              facet-name="categories:fabric"
-              @toggle="toggleFacet"
-            >
-              <FabricLoader />
-            </SearchFilter>
-            <SearchFilter
-              :active-filters="facets"
-              display-name="Forge"
-              facet-name="categories:forge"
-              @toggle="toggleFacet"
-            >
-              <ForgeLoader />
-            </SearchFilter>
-            <h3>Environments</h3>
-            <SearchFilter
-              :active-filters="selectedEnvironments"
-              display-name="Client"
-              facet-name="client"
+              :active-filters="selectedRaces"
+              display-name="Hyur"
+              facet-name="hyur"
               @toggle="toggleEnv"
             >
-              <ClientSide />
             </SearchFilter>
             <SearchFilter
-              :active-filters="selectedEnvironments"
-              display-name="Server"
-              facet-name="server"
+              :active-filters="selectedRaces"
+              display-name="Elezen"
+              facet-name="elezen"
               @toggle="toggleEnv"
             >
-              <ServerSide />
             </SearchFilter>
-            <h3>Minecraft Versions</h3>
             <SearchFilter
-              :active-filters="showVersions"
-              display-name="Include snapshots"
-              facet-name="snapshots"
-              style="margin-bottom: 10px"
-              @toggle="fillInitialVersions"
-            />
+              :active-filters="selectedRaces"
+              display-name="Miqote"
+              facet-name="miqote"
+              @toggle="toggleEnv"
+            >
+            </SearchFilter>
+            <SearchFilter
+              :active-filters="selectedRaces"
+              display-name="Lalafell"
+              facet-name="lalafell"
+              @toggle="toggleEnv"
+            >
+            </SearchFilter>
+            <SearchFilter
+              :active-filters="selectedRaces"
+              display-name="Au Ra"
+              facet-name="au_ra"
+              @toggle="toggleEnv"
+            >
+            </SearchFilter>
+            <SearchFilter
+              :active-filters="selectedRaces"
+              display-name="Hrothgar"
+              facet-name="hrothgar"
+              @toggle="toggleEnv"
+            >
+            </SearchFilter>
+            <SearchFilter
+              :active-filters="selectedRaces"
+              display-name="Viera"
+              facet-name="viera"
+              @toggle="toggleEnv"
+            >
+            </SearchFilter>
+            <h3>Character Genders</h3>
+            <SearchFilter
+              :active-filters="selectedGenders"
+              display-name="Male"
+              facet-name="male"
+              @toggle="toggleEnv"
+            >
+            </SearchFilter>
+            <SearchFilter
+              :active-filters="selectedGenders"
+              display-name="Female"
+              facet-name="female"
+              @toggle="toggleEnv"
+            >
+            </SearchFilter>
+            <SearchFilter
+              :active-filters="selectedGenders"
+              display-name="Unisex"
+              facet-name="unisex"
+              @toggle="toggleEnv"
+            >
+            </SearchFilter>
           </section>
-          <multiselect
-            v-model="selectedVersions"
-            :options="versions"
-            :loading="versions.length === 0"
-            :multiple="true"
-            :searchable="true"
-            :show-no-results="false"
-            :close-on-select="false"
-            :clear-on-select="false"
-            :show-labels="false"
-            :limit="6"
-            :hide-selected="true"
-            placeholder="Choose versions..."
-            @input="onSearchChange(1)"
-          ></multiselect>
           <h3>Licenses</h3>
           <Multiselect
             v-model="displayLicense"
@@ -305,7 +274,6 @@
             @input="toggleLicense"
           />
         </div>
-        <Advertisement type="square" small-screen="destroy" />
         <m-footer class="footer" hide-small />
       </section>
     </div>
@@ -320,6 +288,7 @@ import Pagination from '~/components/ui/Pagination'
 import SearchFilter from '~/components/ui/search/SearchFilter'
 
 import MFooter from '~/components/layout/MFooter'
+/*
 import TechCategory from '~/assets/images/categories/tech.svg?inline'
 import AdventureCategory from '~/assets/images/categories/adventure.svg?inline'
 import CursedCategory from '~/assets/images/categories/cursed.svg?inline'
@@ -338,37 +307,18 @@ import FabricLoader from '~/assets/images/categories/fabric.svg?inline'
 
 import ClientSide from '~/assets/images/categories/client.svg?inline'
 import ServerSide from '~/assets/images/categories/server.svg?inline'
-
+*/
 import SearchIcon from '~/assets/images/utils/search.svg?inline'
 import ExitIcon from '~/assets/images/utils/exit.svg?inline'
-
-import Advertisement from '~/components/ads/Advertisement'
 
 export default {
   auth: false,
   components: {
-    Advertisement,
     MFooter,
     SearchResult,
     Pagination,
     Multiselect,
     SearchFilter,
-    TechCategory,
-    AdventureCategory,
-    CursedCategory,
-    DecorationCategory,
-    EquipmentCategory,
-    FoodCategory,
-    LibraryCategory,
-    MagicCategory,
-    MiscCategory,
-    StorageCategory,
-    UtilityCategory,
-    WorldGenCategory,
-    ForgeLoader,
-    FabricLoader,
-    ClientSide,
-    ServerSide,
     SearchIcon,
     ExitIcon,
   },
@@ -380,9 +330,8 @@ export default {
       for (const facet of facets) await this.toggleFacet(facet, false)
     }
     if (this.$route.query.v)
-      this.selectedVersions = this.$route.query.v.split(',')
-    if (this.$route.query.e)
-      this.selectedEnvironments = this.$route.query.e.split(',')
+      this.selectedGenders = this.$route.query.v.split(',')
+    if (this.$route.query.e) this.selectedRaces = this.$route.query.e.split(',')
     if (this.$route.query.s) {
       this.sortType.name = this.$route.query.s
 
@@ -425,10 +374,10 @@ export default {
       licenses: [],
 
       showVersions: [],
-      selectedVersions: [],
+      selectedGenders: [],
       versions: [],
 
-      selectedEnvironments: [],
+      selectedRaces: [],
 
       facets: [],
       results: null,
@@ -451,14 +400,13 @@ export default {
   methods: {
     async fillInitialVersions(x) {
       try {
-        let url =
-          'https://api.modrinth.com/api/v1/tag/game_version?type=release'
+        let url = 'this.$apiUri/api/v1/tag/game_version?type=release'
 
         if (x !== null) {
           if (!this.showVersions.length > 0 && !this.firstRun) {
             this.showVersions.push('snapshots')
 
-            url = 'https://api.modrinth.com/api/v1/tag/game_version'
+            url = 'this.$apiUri/api/v1/tag/game_version'
           } else {
             this.showVersions = []
           }
@@ -474,9 +422,7 @@ export default {
       }
     },
     async fillInitialLicenses() {
-      const licences = (
-        await axios.get('https://api.modrinth.com/api/v1/tag/license')
-      ).data
+      const licences = (await axios.get('this.$apiUri/api/v1/tag/license')).data
       licences.sort((x, y) => {
         // Custom case for custom, so it goes to the bottom of the list.
         if (x.short === 'custom') return 1
@@ -506,8 +452,8 @@ export default {
 
       this.displayLicense = null
       this.selectedLicense = null
-      this.selectedVersions = []
-      this.selectedEnvironments = []
+      this.selectedGenders = []
+      this.selectedRaces = []
       await this.onSearchChange(1)
     },
     async toggleFacet(elementName, sendRequest) {
@@ -521,11 +467,11 @@ export default {
       if (!sendRequest) await this.onSearchChange(1)
     },
     async toggleEnv(environment, sendRequest) {
-      const index = this.selectedEnvironments.indexOf(environment)
+      const index = this.selectedRaces.indexOf(environment)
       if (index !== -1) {
-        this.selectedEnvironments.splice(index, 1)
+        this.selectedRaces.splice(index, 1)
       } else {
-        this.selectedEnvironments.push(environment)
+        this.selectedRaces.push(environment)
       }
 
       if (!sendRequest) await this.onSearchChange(1)
@@ -550,27 +496,27 @@ export default {
 
         if (
           this.facets.length > 0 ||
-          this.selectedVersions.length > 0 ||
-          this.selectedEnvironments.length > 0
+          this.selectedGenders.length > 0 ||
+          this.selectedRaces.length > 0
         ) {
           let formattedFacets = []
           for (const facet of this.facets) {
             formattedFacets.push([facet])
           }
 
-          if (this.selectedVersions.length > 0) {
+          if (this.selectedGenders.length > 0) {
             const versionFacets = []
-            for (const facet of this.selectedVersions) {
+            for (const facet of this.selectedGenders) {
               versionFacets.push('versions:' + facet)
             }
             formattedFacets.push(versionFacets)
           }
 
-          if (this.selectedEnvironments.length > 0) {
+          if (this.selectedRaces.length > 0) {
             let environmentFacets = []
 
-            const includesClient = this.selectedEnvironments.includes('client')
-            const includesServer = this.selectedEnvironments.includes('server')
+            const includesClient = this.selectedRaces.includes('client')
+            const includesServer = this.selectedRaces.includes('server')
             if (includesClient && includesServer) {
               environmentFacets = [
                 ['client_side:required'],
@@ -602,7 +548,7 @@ export default {
           params.push(`offset=${offset}`)
         }
 
-        let url = 'https://api.modrinth.com/api/v1/mod'
+        let url = 'this.$apiUri/api/v1/mod'
 
         if (params.length > 0) {
           for (let i = 0; i < params.length; i++) {
@@ -646,10 +592,10 @@ export default {
           if (offset > 0) url += `&o=${offset}`
           if (this.facets.length > 0)
             url += `&f=${encodeURIComponent(this.facets)}`
-          if (this.selectedVersions.length > 0)
-            url += `&v=${encodeURIComponent(this.selectedVersions)}`
-          if (this.selectedEnvironments.length > 0)
-            url += `&e=${encodeURIComponent(this.selectedEnvironments)}`
+          if (this.selectedGenders.length > 0)
+            url += `&v=${encodeURIComponent(this.selectedGenders)}`
+          if (this.selectedRaces.length > 0)
+            url += `&e=${encodeURIComponent(this.selectedRaces)}`
           if (this.sortType.name !== 'relevance')
             url += `&s=${encodeURIComponent(this.sortType.name)}`
           if (this.maxResults > 20)
@@ -672,7 +618,7 @@ export default {
     },
   },
   head: {
-    title: 'Mods - Modrinth',
+    title: 'Mods - XIVMods',
     meta: [
       {
         hid: 'apple-mobile-web-app-title',
@@ -687,7 +633,7 @@ export default {
       {
         hid: 'og:url',
         name: 'og:url',
-        content: `https://modrinth.com/mods`,
+        content: `this.$siteUrl/mods`,
       },
     ],
   },

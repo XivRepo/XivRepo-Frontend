@@ -55,6 +55,8 @@
 import axios from 'axios'
 import UpToDate from '~/assets/images/illustrations/up_to_date.svg?inline'
 
+const vm = this
+
 export default {
   components: {
     UpToDate,
@@ -62,7 +64,7 @@ export default {
   async asyncData(data) {
     const notifications = (
       await axios.get(
-        `https://api.modrinth.com/api/v1/user/${data.$auth.user.id}/notifications`,
+        `${vm.$apiUri}/api/v1/user/${data.$auth.user.id}/notifications`,
         data.$auth.headers
       )
     ).data
@@ -79,7 +81,7 @@ export default {
         if (index) {
           const config = {
             method: notification.actions[index].action_route[0].toLowerCase(),
-            url: `https://api.modrinth.com/api/v1/${notification.actions[index].action_route[1]}`,
+            url: `${this.$apiUri}/api/v1/${notification.actions[index].action_route[1]}`,
             headers: {
               Authorization: this.$auth.token,
             },
@@ -89,7 +91,7 @@ export default {
         }
 
         await axios.delete(
-          `https://api.modrinth.com/api/v1/notification/${notification.id}`,
+          `${vm.$apiUri}/api/v1/notification/${notification.id}`,
           this.$auth.headers
         )
 
@@ -107,7 +109,7 @@ export default {
     },
   },
   head: {
-    title: 'Notifications - Modrinth',
+    title: 'Notifications - XIVMods',
   },
 }
 </script>

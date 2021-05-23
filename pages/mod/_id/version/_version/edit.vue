@@ -45,47 +45,6 @@
             :allow-empty="false"
           />
         </label>
-        <h3>Loaders</h3>
-        <label>
-          <span>
-            Mark all loaders this version works with. It is essential for search
-          </span>
-          <multiselect
-            v-model="version.loaders"
-            :options="selectableLoaders"
-            :loading="selectableLoaders.length === 0"
-            :multiple="true"
-            :searchable="false"
-            :show-no-results="false"
-            :close-on-select="true"
-            :clear-on-select="false"
-            :show-labels="false"
-            :limit="6"
-            :hide-selected="true"
-            placeholder="Choose loaders..."
-          />
-        </label>
-        <h3>Game versions</h3>
-        <label>
-          <span>
-            Mark all game version this version supports. It is essential for
-            search
-          </span>
-          <multiselect
-            v-model="version.game_versions"
-            :options="selectableVersions"
-            :loading="selectableVersions.length === 0"
-            :multiple="true"
-            :searchable="true"
-            :show-no-results="false"
-            :close-on-select="false"
-            :clear-on-select="false"
-            :show-labels="false"
-            :limit="6"
-            :hide-selected="true"
-            placeholder="Choose versions..."
-          />
-        </label>
       </div>
       <div class="changelog">
         <h3>Changelog</h3>
@@ -152,8 +111,8 @@ export default {
     try {
       const [selectableLoaders, selectableVersions] = (
         await Promise.all([
-          axios.get(`https://api.modrinth.com/api/v1/tag/loader`),
-          axios.get(`https://api.modrinth.com/api/v1/tag/game_version`),
+          axios.get(`${this.$apiUri}/api/v1/tag/loader`),
+          axios.get(`${this.$apiUri}/api/v1/tag/game_version`),
         ])
       ).map((it) => it.data)
 
@@ -186,7 +145,7 @@ export default {
 
       try {
         await axios.patch(
-          `https://api.modrinth.com/api/v1/version/${this.version.id}`,
+          `${this.$apiUri}/api/v1/version/${this.version.id}`,
           this.version,
           this.$auth.headers
         )

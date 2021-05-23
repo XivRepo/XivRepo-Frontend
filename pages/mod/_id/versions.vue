@@ -6,8 +6,6 @@
           <th></th>
           <th>Name</th>
           <th>Version</th>
-          <th>Mod Loader</th>
-          <th>Minecraft Version</th>
           <th>Status</th>
           <th>Downloads</th>
           <th>Date Published</th>

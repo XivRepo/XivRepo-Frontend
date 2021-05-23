@@ -4,7 +4,7 @@
       <div class="icon">
         <nuxt-link v-if="isModrinth" :to="'/mod/' + id">
           <img
-            :src="iconUrl || 'https://cdn.modrinth.com/placeholder.svg?inline'"
+            :src="iconUrl || '{this.$cdnUri}/placeholder.svg?inline'"
             :alt="name"
             loading="lazy"
           />
@@ -129,7 +129,7 @@ export default {
   props: {
     id: {
       type: String,
-      default: 'modrinth-0',
+      default: 'xivrepo-0',
     },
     name: {
       type: String,

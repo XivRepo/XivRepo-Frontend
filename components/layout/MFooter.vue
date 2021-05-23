@@ -1,8 +1,8 @@
 <template>
   <footer :class="{ centered, hideBig, hideSmall }">
     <span>
-      Modrinth is open source software. You may view the source code at
-      <a target="_blank" href="https://github.com/modrinth">our GitHub page</a>.
+      XIVMods is open source software. You may view the source code at
+      <a target="_blank" href="https://github.com/XivRepo">our GitHub page</a>.
     </span>
     <ul>
       <li>
@@ -25,13 +25,12 @@
     </ul>
     <ul>
       <li>
-        <a target="_blank" href="https://blog.modrinth.com">Blog</a>
+        <a target="_blank" href="https://discord.com/invite/v7ztErSKVJ"
+          >Discord</a
+        >
       </li>
       <li>
-        <a target="_blank" href="https://discord.gg/gFRbNQ2">Discord</a>
-      </li>
-      <li>
-        <a target="_blank" href="https://twitter.com/modrinth">Twitter</a>
+        <a target="_blank" href="https://twitter.com/XivRepo">Twitter</a>
       </li>
     </ul>
     <ul>
@@ -39,7 +38,11 @@
         <nuxt-link to="/dashboard/privacy">Set privacy preferences</nuxt-link>
       </li>
     </ul>
-    <span> © Guavy LLC </span><br />
+    <span> Copyright © 2021 XIV Mods. All rights reserved. </span><br />
+    <span>
+      FINAL FANTASY XIV © 2010-2021 SQUARE ENIX CO., LTD. All Rights
+      Reserved.</span
+    ><br />
     <span v-if="version !== 'unknown'">Version: {{ version }}</span>
   </footer>
 </template>

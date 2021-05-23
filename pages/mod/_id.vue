@@ -8,7 +8,7 @@
               :src="
                 mod.icon_url
                   ? mod.icon_url
-                  : 'https://cdn.modrinth.com/placeholder.svg?inline'
+                  : '{this.$cdnUri}/placeholder.svg?inline'
               "
               alt="mod - icon"
             />
@@ -63,13 +63,6 @@
             </button>
           </div>
         </div>
-        <Advertisement
-          v-if="mod.status === 'approved' || mod.status === 'unlisted'"
-          type="banner"
-          small-screen="square"
-          ethical-ads-small
-          ethical-ads-big
-        />
         <div class="mod-navigation">
           <div class="tabs">
             <nuxt-link
@@ -340,11 +333,6 @@
             </a>
           </div>
         </div>
-        <Advertisement
-          v-if="mod.status === 'approved' || mod.status === 'unlisted'"
-          type="square"
-          small-screen="destroy"
-        />
         <m-footer class="footer" />
       </section>
     </div>
@@ -371,12 +359,10 @@ import ExternalIcon from '~/assets/images/utils/external.svg?inline'
 
 import ForgeIcon from '~/assets/images/categories/forge.svg?inline'
 import FabricIcon from '~/assets/images/categories/fabric.svg?inline'
-import Advertisement from '~/components/ads/Advertisement'
 
 export default {
   name: 'ModPage',
   components: {
-    Advertisement,
     MFooter,
     Categories,
     ExternalIcon,
@@ -397,22 +383,22 @@ export default {
     try {
       const mod = (
         await axios.get(
-          `https://api.modrinth.com/api/v1/mod/${data.params.id}`,
+          `${this.$apiUri}/api/v1/mod/${data.params.id}`,
           data.$auth.headers
         )
       ).data
 
       const [members, versions, featuredVersions, userFollows] = (
         await Promise.all([
-          axios.get(`https://api.modrinth.com/api/v1/team/${mod.team}/members`),
-          axios.get(`https://api.modrinth.com/api/v1/mod/${mod.id}/version`),
+          axios.get(`${this.$apiUri}/api/v1/team/${mod.team}/members`),
+          axios.get(`${this.$apiUri}/api/v1/mod/${mod.id}/version`),
           axios.get(
-            `https://api.modrinth.com/api/v1/mod/${mod.id}/version?featured=true`
+            `${this.$apiUri}/api/v1/mod/${mod.id}/version?featured=true`
           ),
           axios.get(
             data.$auth.user
-              ? `https://api.modrinth.com/api/v1/user/${data.$auth.user.id}/follows`
-              : `https://api.modrinth.com`,
+              ? `${this.$apiUri}/api/v1/user/${data.$auth.user.id}/follows`
+              : `${this.$apiUri}`,
             data.$auth.headers
           ),
         ])
@@ -420,7 +406,7 @@ export default {
 
       const users = (
         await axios.get(
-          `https://api.modrinth.com/api/v1/users?ids=${JSON.stringify(
+          `${this.$apiUri}/api/v1/users?ids=${JSON.stringify(
             members.map((it) => it.user_id)
           )}`,
           data.$auth.headers
@@ -471,9 +457,7 @@ export default {
       return file
     },
     async downloadFile(hash, url) {
-      await axios.get(
-        `https://api.modrinth.com/api/v1/version_file/${hash}/download`
-      )
+      await axios.get(`${this.$apiUri}/api/v1/version_file/${hash}/download`)
 
       const elem = document.createElement('a')
       elem.download = hash
@@ -482,7 +466,7 @@ export default {
     },
     async followMod() {
       await axios.post(
-        `https://api.modrinth.com/api/v1/mod/${this.mod.id}/follow`,
+        `${this.$apiUri}/api/v1/mod/${this.mod.id}/follow`,
         {},
         this.$auth.headers
       )
@@ -491,7 +475,7 @@ export default {
     },
     async unfollowMod() {
       await axios.delete(
-        `https://api.modrinth.com/api/v1/mod/${this.mod.id}/follow`,
+        `${this.$apiUri}/api/v1/mod/${this.mod.id}/follow`,
         this.$auth.headers
       )
 
@@ -500,7 +484,7 @@ export default {
   },
   head() {
     return {
-      title: this.mod.title + ' - Modrinth',
+      title: this.mod.title + ' - XIVMods',
       meta: [
         {
           hid: 'og:type',
@@ -527,19 +511,19 @@ export default {
           name: 'description',
           content:
             this.mod.description +
-            ' View other minecraft mods on Modrinth today! Modrinth is a new and modern Minecraft modding platform supporting both the Forge and Fabric mod loaders.',
+            ' View other minecraft mods on XIVMods today! XIVMods is a new and modern Minecraft modding platform supporting both the Forge and Fabric mod loaders.',
         },
         {
           hid: 'og:url',
           name: 'og:url',
-          content: `https://modrinth.com/mod/${this.mod.id}`,
+          content: `${this.$siteUrl}/mod/${this.mod.id}`,
         },
         {
           hid: 'og:image',
           name: 'og:image',
           content: this.mod.icon_url
             ? this.mod.icon_url
-            : 'https://cdn.modrinth.com/placeholder.png',
+            : '{this.$cdnUri}/placeholder.png',
         },
       ],
     }

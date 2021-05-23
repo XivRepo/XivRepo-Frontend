@@ -55,17 +55,9 @@
             </div>
           </div>
         </div>
-        <Advertisement
-          type="square"
-          small-screen="square"
-          ethical-ads-big
-          ethical-ads-small
-          ethical-ad-type="image"
-        />
         <m-footer class="footer" hide-small />
       </div>
       <div class="content">
-        <Advertisement type="banner" small-screen="destroy" />
         <div class="mods">
           <SearchResult
             v-for="result in mods"
@@ -79,7 +71,7 @@
             :icon-url="result.icon_url"
             :author-url="result.author_url"
             :categories="result.categories"
-            :is-modrinth="true"
+            :is-xivrepo="true"
           />
         </div>
         <m-footer class="footer" hide-big centered />
@@ -96,12 +88,12 @@ import MFooter from '~/components/layout/MFooter'
 import ReportIcon from '~/assets/images/utils/report.svg?inline'
 import CalendarIcon from '~/assets/images/utils/calendar.svg?inline'
 import DownloadIcon from '~/assets/images/utils/download.svg?inline'
-import Advertisement from '~/components/ads/Advertisement'
+
+const vm = this
 
 export default {
   auth: false,
   components: {
-    Advertisement,
     SearchResult,
     CalendarIcon,
     DownloadIcon,
@@ -110,18 +102,14 @@ export default {
   },
   async asyncData(data) {
     try {
-      let res = await axios.get(
-        `https://api.modrinth.com/api/v1/user/${data.params.id}`
-      )
+      let res = await axios.get(`${vm.$apiUri}/api/v1/user/${data.params.id}`)
       const user = res.data
 
       let mods = []
-      res = await axios.get(
-        `https://api.modrinth.com/api/v1/user/${user.id}/mods`
-      )
+      res = await axios.get(`${vm.$apiUri}/api/v1/user/${user.id}/mods`)
       if (res.data) {
         res = await axios.get(
-          `https://api.modrinth.com/api/v1/mods?ids=${JSON.stringify(res.data)}`
+          `${vm.$apiUri}/api/v1/mods?ids=${JSON.stringify(res.data)}`
         )
         mods = res.data
       }
@@ -153,7 +141,7 @@ export default {
   },
   head() {
     return {
-      title: this.user.username + ' - Modrinth',
+      title: this.user.username + ' - XIVMods',
       meta: [
         {
           hid: 'og:type',
@@ -180,18 +168,17 @@ export default {
           name: 'description',
           content:
             this.user.bio +
-            ' - View minecraft mods on Modrinth today! Modrinth is a new and modern Minecraft modding platform that is compatible with CurseForge too!',
+            ' - View minecraft mods on XIVMods today! XIVMods is a new and modern Minecraft modding platform that is compatible with CurseForge too!',
         },
         {
           hid: 'og:url',
           name: 'og:url',
-          content: `https://modrinth.com/user/${this.user.id}`,
+          content: `${this.$siteUrl}/user/${this.user.id}`,
         },
         {
           hid: 'og:image',
           name: 'og:image',
-          content:
-            this.user.avatar_url || 'https://cdn.modrinth.com/placeholder.png',
+          content: this.user.avatar_url || `{this.$cdnUri}/placeholder.png`,
         },
       ],
     }

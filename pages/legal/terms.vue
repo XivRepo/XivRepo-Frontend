@@ -6,7 +6,7 @@
       <h2>1. Terms</h2>
 
       <p>
-        By accessing this Website, accessible from https://modrinth.com, you are
+        By accessing this Website, accessible from ${this.$siteUrl}, you are
         agreeing to be bound by these Website Terms and Conditions of Use and
         agree that you are responsible for the agreement with any applicable
         local laws. If you disagree with any of these terms, you are prohibited
@@ -120,32 +120,32 @@
       <p>
         When you upload text, software, mods, scripts, graphics, photos, audio,
         videos, links, interactive features and other materials that may be
-        viewed on, or accessed through Modrinth, we refer to it as “Content”.
+        viewed on, or accessed through XIVMods, we refer to it as “Content”.
       </p>
 
       <ul>
         <li>
           You must own or have the necessary licenses, rights, consents, and
           permissions to store, share or distribute the Content that is uploaded
-          under your Modrinth account.
+          under your XIVMods account.
         </li>
         <li>
           You are responsible for all activity and Content that is uploaded
-          under your Modrinth account.
+          under your XIVMods account.
         </li>
         <li>
           You must not transmit any viruses, worms, malware, or any other code
-          of a destructive nature through Modrinth.
+          of a destructive nature through XIVMods.
         </li>
         <li>
           You retain all of your ownership rights to your Content. We do not
           claim any ownership in or to any of your Content.
         </li>
         <li>
-          To enable us to provide the services of Modrinth, you hereby grant us
-          a worldwide, non-exclusive, royalty-free, and unrestricted license to
+          To enable us to provide the services of XIVMods, you hereby grant us a
+          worldwide, non-exclusive, royalty-free, and unrestricted license to
           use, reproduce, distribute copies, prepare derivative works of, or
-          display Content in connection with Modrinth in any medium and for any
+          display Content in connection with XIVMods in any medium and for any
           purpose (including commercial purposes).
         </li>
       </ul>
@@ -163,13 +163,13 @@ export default {
   },
   auth: false,
   head: {
-    title: 'Terms - Modrinth',
+    title: 'Terms - XIVMods',
     meta: [
       {
         hid: 'description',
         name: 'description',
         content:
-          'The Terms of Service of Modrinth, an open source modding platform. Modrinth currently supports Minecraft, including the forge and fabric mod loaders.',
+          'The Terms of Service of XIVMods, an open source modding platform. XIVMods currently supports Minecraft, including the forge and fabric mod loaders.',
       },
       {
         hid: 'apple-mobile-web-app-title',
@@ -184,7 +184,7 @@ export default {
       {
         hid: 'og:url',
         name: 'og:url',
-        content: `https://modrinth.com/legal/terms`,
+        content: `${this.$siteUrl}/legal/terms`,
       },
     ],
   },

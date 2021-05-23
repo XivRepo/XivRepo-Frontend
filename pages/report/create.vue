@@ -88,6 +88,8 @@
 import Multiselect from 'vue-multiselect'
 import axios from 'axios'
 
+const vm = this
+
 export default {
   components: {
     Multiselect,
@@ -98,7 +100,7 @@ export default {
   },
   async asyncData() {
     const reportTypes = (
-      await axios.get(`https://api.modrinth.com/api/v1/tag/report_type`)
+      await axios.get(`${vm.$apiUri}/api/v1/tag/report_type`)
     ).data
 
     return {
@@ -127,11 +129,7 @@ export default {
           body: this.body,
         }
 
-        await axios.post(
-          'https://api.modrinth.com/api/v1/report',
-          data,
-          this.$auth.headers
-        )
+        await axios.post('this.$apiUri/api/v1/report', data, this.$auth.headers)
 
         await this.$router.replace(`/${this.itemType}/${this.itemId}`)
       } catch (err) {

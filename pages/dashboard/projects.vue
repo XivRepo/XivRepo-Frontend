@@ -24,7 +24,7 @@
         :categories="mod.categories"
         :edit-mode="true"
         :status="mod.status"
-        :is-modrinth="true"
+        :is-xivrepo="true"
       >
         <nuxt-link
           class="button column edit-button"
@@ -50,6 +50,8 @@ import axios from 'axios'
 import ModCard from '~/components/ui/ProjectCard'
 import UpToDate from '~/assets/images/illustrations/up_to_date.svg?inline'
 
+const vm = this
+
 export default {
   components: {
     ModCard,
@@ -57,12 +59,12 @@ export default {
   },
   async asyncData(data) {
     let res = await axios.get(
-      `https://api.modrinth.com/api/v1/user/${data.$auth.user.id}/mods`,
+      `${vm.$apiUri}/api/v1/user/${data.$auth.user.id}/mods`,
       data.$auth.headers
     )
 
     res = await axios.get(
-      `https://api.modrinth.com/api/v1/mods?ids=${JSON.stringify(res.data)}`,
+      `${vm.$apiUri}/api/v1/mods?ids=${JSON.stringify(res.data)}`,
       data.$auth.headers
     )
 
@@ -71,7 +73,7 @@ export default {
     }
   },
   head: {
-    title: 'My mods - Modrinth',
+    title: 'My mods - XIVMods',
   },
 }
 </script>

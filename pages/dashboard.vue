@@ -78,7 +78,7 @@ export default {
   },
   computed: {
     authUrl() {
-      return `https://api.modrinth.com/api/v1/auth/init?url=https://modrinth.com${this.$route.fullPath}`
+      return `${this.$apiUri}/api/v1/auth/init?url=${this.$siteUrl}${this.$route.fullPath}`
     },
   },
 }

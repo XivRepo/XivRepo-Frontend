@@ -1,5 +1,5 @@
 {
-  "name": "@modrinth/analytics",
+  "name": "@xivrepo/analytics",
   "version": "0.1.0",
   "description": "Cloudflare analytics integration for Nuxtjs",
   "license": "MIT",
@@ -9,8 +9,8 @@
     }
   ],
   "main": "lib/module.js",
-  "repository": "https://github.com/modrinth/knossos/",
-  "homepage": "https://github.com/modrinth/knossos/tree/master/modules/analytics",
+  "repository": "https://github.com/xivrepo/knossos/",
+  "homepage": "https://github.com/xivrepo/knossos/tree/master/modules/analytics",
   "files": [
     "lib"
   ],

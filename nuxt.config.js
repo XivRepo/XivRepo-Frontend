@@ -12,7 +12,7 @@ export default {
     htmlAttrs: {
       lang: 'en',
     },
-    title: 'Modrinth',
+    title: 'XIVMods',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -20,19 +20,19 @@ export default {
         hid: 'description',
         name: 'description',
         content:
-          'Modrinth is a mod distribution platform. Modrinth is modern, easy to use, and built for modders. Modrinth currently supports Minecraft, including Forge and Fabric mod loaders.',
+          'XIVMods is a mod distribution platform for Final Fantasy XIV mods.',
       },
 
-      { hid: 'publisher', name: 'publisher', content: 'Guavy LLC' },
+      { hid: 'publisher', name: 'publisher', content: 'XIVMods' },
       {
         hid: 'apple-mobile-web-app-title',
         name: 'apple-mobile-web-app-title',
-        content: 'Modrinth',
+        content: 'XIVMods',
       },
       { hid: 'theme-color', name: 'theme-color', content: '#4d9227' },
       { hid: 'color-scheme', name: 'color-scheme', content: 'light dark' },
 
-      { hid: 'og:site_name', name: 'og:site_name', content: 'Modrinth' },
+      { hid: 'og:site_name', name: 'og:site_name', content: 'XIVMods' },
       {
         hid: 'og:description',
         name: 'og:description',
@@ -41,17 +41,17 @@ export default {
       {
         hid: 'og:title',
         name: 'og:title',
-        content: 'Modrinth',
+        content: 'XIVMods',
       },
       { hid: 'og:type', name: 'og:type', content: 'website' },
-      { hid: 'og:url', name: 'og:url', content: 'https://www.modrinth.com' },
+      { hid: 'og:url', name: 'og:url', content: 'https://www.xivmods.com/' },
       {
         hid: 'og:image',
         name: 'og:image',
-        content: 'https://cdn.modrinth.com/modrinth.png',
+        content: '/text-logo.svg',
       },
       { hid: 'twitter:card', name: 'twitter:card', content: 'summary' },
-      { hid: 'twitter:site', name: 'twitter:site', content: '@modrinth' },
+      { hid: 'twitter:site', name: 'twitter:site', content: '@XivRepo' },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -87,6 +87,7 @@ export default {
     '~/plugins/compiled-markdown-directive.js',
     '~/plugins/vue-syntax.js',
     '~/plugins/auth.js',
+    '~/plugins/globals.js'
   ],
   /*
    ** Auto import components
@@ -123,7 +124,7 @@ export default {
     geoEdgeId: '',
   },
   robots: {
-    Sitemap: 'https://modrinth.com/sitemap.xml',
+    Sitemap: 'http://localhost:3000/sitemap.xml',
   },
   sitemap: {
     exclude: ['/dashboard/**', '/dashboard', '/mod/create'],

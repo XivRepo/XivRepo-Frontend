@@ -102,46 +102,10 @@
           </div>
           <img
             :src="
-              previewImage
-                ? previewImage
-                : 'https://cdn.modrinth.com/placeholder.svg'
+              previewImage ? previewImage : '{this.$cdnUri}/placeholder.svg'
             "
             alt="preview-image"
           />
-        </div>
-      </section>
-      <section class="game-sides">
-        <h3>Supported environments</h3>
-        <div class="columns">
-          <span>
-            Let others know if your mod is for clients, servers or universal.
-            For example, IC2 will be required + required, while OptiFine will be
-            required + no functionality
-          </span>
-          <div class="labeled-control">
-            <h3>Client</h3>
-            <Multiselect
-              v-model="clientSideType"
-              placeholder="Select one"
-              :options="sideTypes"
-              :searchable="false"
-              :close-on-select="true"
-              :show-labels="false"
-              :allow-empty="false"
-            />
-          </div>
-          <div class="labeled-control">
-            <h3>Server</h3>
-            <Multiselect
-              v-model="serverSideType"
-              placeholder="Select one"
-              :options="sideTypes"
-              :searchable="false"
-              :close-on-select="true"
-              :show-labels="false"
-              :allow-empty="false"
-            />
-          </div>
         </div>
       </section>
       <section class="description">
@@ -189,8 +153,6 @@
             <tr>
               <th>Name</th>
               <th>Version</th>
-              <th>Mod Loader</th>
-              <th>Minecraft Version</th>
               <th>Version Type</th>
               <th>Actions</th>
             </tr>
@@ -304,53 +266,11 @@
                 :allow-empty="false"
               />
             </label>
-            <h3>Loaders</h3>
-            <label>
-              <span>
-                Mark all loaders this version works with. It is essential for
-                search
-              </span>
-              <multiselect
-                v-model="versions[currentVersionIndex].loaders"
-                :options="availableLoaders"
-                :loading="availableLoaders.length === 0"
-                :multiple="true"
-                :searchable="false"
-                :show-no-results="false"
-                :close-on-select="true"
-                :clear-on-select="false"
-                :show-labels="false"
-                :limit="6"
-                :hide-selected="true"
-                placeholder="Choose loaders..."
-              />
-            </label>
-            <h3>Game versions</h3>
-            <label>
-              <span>
-                Mark all game version this version supports. It is essential for
-                search
-              </span>
-              <multiselect
-                v-model="versions[currentVersionIndex].game_versions"
-                :options="availableGameVersions"
-                :loading="availableGameVersions.length === 0"
-                :multiple="true"
-                :searchable="true"
-                :show-no-results="false"
-                :close-on-select="false"
-                :clear-on-select="false"
-                :show-labels="false"
-                :limit="6"
-                :hide-selected="true"
-                placeholder="Choose versions..."
-              />
-            </label>
             <h3>Files</h3>
             <label>
               <span>
-                You should upload a single JAR file. However, you are allowed to
-                upload multiple
+                You should upload a single archive file. However, you are
+                allowed to upload multiple
               </span>
               <FileInput
                 accept="application/*"
@@ -404,14 +324,6 @@
           <span>Wiki page</span>
           <input
             v-model="wiki_url"
-            type="url"
-            placeholder="Enter a valid URL"
-          />
-        </label>
-        <label title="An inivitation link to your Discord server.">
-          <span>Discord invite</span>
-          <input
-            v-model="discord_url"
             type="url"
             placeholder="Enter a valid URL"
           />
@@ -508,6 +420,8 @@ import MFooter from '~/components/layout/MFooter'
 import ForgeIcon from '~/assets/images/categories/forge.svg?inline'
 import FabricIcon from '~/assets/images/categories/fabric.svg?inline'
 
+const vm = this
+
 export default {
   components: {
     MFooter,
@@ -525,11 +439,11 @@ export default {
       availableDonationPlatforms,
     ] = (
       await Promise.all([
-        axios.get(`https://api.modrinth.com/api/v1/tag/category`),
-        axios.get(`https://api.modrinth.com/api/v1/tag/loader`),
-        axios.get(`https://api.modrinth.com/api/v1/tag/game_version`),
-        axios.get(`https://api.modrinth.com/api/v1/tag/license`),
-        axios.get(`https://api.modrinth.com/api/v1/tag/donation_platform`),
+        axios.get(`${vm.$apiUri}/api/v1/tag/category`),
+        axios.get(`${vm.$apiUri}/api/v1/tag/loader`),
+        axios.get(`${vm.$apiUri}/api/v1/tag/game_version`),
+        axios.get(`${vm.$apiUri}/api/v1/tag/license`),
+        axios.get(`${vm.$apiUri}/api/v1/tag/donation_platform`),
       ])
     ).map((it) => it.data)
 
@@ -583,7 +497,7 @@ export default {
           this.license_url = ''
           break
         default:
-          this.license_url = `https://cdn.modrinth.com/licenses/${newValue.short}.txt`
+          this.license_url = `{this.$cdnUri}/licenses/${newValue.short}.txt`
       }
     },
   },
@@ -655,7 +569,7 @@ export default {
 
       try {
         await axios({
-          url: 'https://api.modrinth.com/api/v1/mod',
+          url: this.$apiUri + '/api/v1/mod',
           method: 'POST',
           data: formData,
           headers: {

@@ -292,9 +292,7 @@ export default {
 
       try {
         const user = (
-          await axios.get(
-            `https://api.modrinth.com/api/v1/user/${this.currentUsername}`
-          )
+          await axios.get(`${this.$apiUri}/api/v1/user/${this.currentUsername}`)
         ).data
 
         const data = {
@@ -302,7 +300,7 @@ export default {
         }
 
         await axios.post(
-          `https://api.modrinth.com/api/v1/team/${this.mod.team}/members`,
+          `${this.$apiUri}/api/v1/team/${this.mod.team}/members`,
           data,
           this.$auth.headers
         )
@@ -323,7 +321,7 @@ export default {
 
       try {
         await axios.delete(
-          `https://api.modrinth.com/api/v1/team/${this.mod.team}/members/${this.members[index].user_id}`,
+          `${this.$apiUri}/api/v1/team/${this.mod.team}/members/${this.members[index].user_id}`,
           this.$auth.headers
         )
         await this.$router.go(null)
@@ -348,7 +346,7 @@ export default {
         }
 
         await axios.patch(
-          `https://api.modrinth.com/api/v1/team/${this.mod.team}/members/${this.members[index].user_id}`,
+          `${this.$apiUri}/api/v1/team/${this.mod.team}/members/${this.members[index].user_id}`,
           data,
           this.$auth.headers
         )
@@ -369,7 +367,7 @@ export default {
     },
     async deleteMod() {
       await axios.delete(
-        `https://api.modrinth.com/api/v1/mod/${this.mod.id}`,
+        `${this.$apiUri}/api/v1/mod/${this.mod.id}`,
         this.$auth.headers
       )
       await this.$router.push('/dashboard/projects')
