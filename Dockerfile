@@ -6,11 +6,11 @@ RUN apk update && apk upgrade
 RUN apk add git
 
 # create destination directory
-RUN mkdir -p /usr/src/knossos
-WORKDIR /usr/src/knossos
+RUN mkdir -p /usr/src/xivrepo-front
+WORKDIR /usr/src/xivrepo-front
 
 # copy the app, note .dockerignore
-COPY . /usr/src/knossos/
+COPY . /usr/src/xivrepo-front/
 RUN npm ci
 
 ARG VERSION_ID=unknown

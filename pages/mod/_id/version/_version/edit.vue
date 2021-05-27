@@ -111,8 +111,8 @@ export default {
     try {
       const [selectableLoaders, selectableVersions] = (
         await Promise.all([
-          axios.get(`${this.$apiUri}/api/v1/tag/loader`),
-          axios.get(`${this.$apiUri}/api/v1/tag/game_version`),
+          axios.get(`${data.env.apiUrl}/api/v1/tag/loader`),
+          axios.get(`${data.env.apiUrl}/api/v1/tag/game_version`),
         ])
       ).map((it) => it.data)
 
@@ -145,7 +145,7 @@ export default {
 
       try {
         await axios.patch(
-          `${this.$apiUri}/api/v1/version/${this.version.id}`,
+          `${process.env.apiUrl}/api/v1/version/${this.version.id}`,
           this.version,
           this.$auth.headers
         )

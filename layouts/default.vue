@@ -32,6 +32,11 @@
                   <span>Dashboard</span>
                 </NuxtLink>
               </div>
+              <div v-if="this.$auth.user" class="section section-end">
+                <NuxtLink to="/mod/create" class="tab button">
+                  <span>New Mod</span>
+                </NuxtLink>
+              </div>
             </div>
           </section>
           <section class="column-grow">
@@ -46,6 +51,12 @@
                     <div class="avatar">
                       <span>{{ this.$auth.user.name }}</span>
                       <img :src="this.$auth.user.avatar_url" class="icon" />
+                    </div>
+                    <div class="notifications">
+                      <NotificationIcon />
+                      <span v-if="notificationCount > 0" class="counter">{{
+                        notificationCount
+                      }}</span>
                     </div>
                     <DropdownIcon class="dropdown-icon" />
                   </button>
@@ -121,6 +132,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 import ClickOutside from 'vue-click-outside'
 
 import ModrinthLogo from '~/assets/images/text-logo.svg?inline'
@@ -162,11 +175,13 @@ export default {
   data() {
     return {
       isDropdownOpen: false,
+      notificationCount: 0,
+      notificationTimer: '',
     }
   },
   computed: {
     authUrl() {
-      return `${this.$apiUri}/api/v1/auth/init?url=${this.$siteUrl}${this.$route.fullPath}`
+      return `${process.env.apiUrl}/api/v1/auth/init?url=${process.env.baseUrl}${this.$route.fullPath}`
     },
     userUrl() {
       return `/user/${this.$auth.user.id}`
@@ -181,7 +196,26 @@ export default {
       document.body.style.overflow = 'auto'
     },
   },
+  created() {
+    this.checkNotifications()
+    this.notificationTimer = setInterval(this.checkNotifications, 300000)
+  },
   methods: {
+    async checkNotifications() {
+      if (this.$auth.user.id) {
+        const notifications = (
+          await axios.get(
+            `${process.env.apiUrl}/api/v1/user/${this.$auth.user.id}/notifications`,
+            this.$auth.headers
+          )
+        ).data
+
+        this.notificationCount = notifications.length
+      }
+    },
+    cancelNotificationCheck() {
+      clearInterval(this.notificationTimer)
+    },
     toggleNavBar() {
       window.scrollTo(0, 0)
       const currentlyActive = this.$refs.nav.className === 'right-group active'
@@ -216,6 +250,9 @@ export default {
     changeTheme() {
       this.$colorMode.preference =
         this.$colorMode.value === 'dark' ? 'light' : 'dark'
+    },
+    destroyed() {
+      this.cancelNotificationCheck()
     },
   },
 }
@@ -298,6 +335,33 @@ export default {
               border-top: 3px solid var(--color-brand-disabled);
               margin-top: 0.75rem;
               padding-top: 0.75rem;
+
+              @media screen and (min-width: 1024px) {
+                &.section-end {
+                  justify-self: flex-end;
+                  margin-left: auto;
+                  border-left: none;
+
+                  .tab.button {
+                    padding: 6px 20px;
+                    background-color: var(--color-brand);
+
+                    span {
+                      border-bottom: none;
+                      color: var(--color-brand-inverted);
+                    }
+
+                    &:hover,
+                    &.nuxt-link-exact-active {
+                      background-color: var(--color-brand-active);
+
+                      span {
+                        border-bottom: none;
+                      }
+                    }
+                  }
+                }
+              }
             }
             .tab {
               font-size: var(--font-size-md);
@@ -336,6 +400,25 @@ export default {
                 .dropdown-icon {
                   transform: rotate(180deg);
                 }
+
+                .notifications {
+                  padding: 1rem;
+                  position: relative;
+                  span.counter {
+                    position: absolute;
+                    bottom: 0.5rem;
+                    right: 0.5rem;
+                    background: var(--color-brand);
+                    width: 1.3rem;
+                    height: 1.3rem;
+                    color: var(--color-brand-inverted);
+                    border-radius: 50%;
+                    font-size: 0.8rem;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                  }
+                }
               }
               .content {
                 display: unset;
@@ -372,6 +455,25 @@ export default {
               .dropdown-icon {
                 color: var(--color-text-dark);
                 transition: 150ms ease transform;
+              }
+
+              .notifications {
+                padding: 1rem;
+                position: relative;
+                span.counter {
+                  position: absolute;
+                  bottom: 0.5rem;
+                  right: 0.5rem;
+                  background: var(--color-brand);
+                  width: 1.3rem;
+                  height: 1.3rem;
+                  color: var(--color-brand-inverted);
+                  border-radius: 50%;
+                  font-size: 0.8rem;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                }
               }
             }
             .content {

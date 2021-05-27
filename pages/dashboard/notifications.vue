@@ -55,8 +55,6 @@
 import axios from 'axios'
 import UpToDate from '~/assets/images/illustrations/up_to_date.svg?inline'
 
-const vm = this
-
 export default {
   components: {
     UpToDate,
@@ -64,7 +62,7 @@ export default {
   async asyncData(data) {
     const notifications = (
       await axios.get(
-        `${vm.$apiUri}/api/v1/user/${data.$auth.user.id}/notifications`,
+        `${data.env.apiUrl}/api/v1/user/${data.$auth.user.id}/notifications`,
         data.$auth.headers
       )
     ).data
@@ -81,7 +79,7 @@ export default {
         if (index) {
           const config = {
             method: notification.actions[index].action_route[0].toLowerCase(),
-            url: `${this.$apiUri}/api/v1/${notification.actions[index].action_route[1]}`,
+            url: `${process.env.apiUrl}/api/v1/${notification.actions[index].action_route[1]}`,
             headers: {
               Authorization: this.$auth.token,
             },
@@ -91,7 +89,7 @@ export default {
         }
 
         await axios.delete(
-          `${vm.$apiUri}/api/v1/notification/${notification.id}`,
+          `${process.env.apiUrl}/api/v1/notification/${notification.id}`,
           this.$auth.headers
         )
 

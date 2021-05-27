@@ -292,7 +292,9 @@ export default {
 
       try {
         const user = (
-          await axios.get(`${this.$apiUri}/api/v1/user/${this.currentUsername}`)
+          await axios.get(
+            `${process.env.apiUrl}/api/v1/user/${this.currentUsername}`
+          )
         ).data
 
         const data = {
@@ -300,7 +302,7 @@ export default {
         }
 
         await axios.post(
-          `${this.$apiUri}/api/v1/team/${this.mod.team}/members`,
+          `${process.env.apiUrl}/api/v1/team/${this.mod.team}/members`,
           data,
           this.$auth.headers
         )
@@ -321,7 +323,7 @@ export default {
 
       try {
         await axios.delete(
-          `${this.$apiUri}/api/v1/team/${this.mod.team}/members/${this.members[index].user_id}`,
+          `${process.env.apiUrl}/api/v1/team/${this.mod.team}/members/${this.members[index].user_id}`,
           this.$auth.headers
         )
         await this.$router.go(null)
@@ -346,7 +348,7 @@ export default {
         }
 
         await axios.patch(
-          `${this.$apiUri}/api/v1/team/${this.mod.team}/members/${this.members[index].user_id}`,
+          `${process.env.apiUrl}/api/v1/team/${this.mod.team}/members/${this.members[index].user_id}`,
           data,
           this.$auth.headers
         )
@@ -367,7 +369,7 @@ export default {
     },
     async deleteMod() {
       await axios.delete(
-        `${this.$apiUri}/api/v1/mod/${this.mod.id}`,
+        `${process.env.apiUrl}/api/v1/mod/${this.mod.id}`,
         this.$auth.headers
       )
       await this.$router.push('/dashboard/projects')

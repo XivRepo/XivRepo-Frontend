@@ -89,8 +89,6 @@ import ReportIcon from '~/assets/images/utils/report.svg?inline'
 import CalendarIcon from '~/assets/images/utils/calendar.svg?inline'
 import DownloadIcon from '~/assets/images/utils/download.svg?inline'
 
-const vm = this
-
 export default {
   auth: false,
   components: {
@@ -102,14 +100,16 @@ export default {
   },
   async asyncData(data) {
     try {
-      let res = await axios.get(`${vm.$apiUri}/api/v1/user/${data.params.id}`)
+      let res = await axios.get(
+        `${data.env.apiUrl}/api/v1/user/${data.params.id}`
+      )
       const user = res.data
 
       let mods = []
-      res = await axios.get(`${vm.$apiUri}/api/v1/user/${user.id}/mods`)
+      res = await axios.get(`${data.env.apiUrl}/api/v1/user/${user.id}/mods`)
       if (res.data) {
         res = await axios.get(
-          `${vm.$apiUri}/api/v1/mods?ids=${JSON.stringify(res.data)}`
+          `${data.env.apiUrl}/api/v1/mods?ids=${JSON.stringify(res.data)}`
         )
         mods = res.data
       }
@@ -173,12 +173,14 @@ export default {
         {
           hid: 'og:url',
           name: 'og:url',
-          content: `${this.$siteUrl}/user/${this.user.id}`,
+          content: `${process.env.baseUrl}/user/${this.user.id}`,
         },
         {
           hid: 'og:image',
           name: 'og:image',
-          content: this.user.avatar_url || `{this.$cdnUri}/placeholder.png`,
+          content:
+            this.user.avatar_url ||
+            process.env.cdnUrl + `/data/placeholder.png`,
         },
       ],
     }

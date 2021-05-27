@@ -84,7 +84,7 @@
               :page-url="result.page_url"
               :categories="result.categories"
               :is-ad="index === -1"
-              :is-xivrepo="result.host === 'xivrepo'"
+              :is-xivrepo="true"
             />
             <div v-if="results.length === 0" class="no-results">
               <p>No results found for your query!</p>
@@ -400,13 +400,13 @@ export default {
   methods: {
     async fillInitialVersions(x) {
       try {
-        let url = 'this.$apiUri/api/v1/tag/game_version?type=release'
+        let url = `${process.env.apiUrl}/api/v1/tag/game_version?type=release`
 
         if (x !== null) {
           if (!this.showVersions.length > 0 && !this.firstRun) {
             this.showVersions.push('snapshots')
 
-            url = 'this.$apiUri/api/v1/tag/game_version'
+            url = `${process.env.apiUrl}/api/v1/tag/game_version`
           } else {
             this.showVersions = []
           }
@@ -422,7 +422,9 @@ export default {
       }
     },
     async fillInitialLicenses() {
-      const licences = (await axios.get('this.$apiUri/api/v1/tag/license')).data
+      const licences = (
+        await axios.get(`${process.env.apiUrl}/api/v1/tag/license`)
+      ).data
       licences.sort((x, y) => {
         // Custom case for custom, so it goes to the bottom of the list.
         if (x.short === 'custom') return 1
@@ -548,7 +550,7 @@ export default {
           params.push(`offset=${offset}`)
         }
 
-        let url = 'this.$apiUri/api/v1/mod'
+        let url = `${process.env.apiUrl}/api/v1/mod`
 
         if (params.length > 0) {
           for (let i = 0; i < params.length; i++) {

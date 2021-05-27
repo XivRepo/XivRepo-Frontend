@@ -78,7 +78,7 @@ export default {
   },
   computed: {
     authUrl() {
-      return `${this.$apiUri}/api/v1/auth/init?url=${this.$siteUrl}${this.$route.fullPath}`
+      return `${process.env.apiUrl}/api/v1/auth/init?url=${process.env.baseUrl}${this.$route.fullPath}`
     },
   },
 }

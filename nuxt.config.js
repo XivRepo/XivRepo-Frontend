@@ -12,7 +12,7 @@ export default {
     htmlAttrs: {
       lang: 'en',
     },
-    title: 'XIVMods',
+    title: 'The XIV Repository',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -20,19 +20,19 @@ export default {
         hid: 'description',
         name: 'description',
         content:
-          'XIVMods is a mod distribution platform for Final Fantasy XIV mods.',
+          'The XIV Repository is a mod distribution platform.',
       },
 
-      { hid: 'publisher', name: 'publisher', content: 'XIVMods' },
+      { hid: 'publisher', name: 'publisher', content: 'The XIV Repository' },
       {
         hid: 'apple-mobile-web-app-title',
         name: 'apple-mobile-web-app-title',
-        content: 'XIVMods',
+        content: 'The XIV Repository',
       },
       { hid: 'theme-color', name: 'theme-color', content: '#4d9227' },
       { hid: 'color-scheme', name: 'color-scheme', content: 'light dark' },
 
-      { hid: 'og:site_name', name: 'og:site_name', content: 'XIVMods' },
+      { hid: 'og:site_name', name: 'og:site_name', content: 'The XIV Repository' },
       {
         hid: 'og:description',
         name: 'og:description',
@@ -41,10 +41,10 @@ export default {
       {
         hid: 'og:title',
         name: 'og:title',
-        content: 'XIVMods',
+        content: 'The XIV Repository',
       },
       { hid: 'og:type', name: 'og:type', content: 'website' },
-      { hid: 'og:url', name: 'og:url', content: 'https://www.xivmods.com/' },
+      { hid: 'og:url', name: 'og:url', content: 'https://www.xivrepo.com/' },
       {
         hid: 'og:image',
         name: 'og:image',
@@ -71,7 +71,7 @@ export default {
     },
   },
   router: {
-    middleware: ['auth', 'analytics'],
+    middleware: ['auth'],
   },
   /*
    ** Global CSS
@@ -87,7 +87,7 @@ export default {
     '~/plugins/compiled-markdown-directive.js',
     '~/plugins/vue-syntax.js',
     '~/plugins/auth.js',
-    '~/plugins/globals.js'
+    '~/plugins/axios.js'
   ],
   /*
    ** Auto import components
@@ -167,6 +167,9 @@ export default {
   },
   env: {
     version: process.env.VERSION_ID || 'unknown',
+    baseUrl: process.env.WEBSITE_URL || 'http://localhost:3000',
+    apiUrl: process.env.API_URL || 'http://localhost:8000',
+    cdnUrl: process.env.CDN_URL || 'http://localhost:9000'
   },
   publicRuntimeConfig: {
     ads: {

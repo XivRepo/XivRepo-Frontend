@@ -112,7 +112,7 @@
               ? previewImage
               : mod.icon_url && !iconChanged
               ? mod.icon_url
-              : '{this.$cdnUri}/placeholder.svg'
+              : process.env.cdnUrl + '/data/placeholder.svg'
           "
           alt="preview-image"
         />
@@ -277,14 +277,14 @@ export default {
       ] = (
         await Promise.all([
           axios.get(
-            `${this.$apiUri}/api/v1/mod/${data.params.id}`,
+            `${data.env.apiUrl}/api/v1/mod/${data.params.id}`,
             data.$auth.headers
           ),
-          axios.get(`${this.$apiUri}/api/v1/tag/category`),
-          axios.get(`${this.$apiUri}/api/v1/tag/loader`),
-          axios.get(`${this.$apiUri}/api/v1/tag/game_version`),
-          axios.get(`${this.$apiUri}/api/v1/tag/license`),
-          axios.get(`${this.$apiUri}/api/v1/tag/donation_platform`),
+          axios.get(`${data.env.apiUrl}/api/v1/tag/category`),
+          axios.get(`${data.env.apiUrl}/api/v1/tag/loader`),
+          axios.get(`${data.env.apiUrl}/api/v1/tag/game_version`),
+          axios.get(`${data.env.apiUrl}/api/v1/tag/license`),
+          axios.get(`${data.env.apiUrl}/api/v1/tag/donation_platform`),
         ])
       ).map((it) => it.data)
 
@@ -359,7 +359,8 @@ export default {
           this.license_url = ''
           break
         default:
-          this.license_url = `{this.$cdnUri}/licenses/${newValue.short}.txt`
+          this.license_url =
+            process.env.cdnUrl + `/data/licenses/${newValue.short}.txt`
       }
     },
   },
@@ -404,14 +405,14 @@ export default {
         }
 
         await axios.patch(
-          `${this.$apiUri}/api/v1/mod/${this.mod.id}`,
+          `${process.env.apiUrl}/api/v1/mod/${this.mod.id}`,
           data,
           this.$auth.headers
         )
 
         if (this.iconChanged) {
           await axios.patch(
-            `${this.$apiUri}/api/v1/mod/${this.mod.id}/icon?ext=${
+            `${process.env.apiUrl}/api/v1/mod/${this.mod.id}/icon?ext=${
               this.icon.type.split('/')[this.icon.type.split('/').length - 1]
             }`,
             this.icon,

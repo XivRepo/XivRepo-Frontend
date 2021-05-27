@@ -52,11 +52,11 @@
         <h3>Files</h3>
         <label>
           <span>
-            You should upload a single JAR file. However, you are allowed to
+            You should upload a single archive file. However, you are allowed to
             upload multiple
           </span>
           <FileInput
-            accept="application/*"
+            accept=".zip,.rar,.7z,.7zip,.tar.gz,.ttmp,.ttmp2"
             multiple
             prompt="Choose files or drag them here"
             @change="updateVersionFiles"
@@ -100,8 +100,8 @@ export default {
     try {
       const [selectableLoaders, selectableVersions] = (
         await Promise.all([
-          axios.get(`${this.$apiUri}/api/v1/tag/loader`),
-          axios.get(`${this.$apiUri}/api/v1/tag/game_version`),
+          axios.get(`${data.env.apiUrl}/api/v1/tag/loader`),
+          axios.get(`${data.env.apiUrl}/api/v1/tag/game_version`),
         ])
       ).map((it) => it.data)
 
@@ -148,7 +148,7 @@ export default {
       try {
         const data = (
           await axios({
-            url: 'this.$apiUri/api/v1/version',
+            url: `${process.env.apiUrl}/api/v1/version`,
             method: 'POST',
             data: formData,
             headers: {
@@ -158,9 +158,7 @@ export default {
           })
         ).data
         await this.$router.push(
-          `/mod/${this.mod.slug ? this.mod.slug : data.mod_id}/version/${
-            data.id
-          }`
+          `/mod/${this.mod.slug ? this.mod.slug : data.mod_id}/versions`
         )
       } catch (err) {
         this.$notify({
@@ -184,7 +182,9 @@ export default {
       this.createdVersion.file_parts = newFileParts
     },
     async downloadFile(hash, url) {
-      await axios.get(`${this.$apiUri}/api/v1/version_file/${hash}/download`)
+      await axios.get(
+        `${process.env.apiUrl}/api/v1/version_file/${hash}/download`
+      )
 
       const elem = document.createElement('a')
       elem.download = hash

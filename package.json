@@ -1,5 +1,5 @@
 {
-  "name": "knossos",
+  "name": "xivrepo-front",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -39,6 +39,7 @@
     "@nuxtjs/eslint-module": "^2.0.0",
     "@nuxtjs/svg": "^0.1.12",
     "babel-eslint": "^10.1.0",
+    "dotenv-webpack": "^7.0.2",
     "eslint": "^7.11.0",
     "eslint-config-prettier": "^6.13.0",
     "eslint-plugin-nuxt": "^1.0.0",

@@ -52,8 +52,6 @@ import ModCard from '~/components/ui/ProjectCard'
 import FollowIcon from '~/assets/images/utils/heart.svg?inline'
 import FollowIllustration from '~/assets/images/illustrations/follow_illustration.svg?inline'
 
-const vm = this
-
 export default {
   components: {
     ModCard,
@@ -62,13 +60,13 @@ export default {
   },
   async asyncData(data) {
     const res = await axios.get(
-      `${vm.$apiUri}/api/v1/user/${data.$auth.user.id}/follows`,
+      `${data.env.apiUrl}/api/v1/user/${data.$auth.user.id}/follows`,
       data.$auth.headers
     )
 
     const mods = (
       await axios.get(
-        `${vm.$apiUri}/api/v1/mods?ids=${JSON.stringify(res.data)}`
+        `${data.env.apiUrl}/api/v1/mods?ids=${JSON.stringify(res.data)}`
       )
     ).data
     return {
@@ -78,7 +76,7 @@ export default {
   methods: {
     async unfavMod(index) {
       await axios.delete(
-        `${vm.$apiUri}/api/v1/mod/${this.mods[index].id}/follow`,
+        `${process.env.apiUrl}/api/v1/mod/${this.mods[index].id}/follow`,
         this.$auth.headers
       )
 

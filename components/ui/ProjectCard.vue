@@ -2,9 +2,9 @@
   <article class="project-card">
     <div class="columns">
       <div class="icon">
-        <nuxt-link v-if="isModrinth" :to="'/mod/' + id">
+        <nuxt-link v-if="isXivrepo" :to="'/mod/' + id">
           <img
-            :src="iconUrl || '{this.$cdnUri}/placeholder.svg?inline'"
+            :src="iconUrl || cdn + '/data/placeholder.svg?inline'"
             :alt="name"
             loading="lazy"
           />
@@ -13,7 +13,7 @@
       <div class="info">
         <div class="top">
           <h2 class="title">
-            <nuxt-link v-if="isModrinth" :to="'/mod/' + id">{{
+            <nuxt-link v-if="isXivrepo" :to="'/mod/' + id">{{
               name
             }}</nuxt-link>
             <a v-else :href="pageUrl">{{ name }}</a>
@@ -89,15 +89,6 @@
                 </p>
               </div>
             </div>
-            <div v-if="latestVersion" class="stat">
-              <TagIcon aria-hidden="true" />
-              <div class="info">
-                <h4>Available For</h4>
-                <p class="value">
-                  {{ latestVersion }}
-                </p>
-              </div>
-            </div>
           </div>
           <Categories :categories="categories" />
         </div>
@@ -115,7 +106,6 @@ import Categories from '~/components/ui/search/Categories'
 import CalendarIcon from '~/assets/images/utils/calendar.svg?inline'
 import DownloadIcon from '~/assets/images/utils/download.svg?inline'
 import EditIcon from '~/assets/images/utils/edit.svg?inline'
-import TagIcon from '~/assets/images/utils/tag.svg?inline'
 
 export default {
   name: 'ProjectCard',
@@ -124,7 +114,6 @@ export default {
     CalendarIcon,
     DownloadIcon,
     EditIcon,
-    TagIcon,
   },
   props: {
     id: {
@@ -185,9 +174,13 @@ export default {
       type: String,
       default: null,
     },
-    isModrinth: {
+    isXivrepo: {
       type: Boolean,
       default: false,
+    },
+    cdn: {
+      type: String,
+      default: process.env.cdnUrl,
     },
   },
   methods: {

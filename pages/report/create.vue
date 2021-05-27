@@ -88,8 +88,6 @@
 import Multiselect from 'vue-multiselect'
 import axios from 'axios'
 
-const vm = this
-
 export default {
   components: {
     Multiselect,
@@ -98,9 +96,9 @@ export default {
     if (this.$route.query.id) this.itemId = this.$route.query.id
     if (this.$route.query.t) this.itemType = this.$route.query.t
   },
-  async asyncData() {
+  async asyncData(data) {
     const reportTypes = (
-      await axios.get(`${vm.$apiUri}/api/v1/tag/report_type`)
+      await axios.get(`${data.env.apiUrl}/api/v1/tag/report_type`)
     ).data
 
     return {
@@ -129,7 +127,11 @@ export default {
           body: this.body,
         }
 
-        await axios.post('this.$apiUri/api/v1/report', data, this.$auth.headers)
+        await axios.post(
+          `${process.env.apiUrl}/api/v1/report`,
+          data,
+          this.$auth.headers
+        )
 
         await this.$router.replace(`/${this.itemType}/${this.itemId}`)
       } catch (err) {

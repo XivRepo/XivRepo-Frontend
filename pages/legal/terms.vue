@@ -6,9 +6,9 @@
       <h2>1. Terms</h2>
 
       <p>
-        By accessing this Website, accessible from ${this.$siteUrl}, you are
-        agreeing to be bound by these Website Terms and Conditions of Use and
-        agree that you are responsible for the agreement with any applicable
+        By accessing this Website, accessible from ${process.env.baseUrl}, you
+        are agreeing to be bound by these Website Terms and Conditions of Use
+        and agree that you are responsible for the agreement with any applicable
         local laws. If you disagree with any of these terms, you are prohibited
         from accessing this site. The materials contained in this Website are
         protected by copyright and trade mark law.
@@ -184,7 +184,7 @@ export default {
       {
         hid: 'og:url',
         name: 'og:url',
-        content: `${this.$siteUrl}/legal/terms`,
+        content: `${process.env.baseUrl}/legal/terms`,
       },
     ],
   },

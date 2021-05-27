@@ -11,7 +11,7 @@
     <ConfirmPopup
       ref="delete_version_popup"
       title="Are you sure you want to delete this version?"
-      description="This will remove this version forever (like really forever), and if some mods depends on this version, it won't work anymore."
+      description="This will remove this version forever (like really forever)"
       :has-to-type="false"
       proceed-label="Delete Version"
       @proceed="deleteVersion()"
@@ -94,17 +94,6 @@
             </p>
           </div>
         </div>
-        <div class="stat">
-          <TagIcon />
-          <div class="info">
-            <h4>Available For</h4>
-            <p class="value">
-              {{
-                version.game_versions ? version.game_versions.join(', ') : ''
-              }}
-            </p>
-          </div>
-        </div>
       </div>
       <div
         v-compiled-markdown="version.changelog ? version.changelog : ''"
@@ -146,7 +135,6 @@ import TrashIcon from '~/assets/images/utils/trash.svg?inline'
 import EditIcon from '~/assets/images/utils/edit.svg?inline'
 import DownloadIcon from '~/assets/images/utils/download.svg?inline'
 import CalendarIcon from '~/assets/images/utils/calendar.svg?inline'
-import TagIcon from '~/assets/images/utils/tag.svg?inline'
 import ReportIcon from '~/assets/images/utils/report.svg?inline'
 
 export default {
@@ -155,7 +143,6 @@ export default {
     Categories,
     DownloadIcon,
     CalendarIcon,
-    TagIcon,
     TrashIcon,
     EditIcon,
     ReportIcon,
@@ -193,6 +180,11 @@ export default {
       (x) => x.id === this.$route.params.version
     )
 
+    // Failsafe
+    if (!this.version) {
+      this.version = this.versions[0]
+    }
+
     this.primaryFile = this.version.files.find((file) => file.primary)
 
     if (!this.primaryFile) {
@@ -204,8 +196,6 @@ export default {
         await axios.get(this.version.changelog_url)
       ).data
     }
-
-    console.log(this.version)
   },
   data() {
     return {
@@ -216,10 +206,12 @@ export default {
     }
   },
   mounted() {
-    this.$emit('update:link-bar', [
-      ['Versions', 'versions'],
-      [this.version.name, 'versions/' + this.version.id],
-    ])
+    this.$nextTick(function () {
+      this.$emit('update:link-bar', [
+        ['Versions', 'versions'],
+        [this.version.name, 'versions/' + this.version.id],
+      ])
+    })
   },
   methods: {
     deleteFilePopup(hash) {
@@ -230,7 +222,7 @@ export default {
       this.$nuxt.$loading.start()
 
       await axios.delete(
-        `${this.$apiUri}/api/v1/version_file/${hash}`,
+        `${process.env.apiUrl}/api/v1/version_file/${hash}`,
         this.$auth.headers
       )
 
@@ -241,7 +233,7 @@ export default {
       this.$nuxt.$loading.start()
 
       await axios.patch(
-        `${this.$apiUri}/api/v1/version/${this.version.id}`,
+        `${process.env.apiUrl}/api/v1/version/${this.version.id}`,
         {
           primary_file: ['sha1', hash],
         },
@@ -274,7 +266,7 @@ export default {
 
       try {
         await axios({
-          url: `${this.$apiUri}/api/v1/version/${this.version.id}/file`,
+          url: `${process.env.apiUrl}/api/v1/version/${this.version.id}/file`,
           method: 'POST',
           data: formData,
           headers: {
@@ -303,7 +295,7 @@ export default {
       this.$nuxt.$loading.start()
 
       await axios.delete(
-        `${this.$apiUri}/api/v1/version/${this.version.id}`,
+        `${process.env.apiUrl}/api/v1/version/${this.version.id}`,
         this.$auth.headers
       )
 

@@ -4,10 +4,10 @@
       <h1>Privacy Policy</h1>
 
       <p>
-        At XIVMods, accessible from ${this.$siteUrl}, one of our main priorities
-        is the privacy of our visitors. This Privacy Policy document contains
-        types of information that is collected and recorded by XIVMods and how
-        we use it.
+        At XIVMods, accessible from {{ siteUrl }}, one of our main priorities is
+        the privacy of our visitors. This Privacy Policy document contains types
+        of information that is collected and recorded by XIVMods and how we use
+        it.
       </p>
 
       <p>
@@ -188,6 +188,12 @@ export default {
   components: {
     MFooter,
   },
+  props: {
+    siteUrl: {
+      type: String,
+      default: process.env.baseUrl,
+    },
+  },
   auth: false,
   head: {
     title: 'Privacy - XIVMods',
@@ -211,7 +217,7 @@ export default {
       {
         hid: 'og:url',
         name: 'og:url',
-        content: `${this.$siteUrl}/legal/privacy`,
+        content: `${process.env.baseUrl}/legal/privacy`,
       },
     ],
   },

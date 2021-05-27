@@ -23,16 +23,13 @@
       <section class="essentials">
         <h3>Name</h3>
         <label>
-          <span>
-            Be creative. TechCraft v7 won't be searchable and won't be clicked
-            on
-          </span>
+          <span> Be creative and descriptive with your mod name. </span>
           <input v-model="name" type="text" placeholder="Enter the name" />
         </label>
         <h3>Summary</h3>
         <label>
           <span>
-            Give a quick description to your mod. It will appear in the search
+            Give a quick description to your mod. It will appear in the search.
           </span>
           <input
             v-model="description"
@@ -43,21 +40,22 @@
         <h3>Categories</h3>
         <label>
           <span>
-            Select up to 3 categories. They will help to find your mod
+            Select up to 12 categories. They will help others find your mod.
           </span>
           <multiselect
             id="categories"
             v-model="categories"
             :options="availableCategories"
+            :custom-label="versionLabels"
             :loading="availableCategories.length === 0"
             :multiple="true"
-            :searchable="false"
+            :searchable="true"
             :show-no-results="false"
             :close-on-select="false"
             :clear-on-select="false"
-            :show-labels="false"
-            :max="3"
-            :limit="6"
+            :show-labels="true"
+            :max="12"
+            :limit="8"
             :hide-selected="true"
             placeholder="Choose categories"
           />
@@ -101,9 +99,7 @@
             </button>
           </div>
           <img
-            :src="
-              previewImage ? previewImage : '{this.$cdnUri}/placeholder.svg'
-            "
+            :src="previewImage ? previewImage : cdn + '/data/placeholder.svg'"
             alt="preview-image"
           />
         </div>
@@ -273,7 +269,7 @@
                 allowed to upload multiple
               </span>
               <FileInput
-                accept="application/*"
+                accept=".zip,.rar,.7z,.7zip,.tar.gz,.ttmp,.ttmp2"
                 multiple
                 prompt="Choose files or drag them here"
                 @change="updateVersionFiles"
@@ -420,8 +416,6 @@ import MFooter from '~/components/layout/MFooter'
 import ForgeIcon from '~/assets/images/categories/forge.svg?inline'
 import FabricIcon from '~/assets/images/categories/fabric.svg?inline'
 
-const vm = this
-
 export default {
   components: {
     MFooter,
@@ -430,7 +424,7 @@ export default {
     ForgeIcon,
     FabricIcon,
   },
-  async asyncData() {
+  async asyncData(data) {
     const [
       availableCategories,
       availableLoaders,
@@ -439,11 +433,11 @@ export default {
       availableDonationPlatforms,
     ] = (
       await Promise.all([
-        axios.get(`${vm.$apiUri}/api/v1/tag/category`),
-        axios.get(`${vm.$apiUri}/api/v1/tag/loader`),
-        axios.get(`${vm.$apiUri}/api/v1/tag/game_version`),
-        axios.get(`${vm.$apiUri}/api/v1/tag/license`),
-        axios.get(`${vm.$apiUri}/api/v1/tag/donation_platform`),
+        axios.get(`${data.env.apiUrl}/api/v1/tag/category`),
+        axios.get(`${data.env.apiUrl}/api/v1/tag/loader`),
+        axios.get(`${data.env.apiUrl}/api/v1/tag/game_version`),
+        axios.get(`${data.env.apiUrl}/api/v1/tag/license`),
+        axios.get(`${data.env.apiUrl}/api/v1/tag/donation_platform`),
       ])
     ).map((it) => it.data)
 
@@ -462,6 +456,7 @@ export default {
       releaseChannels: ['beta', 'alpha', 'release'],
       currentVersionIndex: -1,
 
+      cdn: process.env.cdnUrl,
       name: '',
       slug: '',
       draft: false,
@@ -497,7 +492,8 @@ export default {
           this.license_url = ''
           break
         default:
-          this.license_url = `{this.$cdnUri}/licenses/${newValue.short}.txt`
+          this.license_url =
+            process.env.cdnUrl + `/data/licenses/${newValue.short}.txt`
       }
     },
   },
@@ -569,7 +565,7 @@ export default {
 
       try {
         await axios({
-          url: this.$apiUri + '/api/v1/mod',
+          url: process.env.apiUrl + '/api/v1/mod',
           method: 'POST',
           data: formData,
           headers: {
@@ -599,6 +595,20 @@ export default {
       this.$nuxt.$loading.finish()
     },
 
+    versionLabels(id) {
+      if (id) {
+        return this.toProperCase(id.replace(/_/g, ' '))
+      } else {
+        return ''
+      }
+    },
+
+    toProperCase(str) {
+      return str.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+      })
+    },
+
     showPreviewImage(files) {
       const reader = new FileReader()
       this.icon = files[0]
@@ -606,6 +616,7 @@ export default {
 
       reader.onload = (event) => {
         this.previewImage = event.target.result
+        this.cdn = process.env.cdnUrl
       }
     },
 

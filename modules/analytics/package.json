@@ -9,8 +9,8 @@
     }
   ],
   "main": "lib/module.js",
-  "repository": "https://github.com/xivrepo/knossos/",
-  "homepage": "https://github.com/xivrepo/knossos/tree/master/modules/analytics",
+  "repository": "https://github.com/xivrepo/xivrepo-front/",
+  "homepage": "https://github.com/xivrepo/xivrepo-front/tree/master/modules/analytics",
   "files": [
     "lib"
   ],

@@ -9,7 +9,7 @@
     <div v-if="mods.length !== 0">
       <ModCard
         v-for="mod in mods"
-        :id="mod.slug ? mod.slug : mod.id"
+        :id="mod.id"
         :key="mod.id"
         :author="mod.author"
         :name="mod.title"
@@ -50,8 +50,6 @@ import axios from 'axios'
 import ModCard from '~/components/ui/ProjectCard'
 import UpToDate from '~/assets/images/illustrations/up_to_date.svg?inline'
 
-const vm = this
-
 export default {
   components: {
     ModCard,
@@ -59,12 +57,12 @@ export default {
   },
   async asyncData(data) {
     let res = await axios.get(
-      `${vm.$apiUri}/api/v1/user/${data.$auth.user.id}/mods`,
+      `${data.env.apiUrl}/api/v1/user/${data.$auth.user.id}/mods`,
       data.$auth.headers
     )
 
     res = await axios.get(
-      `${vm.$apiUri}/api/v1/mods?ids=${JSON.stringify(res.data)}`,
+      `${data.env.apiUrl}/api/v1/mods?ids=${JSON.stringify(res.data)}`,
       data.$auth.headers
     )
 

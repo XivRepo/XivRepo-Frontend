@@ -21,8 +21,8 @@ jobs:
         uses: crazy-max/ghaction-docker-meta@v1
         with:
           images: |
-            ghcr.io/modrinth/knossos
-            docker.io/modrinth/knossos
+            ghcr.io/modrinth/xivrepo-front
+            docker.io/modrinth/xivrepo-front
       -
         name: Get branch name
         id: vars

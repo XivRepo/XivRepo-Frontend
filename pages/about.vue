@@ -26,11 +26,11 @@
 
       <p>
         On the technical level, XIVMods is made up of two main components: the
-        Rust-based backend named
-        <a target="_blank" href="https://github.com/xivrepo/labrinth"
-          >Labrinth</a
-        >, and the Vue-based frontend named
-        <a target="_blank" href="https://github.com/xivrepo/knossos">Knossos</a
+        <a target="_blank" href="https://github.com/XivRepo/XivRepo-ApiServer"
+          >Rust-based backend</a
+        >, and the
+        <a target="_blank" href="https://github.com/XivRepo/XivRepo-Frontend"
+          >Vue-based frontend</a
         >.
       </p>
 
@@ -90,7 +90,7 @@ export default {
       {
         hid: 'og:url',
         name: 'og:url',
-        content: `${this.$siteUrl}/about`,
+        content: `${process.env.baseUrl}/about`,
       },
     ],
   },

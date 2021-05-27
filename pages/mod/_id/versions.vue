@@ -52,11 +52,6 @@
             </nuxt-link>
           </td>
           <td>
-            <FabricIcon v-if="version.loaders.includes('fabric')" />
-            <ForgeIcon v-if="version.loaders.includes('forge')" />
-          </td>
-          <td>{{ version.game_versions.join(', ') }}</td>
-          <td>
             <span v-if="version.version_type === 'release'" class="badge green">
               Release
             </span>
@@ -81,13 +76,9 @@
 </template>
 <script>
 import DownloadIcon from '~/assets/images/utils/download.svg?inline'
-import ForgeIcon from '~/assets/images/categories/forge.svg?inline'
-import FabricIcon from '~/assets/images/categories/fabric.svg?inline'
 
 export default {
   components: {
-    ForgeIcon,
-    FabricIcon,
     DownloadIcon,
   },
   auth: false,

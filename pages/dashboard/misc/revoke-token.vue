@@ -54,7 +54,7 @@ export default {
     async logout() {
       this.$cookies.set('auth-token-reset', true)
       await this.$router.replace(
-        `this.$apiUri/api/v1/auth/init?url=${this.$siteUrl}/`
+        `${process.env.apiUrl}/api/v1/auth/init?url=${process.env.baseUrl}/`
       )
     },
   },

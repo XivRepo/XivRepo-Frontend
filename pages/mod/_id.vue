@@ -8,7 +8,7 @@
               :src="
                 mod.icon_url
                   ? mod.icon_url
-                  : '{this.$cdnUri}/placeholder.svg?inline'
+                  : cdn + '/data/placeholder.svg?inline'
               "
               alt="mod - icon"
             />
@@ -125,6 +125,7 @@
         </div>
         <div class="mod-content">
           <NuxtChild
+            v-if="finishedLoading"
             :mod="mod"
             :versions="versions"
             :featured-versions="featuredVersions"
@@ -132,6 +133,7 @@
             :current-member="currentMember"
             :link-bar.sync="linkBar"
           />
+          <div v-if="!finishedLoading" class="loader">Loading...</div>
         </div>
       </div>
       <section class="mod-info">
@@ -160,23 +162,6 @@
             </div>
           </div>
           <div class="stat">
-            <TagIcon />
-            <div class="info">
-              <h4>Available For</h4>
-              <p class="value">
-                {{
-                  versions[0]
-                    ? versions[0].game_versions[0]
-                      ? versions[0].game_versions[
-                          versions[0].game_versions.length - 1
-                        ]
-                      : 'None'
-                    : 'None'
-                }}
-              </p>
-            </div>
-          </div>
-          <div class="stat">
             <EditIcon />
             <div class="info">
               <h4>Updated</h4>
@@ -190,20 +175,6 @@
               >
                 {{ $dayjs(mod.updated).fromNow() }}
               </p>
-            </div>
-          </div>
-          <div class="stat">
-            <ClientIcon />
-            <div class="info">
-              <h4>Client Side</h4>
-              <p class="value capitalize">{{ mod.client_side }}</p>
-            </div>
-          </div>
-          <div class="stat">
-            <ServerIcon />
-            <div class="info">
-              <h4>Server Side</h4>
-              <p class="value capitalize">{{ mod.server_side }}</p>
             </div>
           </div>
           <div class="stat">
@@ -227,6 +198,9 @@
               <p class="value">{{ mod.id }}</p>
             </div>
           </div>
+        </div>
+        <div class="section">
+          <h3>Categories</h3>
           <Categories :categories="mod.categories.concat(mod.loaders)" />
         </div>
         <div class="section">
@@ -298,21 +272,6 @@
                 <span class="version-number limit-text-width">
                   {{ version.version_number }} ·
                 </span>
-                <FabricIcon
-                  v-if="version.loaders.includes('fabric')"
-                  class="loader"
-                />
-                <ForgeIcon
-                  v-if="version.loaders.includes('forge')"
-                  class="loader"
-                />
-                <span
-                  v-if="version.game_versions.length > 0"
-                  class="game-version limit-text-width"
-                >
-                  ·
-                  {{ version.game_versions[version.game_versions.length - 1] }}
-                </span>
               </div>
             </div>
           </div>
@@ -347,9 +306,6 @@ import MFooter from '~/components/layout/MFooter'
 import CalendarIcon from '~/assets/images/utils/calendar.svg?inline'
 import DownloadIcon from '~/assets/images/utils/download.svg?inline'
 import EditIcon from '~/assets/images/utils/edit.svg?inline'
-import TagIcon from '~/assets/images/utils/tag.svg?inline'
-import ClientIcon from '~/assets/images/utils/client.svg?inline'
-import ServerIcon from '~/assets/images/utils/server.svg?inline'
 import FileTextIcon from '~/assets/images/utils/file-text.svg?inline'
 import CodeIcon from '~/assets/images/sidebar/mod.svg?inline'
 import ReportIcon from '~/assets/images/utils/report.svg?inline'
@@ -357,48 +313,46 @@ import FollowIcon from '~/assets/images/utils/heart.svg?inline'
 
 import ExternalIcon from '~/assets/images/utils/external.svg?inline'
 
-import ForgeIcon from '~/assets/images/categories/forge.svg?inline'
-import FabricIcon from '~/assets/images/categories/fabric.svg?inline'
-
 export default {
   name: 'ModPage',
   components: {
     MFooter,
     Categories,
     ExternalIcon,
-    ForgeIcon,
-    FabricIcon,
     DownloadIcon,
     CalendarIcon,
     EditIcon,
-    TagIcon,
-    ClientIcon,
-    ServerIcon,
     FileTextIcon,
     CodeIcon,
     ReportIcon,
     FollowIcon,
   },
+  props: {
+    cdn: {
+      type: String,
+      default: process.env.cdnUrl,
+    },
+  },
   async asyncData(data) {
     try {
       const mod = (
         await axios.get(
-          `${this.$apiUri}/api/v1/mod/${data.params.id}`,
+          `${data.env.apiUrl}/api/v1/mod/${data.params.id}`,
           data.$auth.headers
         )
       ).data
 
       const [members, versions, featuredVersions, userFollows] = (
         await Promise.all([
-          axios.get(`${this.$apiUri}/api/v1/team/${mod.team}/members`),
-          axios.get(`${this.$apiUri}/api/v1/mod/${mod.id}/version`),
+          axios.get(`${data.env.apiUrl}/api/v1/team/${mod.team}/members`),
+          axios.get(`${data.env.apiUrl}/api/v1/mod/${mod.id}/version`),
           axios.get(
-            `${this.$apiUri}/api/v1/mod/${mod.id}/version?featured=true`
+            `${data.env.apiUrl}/api/v1/mod/${mod.id}/version?featured=true`
           ),
           axios.get(
             data.$auth.user
-              ? `${this.$apiUri}/api/v1/user/${data.$auth.user.id}/follows`
-              : `${this.$apiUri}`,
+              ? `${data.env.apiUrl}/api/v1/user/${data.$auth.user.id}/follows`
+              : `${data.env.apiUrl}`,
             data.$auth.headers
           ),
         ])
@@ -406,7 +360,7 @@ export default {
 
       const users = (
         await axios.get(
-          `${this.$apiUri}/api/v1/users?ids=${JSON.stringify(
+          `${data.env.apiUrl}/api/v1/users?ids=${JSON.stringify(
             members.map((it) => it.user_id)
           )}`,
           data.$auth.headers
@@ -431,12 +385,18 @@ export default {
         currentMember,
         userFollows: userFollows.name ? null : userFollows,
         linkBar: [],
+        finishedLoading: true,
       }
     } catch {
       data.error({
         statusCode: 404,
         message: 'Mod not found',
       })
+    }
+  },
+  data() {
+    return {
+      finishedLoading: false,
     }
   },
   methods: {
@@ -457,7 +417,9 @@ export default {
       return file
     },
     async downloadFile(hash, url) {
-      await axios.get(`${this.$apiUri}/api/v1/version_file/${hash}/download`)
+      await axios.get(
+        `${process.env.apiUrl}/api/v1/version_file/${hash}/download`
+      )
 
       const elem = document.createElement('a')
       elem.download = hash
@@ -466,7 +428,7 @@ export default {
     },
     async followMod() {
       await axios.post(
-        `${this.$apiUri}/api/v1/mod/${this.mod.id}/follow`,
+        `${process.env.apiUrl}/api/v1/mod/${this.mod.id}/follow`,
         {},
         this.$auth.headers
       )
@@ -475,7 +437,7 @@ export default {
     },
     async unfollowMod() {
       await axios.delete(
-        `${this.$apiUri}/api/v1/mod/${this.mod.id}/follow`,
+        `${process.env.apiUrl}/api/v1/mod/${this.mod.id}/follow`,
         this.$auth.headers
       )
 
@@ -516,14 +478,14 @@ export default {
         {
           hid: 'og:url',
           name: 'og:url',
-          content: `${this.$siteUrl}/mod/${this.mod.id}`,
+          content: `${process.env.baseUrl}/mod/${this.mod.id}`,
         },
         {
           hid: 'og:image',
           name: 'og:image',
           content: this.mod.icon_url
             ? this.mod.icon_url
-            : '{this.$cdnUri}/placeholder.png',
+            : process.env.cdnUrl + '/data/placeholder.png',
         },
       ],
     }

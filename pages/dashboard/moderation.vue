@@ -53,7 +53,9 @@
           <h5 class="title">
             Report for {{ report.item_type }}
             <nuxt-link
-              :to="report.item_type + '/' + report.item_id.replace(/\W/g, '')"
+              :to="
+                '/' + report.item_type + '/' + report.item_id.replace(/\W/g, '')
+              "
               >{{ report.item_id }}
             </nuxt-link>
           </h5>
@@ -92,8 +94,6 @@ import axios from 'axios'
 import ModCard from '~/components/ui/ProjectCard'
 import Security from '~/assets/images/illustrations/security.svg?inline'
 
-const vm = this
-
 export default {
   components: {
     ModCard,
@@ -102,13 +102,13 @@ export default {
   async asyncData(data) {
     const mods = (
       await axios.get(
-        `${vm.$apiUri}/api/v1/moderation/mods`,
+        `${data.env.apiUrl}/api/v1/moderation/mods`,
         data.$auth.headers
       )
     ).data
 
     const reports = (
-      await axios.get(`${vm.$apiUri}/api/v1/report`, data.$auth.headers)
+      await axios.get(`${data.env.apiUrl}/api/v1/report`, data.$auth.headers)
     ).data
 
     return {
@@ -119,7 +119,7 @@ export default {
   methods: {
     async changeModStatus(id, status, index) {
       await axios.patch(
-        `${vm.$apiUri}/api/v1/mod/${id}`,
+        `${process.env.apiUrl}/api/v1/mod/${id}`,
         {
           status,
         },
@@ -130,7 +130,7 @@ export default {
     },
     async deleteReport(index) {
       await axios.delete(
-        `${vm.$apiUri}/api/v1/report/${this.reports[index].id}`,
+        `${process.env.apiUrl}/api/v1/report/${this.reports[index].id}`,
         this.$auth.headers
       )
 

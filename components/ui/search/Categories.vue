@@ -1,6 +1,14 @@
 <template>
   <div class="categories">
-    <p v-if="categories.includes('Face_Mod')">Face Mods</p>
+    <p v-if="categories.includes('face_mod')">Face Mod</p>
+    <p v-if="categories.includes('hair_mod')">Hair Mod</p>
+    <p v-if="categories.includes('body_mod')">Body Mod</p>
+    <p v-if="categories.includes('skin_mod')">Skin Mod</p>
+    <p v-if="categories.includes('mount_mod')">Mount Mod</p>
+    <p v-if="categories.includes('minion_mod')">Minion Mod</p>
+    <p v-if="categories.includes('minion_mod')">Furniture Mod</p>
+    <p v-if="categories.includes('racial_scale_mod')">Racial Scale Mod</p>
+    <p v-if="categories.includes('other_mod')">Other Mod</p>
   </div>
 </template>
 

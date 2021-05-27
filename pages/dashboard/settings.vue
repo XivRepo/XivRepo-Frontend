@@ -168,7 +168,7 @@ export default {
         }
 
         await axios.patch(
-          `${this.$apiUri}/api/v1/user/${this.$auth.user.id}`,
+          `${process.env.apiUrl}/api/v1/user/${this.$auth.user.id}`,
           data,
           this.$auth.headers
         )
@@ -192,7 +192,7 @@ export default {
 
       try {
         await axios.delete(
-          `${this.$apiUri}/api/v1/user/${this.$auth.user.id}`,
+          `${process.env.apiUrl}/api/v1/user/${this.$auth.user.id}`,
           this.$auth.headers
         )
       } catch (err) {
