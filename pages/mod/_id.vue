@@ -227,7 +227,7 @@
             class="featured-version"
           >
             <a
-              :href="findPrimary(version).url"
+              :href="findPrimary(version).id"
               class="download"
               @click.prevent="
                 downloadFile(
@@ -635,6 +635,7 @@ export default {
       border-radius: 2rem;
       background-color: var(--color-button-bg);
       margin-right: var(--spacing-card-sm);
+      cursor: pointer;
       svg {
         width: 1.25rem;
         margin: auto;

@@ -202,7 +202,7 @@ export default {
   },
   methods: {
     async checkNotifications() {
-      if (this.$auth.user.id) {
+      if (this.$auth && this.$auth.user && this.$auth.user.id) {
         const notifications = (
           await axios.get(
             `${process.env.apiUrl}/api/v1/user/${this.$auth.user.id}/notifications`,

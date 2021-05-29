@@ -59,7 +59,7 @@
           </nuxt-link>
           <a
             v-if="primaryFile"
-            :href="primaryFile.url"
+            :href="primaryFile.id"
             class="action iconified-button"
             @click.prevent="
               $parent.downloadFile(primaryFile.hashes.sha1, primaryFile.url)
@@ -113,7 +113,8 @@
             </div>
           </div>
           <a
-            :href="file.url"
+            :href="file.id"
+            class="download"
             @click.prevent="$parent.downloadFile(file.hashes.sha1, file.url)"
           >
             <DownloadIcon />
@@ -349,6 +350,10 @@ export default {
       margin-right: 0.5rem;
       border-radius: var(--size-rounded-control);
       border: 1px solid var(--color-divider);
+
+      .download {
+        cursor: pointer;
+      }
 
       .text-wrapper {
         display: flex;

@@ -15,7 +15,7 @@
         <tr v-for="version in versions" :key="version.id">
           <td>
             <a
-              :href="$parent.findPrimary(version).url"
+              :href="$parent.findPrimary(version).id"
               class="download"
               @click.prevent="
                 $parent.downloadFile(
@@ -171,6 +171,10 @@ table {
       width: 3rem;
     }
   }
+}
+
+.download {
+  cursor: pointer;
 }
 
 .new-version {
