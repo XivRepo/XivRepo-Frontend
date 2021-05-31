@@ -5,8 +5,8 @@
         <div class="logo">
           <img
             class="char"
-            src="~/assets/images/logo.svg"
-            style="max-height: 20vh; display: inline"
+            src="~/assets/images/logo_small.png"
+            style="max-height: 20vh; width: 100%; display: inline"
             alt="logo"
           />
         </div>

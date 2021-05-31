@@ -18,7 +18,7 @@ function isPersonalizedAdsOn(ctx) {
   })
   const scopes = decodeURIComponent(processed['xivrepo-scopes']).split(',')
   return scopes !== null && scopes.includes('ads')
-}*/
+}
 
 // eslint-disable-next-line require-await
 export default async function (ctx, inject) {
@@ -60,6 +60,8 @@ export default async function (ctx, inject) {
   if (ethicalAds) {
     return
   }
+
+  const noConsent = !isPersonalizedAdsOn(ctx)
 
   // GeoEdge support
   if (GeoEdgeId !== '') {
@@ -108,14 +110,15 @@ export default async function (ctx, inject) {
     ? 'googletag.pubads().collapseEmptyDivs();'
     : ''
   // Desactivate personalization
-  /*const gptDisablePersonalization = noConsent
+  const gptDisablePersonalization = noConsent
     ? 'googletag.pubads().setRequestNonPersonalizedAds(1);'
-    : ''*/
+    : ''
   gptInitScriptHtml += `
     googletag.cmd.push(function(){
       googletag.pubads().enableSingleRequest();
       ${gptDisableInitialLoad}
       ${gptCollapseEmptyDivs}
+      ${gptDisablePersonalization}
       googletag.enableServices();
     });
   `
@@ -130,3 +133,4 @@ export default async function (ctx, inject) {
 
   inject('gptAds', gptAdsOptions)
 }
+*/

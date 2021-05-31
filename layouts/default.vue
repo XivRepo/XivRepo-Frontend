@@ -4,11 +4,11 @@
       <section class="navbar columns">
         <section class="logo column">
           <NuxtLink to="/">
-            <ModrinthLogo
+            <XivRepoLogo
               v-if="$colorMode.value === 'light'"
               aria-label="xivrepo"
             />
-            <ModrinthLogoWhite v-else aria-label="xivrepo" />
+            <XivRepoLogoWhite v-else aria-label="xivrepo" />
           </NuxtLink>
           <span class="badge yellow">Beta</span>
         </section>
@@ -136,8 +136,8 @@ import axios from 'axios'
 
 import ClickOutside from 'vue-click-outside'
 
-import ModrinthLogo from '~/assets/images/text-logo.svg?inline'
-import ModrinthLogoWhite from '~/assets/images/text-logo-white.svg?inline'
+import XivRepoLogo from '~/assets/images/long_logo_light.svg?inline'
+import XivRepoLogoWhite from '~/assets/images/long_logo_light.svg?inline'
 
 import HamburgerIcon from '~/assets/images/utils/hamburger.svg?inline'
 
@@ -156,8 +156,8 @@ import CookieConsent from '~/components/ads/CookieConsent'
 
 export default {
   components: {
-    ModrinthLogo,
-    ModrinthLogoWhite,
+    XivRepoLogo,
+    XivRepoLogoWhite,
     DropdownIcon,
     MoonIcon,
     SunIcon,

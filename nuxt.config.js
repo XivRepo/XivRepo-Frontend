@@ -3,8 +3,7 @@ export default {
    ** Nuxt target
    ** See https://nuxtjs.org/api/configuration-target
    */
-  //target: 'server',
-  target: 'static',
+  target: 'server',
   /*
    ** Headers of the page
    ** See https://nuxtjs.org/api/configuration-head
@@ -128,8 +127,6 @@ export default {
     Sitemap: 'http://localhost:3000/sitemap.xml',
   },
   sitemap: {
-    path: '/sitemap.xml',
-    hostname: process.env.WEBSITE_URL || 'http://localhost:3000',
     exclude: ['/dashboard/**', '/dashboard', '/mod/create'],
   },
   /*
