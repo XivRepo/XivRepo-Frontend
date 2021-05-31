@@ -15,7 +15,7 @@ jobs:
 
       -
         name: Build
-        run: docker build . --file Dockerfile --tag xivrepo/frontend-develop:${{ github.sha }} --build-arg VERSION_ID=${{ github.sha }}
+        run: docker build . --file Dockerfile --tag xivrepo/frontend-develop:${{ github.sha }} --build-arg VERSION_ID=${{ github.sha }} --build-arg WEBSITE_URL="https://dev.xivrepo.com" --build-arg API_URL="https://dev-api.xivrepo.com" --build-arg CDN_URL="https://dev-cdn.xivrepo.com"
 
       -
         name: Deploy

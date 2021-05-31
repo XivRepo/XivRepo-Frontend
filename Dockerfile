@@ -14,6 +14,9 @@ COPY . /usr/src/xivrepo-front/
 RUN npm ci
 
 ARG VERSION_ID=unknown
+ARG WEBSITE_URL='https://localhost:3000'
+ARG API_URL='https://localhost:8000'
+ARG CDN_URL='https://localhost:9000'
 
 RUN npm run build
 
@@ -22,15 +25,5 @@ EXPOSE 3000
 
 ENV NUXT_HOST=0.0.0.0
 ENV NUXT_PORT=3000
-
-ENV VERSION_ID=${VERSION_ID}
-ENV WEBSITE_URL
-ENV API_URL
-ENV CDN_URL
-ENV ENABLE_ADS
-ENV GEOEDGE_ID
-ENV GAM_ID
-ENV ETHICAL_ADS
-ENV ARIADNE_URL
 
 ENTRYPOINT [ "npm", "start" ]
