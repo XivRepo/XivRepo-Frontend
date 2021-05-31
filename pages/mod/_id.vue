@@ -499,21 +499,28 @@ export default {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  flex-wrap: wrap;
 
   @extend %card-spaced-b;
   width: 100%;
   .icon {
     margin: auto 0;
+    width: 100%;
+    background: black;
     img {
-      width: 6rem;
-      height: 6rem;
-      margin: var(--spacing-card-md);
+      width: 100%;
+      height: 100%;
+      max-height: 25rem;
+      margin: 0;
       border-radius: var(--size-rounded-icon);
       object-fit: contain;
     }
   }
   .info {
     @extend %column;
+    margin: var(--spacing-card-md) 0 var(--spacing-card-md)
+      var(--spacing-card-md);
+    justify-content: center;
     .title {
       margin: var(--spacing-card-md) var(--spacing-card-md) 0 0;
       color: var(--color-text-dark);
@@ -534,6 +541,7 @@ export default {
     @extend %row;
     margin: var(--spacing-card-md) var(--spacing-card-md) var(--spacing-card-md)
       0;
+    justify-content: center;
 
     button,
     a {

@@ -20,7 +20,7 @@ export default {
         hid: 'description',
         name: 'description',
         content:
-          'The XIV Repository is a mod distribution platform.',
+          'The XIV Repository is a fan-hosted ffxiv modding hub.',
       },
 
       { hid: 'publisher', name: 'publisher', content: 'The XIV Repository' },
@@ -36,7 +36,7 @@ export default {
       {
         hid: 'og:description',
         name: 'og:description',
-        content: 'An open source modding platform',
+        content: 'The XIV Repository is a fan-hosted ffxiv modding hub.',
       },
       {
         hid: 'og:title',
@@ -44,7 +44,7 @@ export default {
         content: 'The XIV Repository',
       },
       { hid: 'og:type', name: 'og:type', content: 'website' },
-      { hid: 'og:url', name: 'og:url', content: 'https://www.xivrepo.com/' },
+      { hid: 'og:url', name: 'og:url', content: 'https://xivrepo.com/' },
       {
         hid: 'og:image',
         name: 'og:image',
@@ -124,7 +124,7 @@ export default {
     geoEdgeId: '',
   },
   robots: {
-    Sitemap: 'http://localhost:3000/sitemap.xml',
+    Sitemap:  process.env.WEBSITE_URL + '/sitemap.xml' || 'http://localhost:3000/sitemap.xml',
   },
   sitemap: {
     exclude: ['/dashboard/**', '/dashboard', '/mod/create'],
