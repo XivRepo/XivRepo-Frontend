@@ -15,7 +15,7 @@ jobs:
 
       -
         name: Build
-        run: docker build . --file Dockerfile --tag xivrepo/frontend-release:${{ github.sha }}
+        run: docker build . --file Dockerfile --tag xivrepo/frontend-release:${{ github.sha }} --build-arg VERSION_ID=${{ github.sha }}
 
       -
         name: Deploy
