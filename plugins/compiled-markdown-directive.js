@@ -16,6 +16,7 @@ const options = {
     li: [],
     p: [],
     blockquote: [],
+    code: [],
     table: [],
     thead: [],
     tr: [],
