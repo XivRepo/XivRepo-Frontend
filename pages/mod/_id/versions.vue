@@ -17,7 +17,7 @@
             <a
               :href="$parent.findPrimary(version).id"
               class="download"
-              :download="findPrimary(version).filename"
+              :download="$parent.findPrimary(version).filename"
               @click.prevent="
                 $parent.downloadFile(
                   $parent.findPrimary(version).hashes.sha1,
