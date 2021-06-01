@@ -60,18 +60,6 @@
             placeholder="Choose categories"
           />
         </label>
-        <h3>Vanity URL (slug)</h3>
-        <label>
-          <span>
-            Set this to something pretty, so URLs to your mod are more readable
-          </span>
-          <input
-            id="name"
-            v-model="slug"
-            type="text"
-            placeholder="Enter the vanity URL's last bit"
-          />
-        </label>
       </section>
       <section class="mod-icon rows">
         <h3>Icon</h3>

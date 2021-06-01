@@ -4,10 +4,13 @@
     <p v-if="categories.includes('hair_mod')">Hair Mod</p>
     <p v-if="categories.includes('body_mod')">Body Mod</p>
     <p v-if="categories.includes('skin_mod')">Skin Mod</p>
+    <p v-if="categories.includes('gear_mod')">Gear Mod</p>
     <p v-if="categories.includes('mount_mod')">Mount Mod</p>
     <p v-if="categories.includes('minion_mod')">Minion Mod</p>
     <p v-if="categories.includes('minion_mod')">Furniture Mod</p>
     <p v-if="categories.includes('racial_scale_mod')">Racial Scale Mod</p>
+    <p v-if="categories.includes('cmt_pose')">Anamnesis/CMT Pose</p>
+    <p v-if="categories.includes('reshade')">Reshade Preset</p>
     <p v-if="categories.includes('other_mod')">Other Mod</p>
   </div>
 </template>

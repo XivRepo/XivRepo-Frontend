@@ -69,32 +69,6 @@
       </label>
     </section>
     <section class="pad-maker">
-      <h3>Authorization token</h3>
-      <label>
-        <span>
-          Your authorization token can be used with the XIVMods API and for the
-          Minotaur Gradle plugin. However, it must be kept secret!
-        </span>
-        <input
-          type="button"
-          class="button pad-rem"
-          value="Copy to Clipboard"
-          @click="copyToken"
-        />
-      </label>
-      <h3>Revoke your token</h3>
-      <label>
-        <span
-          >Beware, this will log you out of XIVMods, and you will have to login
-          again to access XIVMods with a new token.</span
-        >
-        <input
-          type="button"
-          class="button"
-          value="Revoke Token"
-          @click="gotoRevoke"
-        />
-      </label>
       <h3>Delete your account</h3>
       <label>
         <span

@@ -115,6 +115,7 @@
           <a
             :href="file.id"
             class="download"
+            :download="findPrimary(version).filename"
             @click.prevent="$parent.downloadFile(file.hashes.sha1, file.url)"
           >
             <DownloadIcon />

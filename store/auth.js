@@ -24,7 +24,7 @@ export const actions = {
   async fetchUser({ commit }, { token }) {
     try {
       const user = (
-        await this.$axios.get(`${process.env.API_URL}/api/v1/user`, {
+        await this.$axios.get(`${process.env.apiUrl}/api/v1/user`, {
           headers: {
             Authorization: token,
           },
@@ -44,7 +44,7 @@ export const actions = {
   },
   async fetchUserFollows({ commit }, { userId, token }) {
     const follows = await this.$axios.get(
-      `${process.env.API_URL}/api/v1/user/${userId}/follows`,
+      `${process.env.apiUrl}/api/v1/user/${userId}/follows`,
       {
         headers: {
           Authorization: token,

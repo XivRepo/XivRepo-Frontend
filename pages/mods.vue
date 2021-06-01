@@ -153,6 +153,20 @@
             </SearchFilter>
             <SearchFilter
               :active-filters="facets"
+              display-name="Skin Mod"
+              facet-name="categories:skin_mod"
+              @toggle="toggleFacet"
+            >
+            </SearchFilter>
+            <SearchFilter
+              :active-filters="facets"
+              display-name="Gear Mod"
+              facet-name="categories:gear_mod"
+              @toggle="toggleFacet"
+            >
+            </SearchFilter>
+            <SearchFilter
+              :active-filters="facets"
               display-name="Mount Mod"
               facet-name="categories:mount_mod"
               @toggle="toggleFacet"
@@ -174,15 +188,29 @@
             </SearchFilter>
             <SearchFilter
               :active-filters="facets"
-              display-name="Skin Mod"
-              facet-name="categories:skin_mod"
+              display-name="Racial Scale Mod"
+              facet-name="categories:racial_scale_mod"
               @toggle="toggleFacet"
             >
             </SearchFilter>
             <SearchFilter
               :active-filters="facets"
-              display-name="Racial Scale Mod"
-              facet-name="categories:racial_scale_mod"
+              display-name="Anamnesis / CMT Pose"
+              facet-name="categories:cmt_pose"
+              @toggle="toggleFacet"
+            >
+            </SearchFilter>
+            <SearchFilter
+              :active-filters="facets"
+              display-name="Reshade Preset"
+              facet-name="categories:reshade"
+              @toggle="toggleFacet"
+            >
+            </SearchFilter>
+            <SearchFilter
+              :active-filters="facets"
+              display-name="Other Mod"
+              facet-name="categories:other_mod"
               @toggle="toggleFacet"
             >
             </SearchFilter>
@@ -191,49 +219,49 @@
               :active-filters="selectedRaces"
               display-name="Hyur"
               facet-name="hyur"
-              @toggle="toggleEnv"
+              @toggle="toggleFacet"
             >
             </SearchFilter>
             <SearchFilter
               :active-filters="selectedRaces"
               display-name="Elezen"
               facet-name="elezen"
-              @toggle="toggleEnv"
+              @toggle="toggleFacet"
             >
             </SearchFilter>
             <SearchFilter
               :active-filters="selectedRaces"
               display-name="Miqote"
               facet-name="miqote"
-              @toggle="toggleEnv"
+              @toggle="toggleFacet"
             >
             </SearchFilter>
             <SearchFilter
               :active-filters="selectedRaces"
               display-name="Lalafell"
               facet-name="lalafell"
-              @toggle="toggleEnv"
+              @toggle="toggleFacet"
             >
             </SearchFilter>
             <SearchFilter
               :active-filters="selectedRaces"
               display-name="Au Ra"
               facet-name="au_ra"
-              @toggle="toggleEnv"
+              @toggle="toggleFacet"
             >
             </SearchFilter>
             <SearchFilter
               :active-filters="selectedRaces"
               display-name="Hrothgar"
               facet-name="hrothgar"
-              @toggle="toggleEnv"
+              @toggle="toggleFacet"
             >
             </SearchFilter>
             <SearchFilter
               :active-filters="selectedRaces"
               display-name="Viera"
               facet-name="viera"
-              @toggle="toggleEnv"
+              @toggle="toggleFacet"
             >
             </SearchFilter>
             <h3>Character Genders</h3>
@@ -241,38 +269,24 @@
               :active-filters="selectedGenders"
               display-name="Male"
               facet-name="male"
-              @toggle="toggleEnv"
+              @toggle="toggleFacet"
             >
             </SearchFilter>
             <SearchFilter
               :active-filters="selectedGenders"
               display-name="Female"
               facet-name="female"
-              @toggle="toggleEnv"
+              @toggle="toggleFacet"
             >
             </SearchFilter>
             <SearchFilter
               :active-filters="selectedGenders"
               display-name="Unisex"
               facet-name="unisex"
-              @toggle="toggleEnv"
+              @toggle="toggleFacet"
             >
             </SearchFilter>
           </section>
-          <h3>Licenses</h3>
-          <Multiselect
-            v-model="displayLicense"
-            placeholder="Choose licenses..."
-            :loading="licenses.length === 0"
-            :options="licenses"
-            track-by="name"
-            label="name"
-            :searchable="false"
-            :close-on-select="true"
-            :show-labels="false"
-            :allow-empty="true"
-            @input="toggleLicense"
-          />
         </div>
         <m-footer class="footer" hide-small />
       </section>
@@ -288,26 +302,7 @@ import Pagination from '~/components/ui/Pagination'
 import SearchFilter from '~/components/ui/search/SearchFilter'
 
 import MFooter from '~/components/layout/MFooter'
-/*
-import TechCategory from '~/assets/images/categories/tech.svg?inline'
-import AdventureCategory from '~/assets/images/categories/adventure.svg?inline'
-import CursedCategory from '~/assets/images/categories/cursed.svg?inline'
-import DecorationCategory from '~/assets/images/categories/decoration.svg?inline'
-import EquipmentCategory from '~/assets/images/categories/equipment.svg?inline'
-import FoodCategory from '~/assets/images/categories/food.svg?inline'
-import LibraryCategory from '~/assets/images/categories/library.svg?inline'
-import MagicCategory from '~/assets/images/categories/magic.svg?inline'
-import MiscCategory from '~/assets/images/categories/misc.svg?inline'
-import StorageCategory from '~/assets/images/categories/storage.svg?inline'
-import UtilityCategory from '~/assets/images/categories/utility.svg?inline'
-import WorldGenCategory from '~/assets/images/categories/worldgen.svg?inline'
 
-import ForgeLoader from '~/assets/images/categories/forge.svg?inline'
-import FabricLoader from '~/assets/images/categories/fabric.svg?inline'
-
-import ClientSide from '~/assets/images/categories/client.svg?inline'
-import ServerSide from '~/assets/images/categories/server.svg?inline'
-*/
 import SearchIcon from '~/assets/images/utils/search.svg?inline'
 import ExitIcon from '~/assets/images/utils/exit.svg?inline'
 

@@ -46,7 +46,9 @@
               Report
             </nuxt-link>
             <button
-              v-if="userFollows && !userFollows.includes(mod.id)"
+              v-if="
+                this.$auth.user && userFollows && !userFollows.includes(mod.id)
+              "
               class="iconified-button"
               @click="followMod"
             >
@@ -54,7 +56,9 @@
               Follow
             </button>
             <button
-              v-if="userFollows && userFollows.includes(mod.id)"
+              v-if="
+                this.$auth.user && userFollows && userFollows.includes(mod.id)
+              "
               class="iconified-button"
               @click="unfollowMod"
             >
@@ -229,6 +233,7 @@
             <a
               :href="findPrimary(version).id"
               class="download"
+              :download="findPrimary(version).filename"
               @click.prevent="
                 downloadFile(
                   findPrimary(version).hashes.sha1,
@@ -335,12 +340,14 @@ export default {
   },
   async asyncData(data) {
     try {
+      console.log(data.env.apiUrl)
       const mod = (
         await axios.get(
           `${data.env.apiUrl}/api/v1/mod/${data.params.id}`,
           data.$auth.headers
         )
       ).data
+      console.log(mod)
 
       const [members, versions, featuredVersions, userFollows] = (
         await Promise.all([
