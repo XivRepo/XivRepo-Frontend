@@ -340,14 +340,12 @@ export default {
   },
   async asyncData(data) {
     try {
-      console.log(data.env.apiUrl)
       const mod = (
         await axios.get(
           `${data.env.apiUrl}/api/v1/mod/${data.params.id}`,
           data.$auth.headers
         )
       ).data
-      console.log(mod)
 
       const [members, versions, featuredVersions, userFollows] = (
         await Promise.all([
