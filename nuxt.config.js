@@ -1,3 +1,6 @@
+import path from 'path'
+import fs from 'fs'
+
 export default {
   /*
    ** Nuxt target
@@ -19,8 +22,7 @@ export default {
       {
         hid: 'description',
         name: 'description',
-        content:
-          'The XIV Repository is a fan-hosted ffxiv modding hub.',
+        content: 'The XIV Repository is a fan-hosted ffxiv modding hub.',
       },
 
       { hid: 'publisher', name: 'publisher', content: 'The XIV Repository' },
@@ -32,7 +34,11 @@ export default {
       { hid: 'theme-color', name: 'theme-color', content: '#4d9227' },
       { hid: 'color-scheme', name: 'color-scheme', content: 'light dark' },
 
-      { hid: 'og:site_name', name: 'og:site_name', content: 'The XIV Repository' },
+      {
+        hid: 'og:site_name',
+        name: 'og:site_name',
+        content: 'The XIV Repository',
+      },
       {
         hid: 'og:description',
         name: 'og:description',
@@ -87,7 +93,7 @@ export default {
     '~/plugins/compiled-markdown-directive.js',
     '~/plugins/vue-syntax.js',
     '~/plugins/auth.js',
-    '~/plugins/axios.js'
+    '~/plugins/axios.js',
   ],
   /*
    ** Auto import components
@@ -124,7 +130,9 @@ export default {
     geoEdgeId: '',
   },
   robots: {
-    Sitemap:  process.env.WEBSITE_URL + '/sitemap.xml' || 'http://localhost:3000/sitemap.xml',
+    Sitemap:
+      process.env.WEBSITE_URL + '/sitemap.xml' ||
+      'http://localhost:3000/sitemap.xml',
   },
   sitemap: {
     exclude: ['/dashboard/**', '/dashboard', '/mod/create'],
@@ -169,7 +177,7 @@ export default {
     version: process.env.VERSION_ID || 'unknown',
     baseUrl: process.env.WEBSITE_URL || 'http://localhost:3000',
     apiUrl: process.env.API_URL || 'http://localhost:8000',
-    cdnUrl: process.env.CDN_URL || 'http://localhost:9000'
+    cdnUrl: process.env.CDN_URL || 'http://localhost:9000',
   },
   publicRuntimeConfig: {
     ads: {
@@ -180,6 +188,12 @@ export default {
     },
     analytics: {
       base_url: process.env.ARIADNE_URL,
+    },
+  },
+  server: {
+    https: {
+      key: fs.readFileSync(path.resolve(__dirname, 'server.key')),
+      cert: fs.readFileSync(path.resolve(__dirname, 'server.crt')),
     },
   },
 }
