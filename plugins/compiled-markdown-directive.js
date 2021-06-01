@@ -4,7 +4,6 @@ import marked from 'marked'
 
 const options = {
   whiteList: {
-    ...xss.whiteList,
     summary: [],
     h1: ['id'],
     h2: ['id'],
@@ -12,6 +11,20 @@ const options = {
     h4: ['id'],
     h5: ['id'],
     h6: ['id'],
+    ul: [],
+    ol: [],
+    li: [],
+    p: [],
+    blockquote: [],
+    table: [],
+    thead: [],
+    tr: [],
+    th: [],
+    tbody: [],
+    td: [],
+    strong: [],
+    del: [],
+    em: [],
   },
 }
 
