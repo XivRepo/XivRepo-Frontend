@@ -96,7 +96,7 @@ export default {
     )
 
     const popular = await axios.get(
-      `${data.env.apiUrl}/api/v1/mod?limit=6&index=follows`,
+      `${data.env.apiUrl}/api/v1/mod?limit=6&index=downloads`,
       data.$auth.headers
     )
 
