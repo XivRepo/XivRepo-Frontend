@@ -195,7 +195,14 @@
             </SearchFilter>
             <SearchFilter
               :active-filters="facets"
-              display-name="Anamnesis / CMT Pose"
+              display-name="Anamnesis Pose"
+              facet-name="categories:anamnesis_pose"
+              @toggle="toggleFacet"
+            >
+            </SearchFilter>
+            <SearchFilter
+              :active-filters="facets"
+              display-name="Concept Matrix Pose"
               facet-name="categories:cmt_pose"
               @toggle="toggleFacet"
             >
@@ -216,73 +223,80 @@
             </SearchFilter>
             <h3>Races</h3>
             <SearchFilter
-              :active-filters="selectedRaces"
+              :active-filters="facets"
               display-name="Hyur"
-              facet-name="hyur"
+              facet-name="categories:hyur"
               @toggle="toggleFacet"
             >
             </SearchFilter>
             <SearchFilter
-              :active-filters="selectedRaces"
+              :active-filters="facets"
               display-name="Elezen"
-              facet-name="elezen"
+              facet-name="categories:elezen"
               @toggle="toggleFacet"
             >
             </SearchFilter>
             <SearchFilter
-              :active-filters="selectedRaces"
+              :active-filters="facets"
               display-name="Miqote"
-              facet-name="miqote"
+              facet-name="categories:miqote"
               @toggle="toggleFacet"
             >
             </SearchFilter>
             <SearchFilter
-              :active-filters="selectedRaces"
+              :active-filters="facets"
               display-name="Lalafell"
-              facet-name="lalafell"
+              facet-name="categories:lalafell"
               @toggle="toggleFacet"
             >
             </SearchFilter>
             <SearchFilter
-              :active-filters="selectedRaces"
+              :active-filters="facets"
               display-name="Au Ra"
-              facet-name="au_ra"
+              facet-name="categories:au_ra"
               @toggle="toggleFacet"
             >
             </SearchFilter>
             <SearchFilter
-              :active-filters="selectedRaces"
+              :active-filters="facets"
+              display-name="Roegadyn"
+              facet-name="categories:roegadyn"
+              @toggle="toggleFacet"
+            >
+            </SearchFilter>
+            <SearchFilter
+              :active-filters="facets"
               display-name="Hrothgar"
-              facet-name="hrothgar"
+              facet-name="categories:hrothgar"
               @toggle="toggleFacet"
             >
             </SearchFilter>
             <SearchFilter
-              :active-filters="selectedRaces"
+              :active-filters="facets"
               display-name="Viera"
-              facet-name="viera"
+              facet-name="categories:viera"
               @toggle="toggleFacet"
             >
             </SearchFilter>
             <h3>Character Genders</h3>
             <SearchFilter
-              :active-filters="selectedGenders"
+              :active-filters="facets"
               display-name="Male"
-              facet-name="male"
+              facet-name="categories:male"
               @toggle="toggleFacet"
             >
             </SearchFilter>
             <SearchFilter
-              :active-filters="selectedGenders"
+              :active-filters="facets"
               display-name="Female"
-              facet-name="female"
+              facet-name="categories:female"
               @toggle="toggleFacet"
             >
             </SearchFilter>
             <SearchFilter
-              :active-filters="selectedGenders"
+              :active-filters="facets"
               display-name="Unisex"
-              facet-name="unisex"
+              facet-name="categories:unisex"
               @toggle="toggleFacet"
             >
             </SearchFilter>
