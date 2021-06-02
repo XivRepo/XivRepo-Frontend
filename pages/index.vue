@@ -10,7 +10,7 @@
             alt="logo"
           />
         </div>
-        <h1>Welcome to XIVMods</h1>
+        <h1>Welcome to The XIV Repository!</h1>
         <h2 class="typewriter">
           {{ currentText }}<span aria-hidden="true"></span> Mods
         </h2>

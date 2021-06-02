@@ -162,8 +162,8 @@ export default {
     },
   },
   loading: {
-    color: 'green',
-    height: '2px',
+    color: 'purple',
+    height: '3px',
   },
   env: {
     version: process.env.VERSION_ID || 'unknown',
