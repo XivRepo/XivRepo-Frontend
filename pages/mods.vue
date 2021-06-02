@@ -252,6 +252,13 @@
             </SearchFilter>
             <SearchFilter
               :active-filters="facets"
+              display-name="Roegadyn"
+              facet-name="categories:roegadyn"
+              @toggle="toggleFacet"
+            >
+            </SearchFilter>
+            <SearchFilter
+              :active-filters="facets"
               display-name="Hrothgar"
               facet-name="categories:hrothgar"
               @toggle="toggleFacet"
