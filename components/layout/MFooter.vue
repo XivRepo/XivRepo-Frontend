@@ -79,6 +79,7 @@ export default {
 <style lang="scss" scoped>
 .centered {
   align-items: center;
+  text-align: center;
 }
 
 footer {

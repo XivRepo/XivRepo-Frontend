@@ -269,6 +269,8 @@ export default {
     max-width: 100vw;
     .navbar {
       margin: 0 var(--spacing-card-lg);
+      align-items: center;
+      height: 100%;
       section.logo {
         align-items: center;
         display: flex;
@@ -641,6 +643,12 @@ export default {
         }
       }
     }
+  }
+}
+
+@media (max-width: 998px) {
+  .layout .site-header .navbar section.logo svg {
+    height: 10vw;
   }
 }
 </style>

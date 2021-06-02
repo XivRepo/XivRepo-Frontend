@@ -16,23 +16,111 @@
         </h2>
       </div>
     </div>
-    <div class="default-hero"></div>
+    <div class="default-hero">
+      <div class="left mod-grid">
+        <h2 class="centered">New Mods</h2>
+        <div v-if="newest_mods.hits !== null">
+          <ModCardGrid
+            v-for="(result, index) in newest_mods.hits"
+            :id="result.slug ? result.slug : result.mod_id.split('-')[1]"
+            :key="result.mod_id"
+            :author="result.author"
+            :name="result.title"
+            :description="result.description"
+            :latest-version="result.latest_version"
+            :created-at="result.date_created"
+            :updated-at="result.date_modified"
+            :downloads="result.downloads.toString()"
+            :icon-url="result.icon_url"
+            :author-url="result.author_url"
+            :page-url="result.page_url"
+            :categories="result.categories"
+            :is-ad="index === -1"
+            :is-xivrepo="true"
+          />
+        </div>
+        <a
+          class="button brand-button button-big margin-center"
+          href="/mods?s=newest"
+          >View More New Mods</a
+        >
+      </div>
+      <div class="right mod-grid">
+        <h2 class="centered">Popular Mods</h2>
+        <div v-if="popular_mods.hits !== null">
+          <ModCardGrid
+            v-for="(result, index) in popular_mods.hits"
+            :id="result.slug ? result.slug : result.mod_id.split('-')[1]"
+            :key="result.mod_id"
+            :author="result.author"
+            :name="result.title"
+            :description="result.description"
+            :latest-version="result.latest_version"
+            :created-at="result.date_created"
+            :updated-at="result.date_modified"
+            :downloads="result.downloads.toString()"
+            :icon-url="result.icon_url"
+            :author-url="result.author_url"
+            :page-url="result.page_url"
+            :categories="result.categories"
+            :is-ad="index === -1"
+            :is-xivrepo="true"
+          />
+        </div>
+        <a
+          class="button brand-button button-big margin-center"
+          href="/mods?s=follows"
+          >View More Popular Mods</a
+        >
+      </div>
+    </div>
     <m-footer class="footer" centered />
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 import MFooter from '~/components/layout/MFooter'
+import ModCardGrid from '~/components/ui/ModCardGrid'
 
 export default {
   components: {
     MFooter,
+    ModCardGrid,
   },
   auth: false,
+  async asyncData(data) {
+    const newest = await axios.get(
+      `${data.env.apiUrl}/api/v1/mod?limit=6&index=newest`,
+      data.$auth.headers
+    )
+
+    const popular = await axios.get(
+      `${data.env.apiUrl}/api/v1/mod?limit=6&index=follows`,
+      data.$auth.headers
+    )
+
+    return {
+      newest_mods: newest.data,
+      popular_mods: popular.data,
+    }
+  },
   data() {
     return {
-      currentText: 'Body',
-      texts: ['Body', 'Hair', 'Mount', 'Minion'],
+      currentText: 'Face',
+      texts: [
+        'Face',
+        'Body',
+        'Hair',
+        'Skin',
+        'Gear',
+        'Mount',
+        'Minion',
+        'Furniture',
+        'More',
+      ],
+      newest_mods: [],
+      popular_mods: [],
     }
   },
   beforeMount() {
@@ -68,6 +156,7 @@ export default {
 .left,
 .right {
   width: 50%;
+  min-width: 920px;
 }
 
 .main-hero {
@@ -198,8 +287,25 @@ export default {
 }
 
 .default-hero {
-  margin-top: 200px;
-  height: 700px;
+  padding: 2em;
+  margin-top: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  h2 {
+    text-align: center;
+  }
+}
+
+.mod-grid {
+  margin: var(--spacing-card-lg) 0;
+  > div {
+    display: flex;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }
 
 .workflow {
@@ -229,9 +335,32 @@ export default {
   margin-top: 150px;
 }
 
+@media screen and (max-width: 980px) {
+  .default-hero.mod-grid {
+    > div {
+      flex-direction: column;
+    }
+  }
+
+  .left,
+  .right {
+    min-width: unset;
+  }
+
+  .main-hero {
+    .left {
+      padding: 0;
+    }
+  }
+}
+
 @media screen and (max-width: 500px) {
   .hero {
     margin-top: 0 !important;
+  }
+
+  .default-hero {
+    padding: 0.25rem;
   }
 }
 
@@ -240,11 +369,8 @@ export default {
     display: none;
   }
 
+  .left,
   .right {
-    display: none;
-  }
-
-  .left {
     padding-left: 0 !important;
     text-align: center;
     width: 100%;
