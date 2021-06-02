@@ -231,12 +231,12 @@
             class="featured-version"
           >
             <a
-              :href="findPrimary(version).id"
+              :href="findPrimary(version).filename"
               class="download"
               :download="findPrimary(version).filename"
               @click.prevent="
                 downloadFile(
-                  findPrimary(version).hashes.sha1,
+                  findPrimary(version).filename,
                   findPrimary(version).url
                 )
               "
