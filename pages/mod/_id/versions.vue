@@ -21,7 +21,8 @@
               @click.prevent="
                 $parent.downloadFile(
                   $parent.findPrimary(version).hashes.sha1,
-                  $parent.findPrimary(version).url
+                  $parent.findPrimary(version).url,
+                  $parent.findPrimary(version).filename
                 )
               "
             >

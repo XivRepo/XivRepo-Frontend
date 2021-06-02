@@ -62,7 +62,11 @@
             :href="primaryFile.id"
             class="action iconified-button"
             @click.prevent="
-              $parent.downloadFile(primaryFile.hashes.sha1, primaryFile.url)
+              $parent.downloadFile(
+                primaryFile.hashes.sha1,
+                primaryFile.url,
+                primaryFile.filename
+              )
             "
           >
             <DownloadIcon />
@@ -113,10 +117,12 @@
             </div>
           </div>
           <a
-            :href="file.id"
+            :href="$parent.findPrimary(version).filename"
             class="download"
             :download="$parent.findPrimary(version).filename"
-            @click.prevent="$parent.downloadFile(file.hashes.sha1, file.url)"
+            @click.prevent="
+              $parent.downloadFile(file.hashes.sha1, file.url, file.filename)
+            "
           >
             <DownloadIcon />
           </a>

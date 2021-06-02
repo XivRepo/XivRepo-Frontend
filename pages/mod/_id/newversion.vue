@@ -181,13 +181,13 @@ export default {
 
       this.createdVersion.file_parts = newFileParts
     },
-    async downloadFile(hash, url) {
+    async downloadFile(hash, url, filename) {
       await axios.get(
         `${process.env.apiUrl}/api/v1/version_file/${hash}/download`
       )
 
       const elem = document.createElement('a')
-      elem.download = hash
+      elem.download = filename
       elem.href = url
       elem.click()
     },
