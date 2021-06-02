@@ -120,6 +120,68 @@
           <div v-compiled-markdown="body" class="markdown-body"></div>
         </div>
       </section>
+      <section class="files">
+        <div class="title">
+          <h3>Upload Files</h3>
+        </div>
+        <div class="initial-release">
+          <div class="main">
+            <h3>Version Title</h3>
+            <label>
+              <span>
+                Give your initial mod release a title! By default this will just be "Initial Release".
+              </span>
+              <input
+                v-model="initial_version.version_title"
+                type="text"
+                placeholder="Enter the version name"
+              />
+            </label>
+            <h3>Version Number</h3>
+            <label>
+              <span>
+                That's how your version will appear in mod lists and in URLs. By default your first
+                release will be "1.0.0"
+              </span>
+              <input
+                v-model="initial_version.version_number"
+                type="text"
+                placeholder="Enter a number"
+              />
+            </label>
+            <h3>Channel</h3>
+            <label>
+              <span>
+                Is your mod still not ready for an official release but you still want to publish it for
+                testing or review? Here you can select a release channel which will indicate if the mod
+                is finished (ie release) or still in development (ie beta or alpha).
+              </span>
+              <multiselect
+                v-model="initial_version.release_channel"
+                placeholder="Select one"
+                :options="['release', 'beta', 'alpha']"
+                :searchable="false"
+                :close-on-select="true"
+                :show-labels="false"
+                :allow-empty="false"
+              />
+            </label>
+          </div>
+          <div class="changelog">
+            <h3>Changelog</h3>
+            <span>
+              Tell players makers what's new. It supports the same
+              markdown as description, but it is advisable not to be too
+              creative with it in changelogs
+            </span>
+            <div class="textarea-wrapper">
+              <textarea
+                v-model="initial_version.changelog"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
       <section class="versions">
         <div class="title">
           <h3>Upload Versions</h3>
@@ -397,6 +459,7 @@
 <script>
 import axios from 'axios'
 import Multiselect from 'vue-multiselect'
+import VueUploadComponent from 'vue-upload-component'
 
 import FileInput from '~/components/ui/FileInput'
 import MFooter from '~/components/layout/MFooter'
@@ -411,6 +474,7 @@ export default {
     Multiselect,
     ForgeIcon,
     FabricIcon,
+    FileUpload: VueUploadComponent,
   },
   async asyncData(data) {
     const [
@@ -459,6 +523,18 @@ export default {
       icon: null,
       license: null,
       license_url: null,
+      initial_version: {
+        raw_files: [],
+        file_parts: [],
+        version_number: '1.0.0',
+        version_title: 'Initial Release',
+        version_body: '',
+        dependencies: [],
+        game_versions: [],
+        release_channel: 'release',
+        loaders: [],
+        featured: false,
+      },
 
       sideTypes: ['Required', 'Optional', 'Unsupported'],
       clientSideType: 'Required',
@@ -784,6 +860,7 @@ section.description {
 }
 
 section.versions {
+  display: none;
   grid-area: versions;
 
   table {
