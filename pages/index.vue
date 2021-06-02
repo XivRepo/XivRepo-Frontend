@@ -155,8 +155,8 @@ export default {
 <style lang="scss" scoped>
 .left,
 .right {
-  width: 50%;
-  min-width: 920px;
+  width: calc(50% - calc(var(--spacing-card-lg) * 4));
+  min-width: 800px;
 }
 
 .main-hero {
@@ -299,12 +299,30 @@ export default {
 }
 
 .mod-grid {
-  margin: var(--spacing-card-lg) 0;
+  margin: var(--spacing-card-lg);
+  padding: var(--spacing-card-lg);
+  border-radius: var(--size-rounded-sm);
   > div {
     display: flex;
     margin: 0 auto;
     flex-wrap: wrap;
     justify-content: center;
+  }
+
+  @media (min-width: 1875px) {
+    &.left {
+      position: relative;
+      &::after {
+        content: '';
+        display: inline-block;
+        height: calc(100% - calc(var(--spacing-card-lg) * 8));
+        width: 0;
+        position: absolute;
+        right: calc(var(--spacing-card-lg) * -1);
+        border-right: 2px solid var(--color-divider-dark);
+        top: calc(var(--spacing-card-lg) * 4);
+      }
+    }
   }
 }
 
