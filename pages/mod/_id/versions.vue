@@ -15,7 +15,7 @@
         <tr v-for="version in versions" :key="version.id">
           <td>
             <a
-              :href="$parent.findPrimary(version).id"
+              :href="$parent.findPrimary(version).filename"
               class="download"
               :download="$parent.findPrimary(version).filename"
               @click.prevent="

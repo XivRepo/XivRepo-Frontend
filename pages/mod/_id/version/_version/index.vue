@@ -59,7 +59,7 @@
           </nuxt-link>
           <a
             v-if="primaryFile"
-            :href="primaryFile.id"
+            :href="primaryFile.fileName"
             class="action iconified-button"
             @click.prevent="
               $parent.downloadFile(
