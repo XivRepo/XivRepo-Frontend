@@ -301,8 +301,9 @@ article.mod-card {
           flex-wrap: wrap;
 
           div.stat {
-            margin: 1rem;
-            min-width: 100px;
+            margin: 0.5rem;
+            min-width: 90px;
+            flex: 1 1 auto;
           }
         }
       }
