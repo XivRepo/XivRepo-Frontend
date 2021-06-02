@@ -122,7 +122,7 @@
       </section>
       <section class="files">
         <div class="title">
-          <h3>Upload Files</h3>
+          <h3>Mod Files</h3>
         </div>
         <div class="initial-release">
           <div class="main">
@@ -752,6 +752,7 @@ export default {
     'mod-icon     mod-icon    mod-icon' auto
     'game-sides   game-sides  game-sides' auto
     'description  description description' auto
+    'files         files        files' auto
     'versions     versions    versions' auto
     'extra-links  extra-links extra-links' auto
     'license      license     license' auto
@@ -766,6 +767,7 @@ export default {
       'essentials   essentials  mod-icon' auto
       'game-sides   game-sides  game-sides' auto
       'description  description description' auto
+      'files         files        files' auto
       'versions     versions    versions' auto
       'extra-links  license     license' auto
       'donations    donations   .' auto
@@ -856,6 +858,18 @@ section.description {
   .markdown-body {
     overflow-y: auto;
     padding: 0 var(--spacing-card-sm);
+  }
+}
+
+section.files {
+  grid-area: files;
+
+  .initial-release {
+    display: grid;
+    grid-template:
+      'main changelog' auto
+      / 4fr 5fr;
+    column-gap: var(--spacing-card-md);
   }
 }
 
