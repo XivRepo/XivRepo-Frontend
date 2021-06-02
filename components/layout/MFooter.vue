@@ -1,7 +1,8 @@
 <template>
   <footer :class="{ centered, hideBig, hideSmall }">
     <span>
-      XIVMods is open source software. You may view the source code at
+      The XIV Repository is open source software. You may view the source code
+      at
       <a target="_blank" href="https://github.com/XivRepo">our GitHub page</a>.
     </span>
     <ul>
@@ -38,7 +39,8 @@
         <nuxt-link to="/dashboard/privacy">Set privacy preferences</nuxt-link>
       </li>
     </ul>
-    <span> Copyright © 2021 XIV Mods. All rights reserved. </span><br />
+    <span> Copyright © 2021 The XIV Repository. All rights reserved. </span
+    ><br />
     <span>
       FINAL FANTASY XIV © 2010-2021 SQUARE ENIX CO., LTD. All Rights
       Reserved.</span
