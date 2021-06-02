@@ -22,9 +22,6 @@
             by <nuxt-link :to="'/user/' + author">{{ author }}</nuxt-link>
           </p>
         </div>
-        <p class="description">
-          {{ description }}
-        </p>
         <div :class="{ vertical: editMode }" class="bottom">
           <div class="stats">
             <div v-if="status !== null" class="stat">
