@@ -195,7 +195,14 @@
             </SearchFilter>
             <SearchFilter
               :active-filters="facets"
-              display-name="Anamnesis / CMT Pose"
+              display-name="Anamnesis Pose"
+              facet-name="categories:anamnesis_pose"
+              @toggle="toggleFacet"
+            >
+            </SearchFilter>
+            <SearchFilter
+              :active-filters="facets"
+              display-name="Concept Matrix Pose"
               facet-name="categories:cmt_pose"
               @toggle="toggleFacet"
             >
