@@ -120,68 +120,6 @@
           <div v-compiled-markdown="body" class="markdown-body"></div>
         </div>
       </section>
-      <section class="files">
-        <div class="title">
-          <h3>Mod Files</h3>
-        </div>
-        <div class="initial-release">
-          <div class="main">
-            <h3>Version Title</h3>
-            <label>
-              <span>
-                Give your initial mod release a title! By default this will just be "Initial Release".
-              </span>
-              <input
-                v-model="initial_version.version_title"
-                type="text"
-                placeholder="Enter the version name"
-              />
-            </label>
-            <h3>Version Number</h3>
-            <label>
-              <span>
-                That's how your version will appear in mod lists and in URLs. By default your first
-                release will be "1.0.0"
-              </span>
-              <input
-                v-model="initial_version.version_number"
-                type="text"
-                placeholder="Enter a number"
-              />
-            </label>
-            <h3>Channel</h3>
-            <label>
-              <span>
-                Is your mod still not ready for an official release but you still want to publish it for
-                testing or review? Here you can select a release channel which will indicate if the mod
-                is finished (ie release) or still in development (ie beta or alpha).
-              </span>
-              <multiselect
-                v-model="initial_version.release_channel"
-                placeholder="Select one"
-                :options="['release', 'beta', 'alpha']"
-                :searchable="false"
-                :close-on-select="true"
-                :show-labels="false"
-                :allow-empty="false"
-              />
-            </label>
-          </div>
-          <div class="changelog">
-            <h3>Changelog</h3>
-            <span>
-              Tell players makers what's new. It supports the same
-              markdown as description, but it is advisable not to be too
-              creative with it in changelogs
-            </span>
-            <div class="textarea-wrapper">
-              <textarea
-                v-model="initial_version.changelog"
-              ></textarea>
-            </div>
-          </div>
-        </div>
-      </section>
       <section class="versions">
         <div class="title">
           <h3>Upload Versions</h3>
@@ -199,7 +137,7 @@
             <tr>
               <th>Name</th>
               <th>Version</th>
-              <th>Version Type</th>
+              <th>Release Type</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -213,14 +151,9 @@
               :key="version.id"
             >
               <td>
-                {{ version.name }}
+                {{ version.version_title }}
               </td>
               <td>{{ version.version_number }}</td>
-              <td>
-                <FabricIcon v-if="version.loaders.includes('fabric')" />
-                <ForgeIcon v-if="version.loaders.includes('forge')" />
-              </td>
-              <td>{{ version.game_versions.join(', ') }}</td>
               <td>
                 <span
                   v-if="version.release_channel === 'release'"
@@ -318,13 +251,36 @@
                 You should upload a single archive file. However, you are
                 allowed to upload multiple
               </span>
-              <FileInput
-                accept=".zip,.rar,.7z,.7zip,.tar.gz,.ttmp,.ttmp2"
-                multiple
-                prompt="Choose files or drag them here"
-                @change="updateVersionFiles"
-              />
             </label>
+            <div class="uploader">
+              <file-upload
+                ref="upload"
+                v-model="versions[currentVersionIndex].files"
+                post-action=""
+                extensions="zip,rar,7z,7zip,tar.gz,ttmp,ttmp2"
+                accept="image/png,image/gif,image/jpeg,image/webp"
+                :multiple="true"
+                :size="1024 * 1024 * 10"
+                @input-filter="inputFilter"
+                @input-file="inputFile"
+              >
+                Choose Files
+              </file-upload>
+            </div>
+            <ul class="file-list">
+              <li
+                v-for="file in versions[currentVersionIndex].files"
+                :key="file.id"
+              >
+                <span>{{ file.name }}</span> -
+                <span>{{ file.size | formatSize }}</span> -
+                <span v-if="file.error">{{ file.error }}</span>
+                <span v-else-if="file.success">success</span>
+                <span v-else-if="file.active">active</span>
+                <span v-else-if="!!file.error">{{ file.error }}</span>
+                <span v-else></span>
+              </li>
+            </ul>
           </div>
           <div class="changelog">
             <h3>Changelog</h3>
@@ -459,22 +415,31 @@
 <script>
 import axios from 'axios'
 import Multiselect from 'vue-multiselect'
-import VueUploadComponent from 'vue-upload-component'
+import FileUpload from 'vue-upload-component'
 
 import FileInput from '~/components/ui/FileInput'
 import MFooter from '~/components/layout/MFooter'
-
-import ForgeIcon from '~/assets/images/categories/forge.svg?inline'
-import FabricIcon from '~/assets/images/categories/fabric.svg?inline'
 
 export default {
   components: {
     MFooter,
     FileInput,
     Multiselect,
-    ForgeIcon,
-    FabricIcon,
-    FileUpload: VueUploadComponent,
+    FileUpload,
+  },
+  filters: {
+    formatSize(size) {
+      if (size > 1024 * 1024 * 1024 * 1024) {
+        return (size / 1024 / 1024 / 1024 / 1024).toFixed(2) + ' TB'
+      } else if (size > 1024 * 1024 * 1024) {
+        return (size / 1024 / 1024 / 1024).toFixed(2) + ' GB'
+      } else if (size > 1024 * 1024) {
+        return (size / 1024 / 1024).toFixed(2) + ' MB'
+      } else if (size > 1024) {
+        return (size / 1024).toFixed(2) + ' KB'
+      }
+      return size.toString() + ' B'
+    },
   },
   async asyncData(data) {
     const [
@@ -507,6 +472,8 @@ export default {
       compiledBody: '',
       releaseChannels: ['beta', 'alpha', 'release'],
       currentVersionIndex: -1,
+      filePost: '',
+      filePut: '',
 
       cdn: process.env.cdnUrl,
       name: '',
@@ -523,18 +490,6 @@ export default {
       icon: null,
       license: null,
       license_url: null,
-      initial_version: {
-        raw_files: [],
-        file_parts: [],
-        version_number: '1.0.0',
-        version_title: 'Initial Release',
-        version_body: '',
-        dependencies: [],
-        game_versions: [],
-        release_channel: 'release',
-        loaders: [],
-        featured: false,
-      },
 
       sideTypes: ['Required', 'Optional', 'Unsupported'],
       clientSideType: 'Required',
@@ -566,6 +521,7 @@ export default {
       this.draft = true
       await this.createMod()
     },
+
     async createMod() {
       this.$nuxt.$loading.start()
 
@@ -699,8 +655,9 @@ export default {
       this.versions.push({
         raw_files: [],
         file_parts: [],
-        version_number: '',
-        version_title: '',
+        files: [],
+        version_number: '1.0.0',
+        version_title: 'Initial Release',
         version_body: '',
         dependencies: [],
         game_versions: [],
@@ -715,6 +672,30 @@ export default {
     deleteVersion() {
       this.versions.splice(this.currentVersionIndex, 1)
       this.currentVersionIndex = -1
+    },
+
+    inputFilter(newFile, oldFile, prevent) {
+      if (newFile && !oldFile) {
+        if (/(\/|^)(Thumbs\.db|desktop\.ini|\..+)$/.test(newFile.name)) {
+          return prevent()
+        }
+
+        if (/\.(php5?|html?|jsx?)$/i.test(newFile.name)) {
+          return prevent()
+        }
+      }
+    },
+
+    inputFile(newFile, oldFile) {
+      if (newFile && !oldFile) {
+        console.log('add', newFile)
+      }
+      if (newFile && oldFile) {
+        console.log('update', newFile)
+      }
+      if (!newFile && oldFile) {
+        console.log('remove', oldFile)
+      }
     },
   },
 }
@@ -868,13 +849,12 @@ section.files {
     display: grid;
     grid-template:
       'main changelog' auto
-      / 4fr 5fr;
+      / 5fr 4fr;
     column-gap: var(--spacing-card-md);
   }
 }
 
 section.versions {
-  display: none;
   grid-area: versions;
 
   table {
@@ -900,8 +880,8 @@ section.versions {
     th,
     td {
       &:first-child {
-        text-align: center;
-        width: 7%;
+        text-align: left;
+        width: 30%;
 
         svg {
           color: var(--color-text);
@@ -914,7 +894,7 @@ section.versions {
       }
 
       &:nth-child(2),
-      &:nth-child(5) {
+      &:nth-child(3) {
         padding-left: 0;
         width: 12%;
       }
@@ -974,6 +954,23 @@ section.versions {
 
       .textarea-wrapper {
         flex: 1;
+      }
+    }
+
+    .uploader {
+      margin-top: 1em;
+      label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: var(--spacing-card-sm) var(--spacing-card-md);
+      }
+
+      span {
+        border: 2px dashed var(--color-divider-dark);
+        border-radius: var(--size-rounded-control);
+        padding: var(--spacing-card-md) var(--spacing-card-lg);
       }
     }
   }
