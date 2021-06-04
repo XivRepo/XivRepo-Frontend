@@ -9,7 +9,8 @@
     <p v-if="categories.includes('minion_mod')">Minion Mod</p>
     <p v-if="categories.includes('minion_mod')">Furniture Mod</p>
     <p v-if="categories.includes('racial_scale_mod')">Racial Scale Mod</p>
-    <p v-if="categories.includes('cmt_pose')">Anamnesis/CMT Pose</p>
+    <p v-if="categories.includes('anamnesis_pose')">Anamnesis Pose</p>
+    <p v-if="categories.includes('cmt_pose')">CMT Pose</p>
     <p v-if="categories.includes('reshade')">Reshade Preset</p>
     <p v-if="categories.includes('other_mod')">Other Mod</p>
   </div>

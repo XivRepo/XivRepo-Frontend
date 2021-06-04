@@ -56,7 +56,7 @@
             upload multiple
           </span>
           <FileInput
-            accept=".zip,.rar,.7z,.7zip,.tar.gz,.ttmp,.ttmp2"
+            accept=".zip,.rar,.7z,.7zip,.tar.gz,.ttmp,.ttmp2,.pose,.cmp"
             multiple
             prompt="Choose files or drag them here"
             @change="updateVersionFiles"
