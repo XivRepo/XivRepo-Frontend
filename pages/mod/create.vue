@@ -40,7 +40,7 @@
         <h3>Categories</h3>
         <label class="form-label">
           <span>
-            Select up to 12 categories. They will help others find your mod.
+            Select up to 3 categories. They will help others find your mod.
           </span>
           <multiselect
             id="categories"
@@ -54,8 +54,7 @@
             :close-on-select="false"
             :clear-on-select="false"
             :show-labels="true"
-            :max="12"
-            :limit="8"
+            :max="3"
             :hide-selected="true"
             placeholder="Choose categories"
           />

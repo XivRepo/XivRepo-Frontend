@@ -54,6 +54,7 @@
           id="categories"
           v-model="mod.categories"
           :options="availableCategories"
+          :custom-label="versionLabels"
           :loading="availableCategories.length === 0"
           :multiple="true"
           :searchable="false"
@@ -67,23 +68,6 @@
           placeholder="Choose categories"
         />
       </label>
-      <h3>Adult Content</h3>
-      <label class="form-label">
-        <span>
-          Does your mod contain adult content? If so please make sure to mark it
-          as NSFW. Mods not marked properly may be subject to remove.
-        </span>
-      </label>
-      <div style="margin-top: 0.7em">
-        <client-only>
-          <VueToggles
-            checked-text="NSFW"
-            unchecked-text="SFW"
-            :value="mod.is_nsfw"
-            @click="mod.is_nsfw = !mod.is_nsfw"
-          />
-        </client-only>
-      </div>
     </section>
     <section class="mod-icon rows">
       <h3>Icon</h3>
@@ -124,29 +108,65 @@
       </div>
     </section>
     <section class="description">
-      <h3>
-        <label
-          for="body"
-          title="You can type the of the long form of your description here."
-        >
-          Description
-        </label>
-      </h3>
-      <span>
-        You can type the of the long form of your description here. This editor
-        supports markdown. You can find the syntax
-        <a
-          href="https://guides.github.com/features/mastering-markdown/"
-          target="_blank"
-          rel="noopener noreferrer"
-          >here</a
-        >.
-      </span>
+      <h3>Description</h3>
+      <label class="form-label">
+        <span>
+          You can type the of the long form of your description here. This
+          editor supports markdown. You can find the syntax
+          <a
+            href="https://guides.github.com/features/mastering-markdown/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >here</a
+          >.
+        </span>
+      </label>
       <div class="columns">
         <div class="textarea-wrapper">
           <textarea id="body" v-model="mod.body"></textarea>
         </div>
         <div v-compiled-markdown="mod.body" class="markdown-body"></div>
+      </div>
+    </section>
+    <section class="additional-information">
+      <h3>Tags</h3>
+      <label class="form-label">
+        <span>
+          To help you mod be found easier by users, you can add additional for
+          users to search with here
+        </span>
+        <multiselect
+          id="tags"
+          v-model="mod.tags"
+          :options="availableTags"
+          :custom-label="versionLabels"
+          :loading="availableTags.length === 0"
+          :multiple="true"
+          :searchable="true"
+          :show-no-results="false"
+          :close-on-select="false"
+          :clear-on-select="false"
+          :show-labels="true"
+          :hide-selected="true"
+          placeholder="Choose tags"
+        />
+      </label>
+      <h3>Adult Content</h3>
+      <label class="form-label">
+        <span>
+          Does your mod contain adult content? If so please make sure to mark it
+          as NSFW. Mods not marked properly may be subject to remove.
+        </span>
+      </label>
+      <div style="margin-top: 0.7em">
+        <client-only>
+          <VueToggles
+            checked-text="NSFW"
+            unchecked-text="SFW"
+            :value="mod.is_nsfw"
+            @click="mod.is_nsfw = !mod.is_nsfw"
+          />
+        </client-only>
       </div>
     </section>
     <section class="extra-links">
@@ -180,31 +200,6 @@
           type="url"
           placeholder="Enter a valid URL"
         />
-      </label>
-    </section>
-    <section class="license">
-      <div class="title">
-        <h3>License</h3>
-      </div>
-      <label>
-        <span>
-          It is really important to choose a proper license for your mod. You
-          may choose one from our list or provide a URL to your own license. URL
-          field will be filled automatically for provided licenses
-        </span>
-        <div class="input-group">
-          <Multiselect
-            v-model="license"
-            placeholder="Select one"
-            track-by="short"
-            label="name"
-            :options="availableLicenses"
-            :searchable="true"
-            :close-on-select="true"
-            :show-labels="false"
-          />
-          <input v-model="license_url" type="url" placeholder="License URL" />
-        </div>
       </label>
     </section>
     <section class="donations">
@@ -277,6 +272,7 @@ export default {
       const [
         mod,
         availableCategories,
+        availableTags,
         availableLoaders,
         availableGameVersions,
         availableLicenses,
@@ -287,6 +283,7 @@ export default {
             `${data.env.apiUrl}/api/v1/mod/${data.params.id}`,
             data.$auth.headers
           ),
+          axios.get(`${data.env.apiUrl}/api/v1/tag/category`),
           axios.get(`${data.env.apiUrl}/api/v1/tag/category`),
           axios.get(`${data.env.apiUrl}/api/v1/tag/loader`),
           axios.get(`${data.env.apiUrl}/api/v1/tag/game_version`),
@@ -323,6 +320,7 @@ export default {
         clientSideType: mod.client_side.charAt(0) + mod.client_side.slice(1),
         serverSideType: mod.server_side.charAt(0) + mod.server_side.slice(1),
         availableCategories,
+        availableTags,
         availableLoaders,
         availableGameVersions,
         availableLicenses,
@@ -388,6 +386,7 @@ export default {
           description: this.mod.description,
           body: this.mod.body,
           categories: this.mod.categories,
+          tags: this.mod.tags,
           issues_url: this.mod.issues_url,
           source_url: this.mod.source_url,
           wiki_url: this.mod.wiki_url,
@@ -454,6 +453,18 @@ export default {
         this.previewImage = event.target.result
       }
     },
+    toProperCase(str) {
+      return str.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+      })
+    },
+    versionLabels(id) {
+      if (id) {
+        return this.toProperCase(id.replace(/_/g, ' '))
+      } else {
+        return ''
+      }
+    },
   },
 }
 </script>
@@ -516,8 +527,8 @@ label {
     'game-sides   game-sides  game-sides' auto
     'description  description description' auto
     'versions     versions    versions' auto
+    'additional-information additional-information additional-information' auto
     'extra-links  extra-links extra-links' auto
-    'license      license     license' auto
     'donations    donations   donations' auto
     'footer       footer      footer' auto
     / 4fr 1fr 4fr;
@@ -614,6 +625,10 @@ section.extra-links {
       flex: 1;
     }
   }
+}
+
+section.additional-information {
+  grid-area: additional-information;
 }
 
 section.license {
