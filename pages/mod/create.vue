@@ -66,12 +66,14 @@
             Does your mod contain adult content? If so please make sure to mark
             it as NSFW. Mods not marked properly may be subject to remove.
             <div style="margin-top: 0.7em">
-              <VueToggles
-                checked-text="NSFW"
-                unchecked-text="SFW"
-                :value="nsfw"
-                @click="nsfw = !nsfw"
-              />
+              <client-only>
+                <VueToggles
+                  checked-text="NSFW"
+                  unchecked-text="SFW"
+                  :value="nsfw"
+                  @click="nsfw = !nsfw"
+                />
+              </client-only>
             </div>
           </span>
         </label>
@@ -274,19 +276,26 @@
               />
             </label>
             <div class="uploader">
-              <file-upload
-                ref="upload"
-                v-model="versions[currentVersionIndex].files"
-                post-action=""
-                extensions="zip,rar,7z,7zip,tar.gz,ttmp,ttmp2"
-                accept="image/png,image/gif,image/jpeg,image/webp"
-                :multiple="true"
-                :size="1024 * 1024 * 10"
-                @input-filter="inputFilter"
-                @input-file="inputFile"
-              >
-                Choose Files
-              </file-upload>
+              <client-only>
+                <FileUpload
+                  ref="upload"
+                  v-model="versions[currentVersionIndex].files"
+                  extensions="zip,rar,7z,7zip,tar.gz,ttmp,ttmp2"
+                  accept="image/png,image/gif,image/jpeg,image/webp"
+                  :multiple="true"
+                  :size="1024 * 1024 * 10"
+                  :post-action="
+                    process.env.apiUrl +
+                    '/api/v1/version/' +
+                    versions[currentVersionIndex] +
+                    '/file'
+                  "
+                  @input-filter="inputFilter"
+                  @input-file="inputFile"
+                >
+                  Choose Files
+                </FileUpload>
+              </client-only>
             </div>
             <ul class="file-list">
               <li
@@ -436,8 +445,8 @@
 <script>
 import axios from 'axios'
 import Multiselect from 'vue-multiselect'
-import FileUpload from 'vue-upload-component'
 import VueToggles from 'vue-toggles'
+import FileUpload from 'vue-toggles'
 
 import FileInput from '~/components/ui/FileInput'
 import MFooter from '~/components/layout/MFooter'
@@ -447,8 +456,8 @@ export default {
     MFooter,
     FileInput,
     Multiselect,
-    FileUpload,
     VueToggles,
+    FileUpload,
   },
   filters: {
     formatSize(size) {

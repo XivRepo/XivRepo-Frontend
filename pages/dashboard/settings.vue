@@ -60,8 +60,8 @@
         </span>
         <div style="margin-left: 1em">
           <VueToggles
-            checked-text="NSFW"
-            unchecked-text="SFW"
+            checked-text="Shown"
+            unchecked-text="Hidden"
             :value="show_nsfw"
             @click="show_nsfw = !show_nsfw"
           />

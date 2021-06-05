@@ -301,7 +301,6 @@
             >
             </SearchFilter>
           </section>
-          // TODO: Remove Always Show
           <!-- <section v-if="!$auth.user.show_nsfw"> -->
           <section v-if="true">
             <h3>Adult Content</h3>

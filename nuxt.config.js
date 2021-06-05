@@ -86,7 +86,9 @@ export default {
    */
   plugins: [
     '~/plugins/vue-tooltip.js',
+    '~/plugins/vue-toggles.js',
     '~/plugins/vue-notification.js',
+    '~plugins/vue-upload-component.js',
     '~/plugins/compiled-markdown-directive.js',
     '~/plugins/vue-syntax.js',
     '~/plugins/auth.js',
@@ -155,7 +157,12 @@ export default {
    ** See https://nuxtjs.org/api/configuration-build/
    */
   build: {
-    transpile: ['vue-tooltip', 'vue-notification'],
+    transpile: [
+      'vue-tooltip',
+      'vue-notification',
+      'vue-upload-component',
+      'vue-toggles',
+    ],
     styleResources: {
       scss: './assets/styles/injected.scss',
     },
