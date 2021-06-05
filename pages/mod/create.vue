@@ -285,7 +285,7 @@
                   :multiple="true"
                   :size="1024 * 1024 * 10"
                   :post-action="
-                    process.env.apiUrl +
+                    api_base +
                     '/api/v1/version/' +
                     versions[currentVersionIndex] +
                     '/file'
@@ -446,7 +446,8 @@
 import axios from 'axios'
 import Multiselect from 'vue-multiselect'
 import VueToggles from 'vue-toggles'
-import FileUpload from 'vue-toggles'
+import FileUpload from 'vue-upload-component/dist/vue-upload-component.part.js'
+import 'vue-upload-component/dist/vue-upload-component.part.css'
 
 import FileInput from '~/components/ui/FileInput'
 import MFooter from '~/components/layout/MFooter'
@@ -508,6 +509,7 @@ export default {
       filePut: '',
 
       cdn: process.env.cdnUrl,
+      api_base: process.env.API_URL,
       name: '',
       slug: '',
       draft: false,
