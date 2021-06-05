@@ -332,6 +332,10 @@
             placeholder="Choose tags"
           />
         </label>
+        <label class="form-label">
+          Don't see the tag you are looking for? Please submit a request&nbsp;
+          <a class="link" href="/request/tag">here</a>.
+        </label>
         <h3>Adult Content</h3>
         <label>
           <span>
