@@ -64,7 +64,7 @@
         <label>
           <span>
             Does your mod contain adult content? If so please make sure to mark
-            it as NSFW. Mods found violating this may be subject to remove.
+            it as NSFW. Mods not marked properly may be subject to remove.
             <div style="margin-top: 0.7em">
               <VueToggles
                 checked-text="NSFW"
