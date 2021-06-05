@@ -301,15 +301,16 @@
             >
             </SearchFilter>
           </section>
-          <!-- <section v-if="!$auth.user.show_nsfw"> -->
-          <section v-if="true">
+          <section v-if="!$auth.user.show_nsfw">
             <h3>Adult Content</h3>
-            <VueToggles
-              checked-text="Shown"
-              unchecked-text="Hidden"
-              :value="show_nsfw"
-              @click="show_nsfw = !show_nsfw"
-            />
+            <client-only>
+              <VueToggles
+                checked-text="Shown"
+                unchecked-text="Hidden"
+                :value="show_nsfw"
+                @click="show_nsfw = !show_nsfw"
+              />
+            </client-only>
           </section>
         </div>
         <m-footer class="footer" hide-small />

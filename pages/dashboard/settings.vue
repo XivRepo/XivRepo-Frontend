@@ -59,12 +59,14 @@
           age to view pornographic content in your region.
         </span>
         <div style="margin-left: 1em">
-          <VueToggles
-            checked-text="Shown"
-            unchecked-text="Hidden"
-            :value="show_nsfw"
-            @click="show_nsfw = !show_nsfw"
-          />
+          <client-only>
+            <VueToggles
+              checked-text="Shown"
+              unchecked-text="Hidden"
+              :value="show_nsfw"
+              @click="show_nsfw = !show_nsfw"
+            />
+          </client-only>
         </div>
       </label>
     </section>
@@ -120,7 +122,7 @@ export default {
     this.name = this.$auth.user.name
     this.email = this.$auth.user.email
     this.bio = this.$auth.user.bio
-    this.nsfw = this.$auth.user.show_nsfw
+    this.show_nsfw = this.$auth.user.show_nsfw
     this.token = this.$auth.token
   },
   data() {
