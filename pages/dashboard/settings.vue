@@ -17,7 +17,7 @@
     </div>
     <section>
       <h3>Username</h3>
-      <label>
+      <label class="form-label">
         <span>
           The username used on the XIVMods site to identify yourself. This must
           be unique.
@@ -29,7 +29,7 @@
         />
       </label>
       <h3>Name</h3>
-      <label>
+      <label class="form-label">
         <span>
           Your display name on your XIVMods profile. This does not have to be
           unique, can be set to anything, and is optional.
@@ -37,7 +37,7 @@
         <input v-model="name" type="text" placeholder="Enter your name" />
       </label>
       <h3>Email</h3>
-      <label>
+      <label class="form-label">
         <span>
           The email for your account. This is private information which is not
           displayed in any API routes or your profile. It is also optional.
@@ -45,7 +45,7 @@
         <input v-model="email" type="email" placeholder="Enter your email" />
       </label>
       <h3>Bio</h3>
-      <label>
+      <label class="form-label">
         <span>
           A description of yourself which other users can see on your profile.
         </span>
@@ -70,7 +70,7 @@
     </section>
     <section class="pad-maker">
       <h3>Theme</h3>
-      <label>
+      <label class="form-label">
         <span
           >Change the global site theme of XIVMods. You can choose from light
           mode and dark mode. You can switch it using this button or anywhere by
