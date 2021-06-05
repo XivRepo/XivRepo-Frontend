@@ -51,6 +51,22 @@
         </span>
         <input v-model="bio" type="text" placeholder="Enter your bio" />
       </label>
+      <h3>Adult Content</h3>
+      <label>
+        <span>
+          This setting will allow you to view 18+ mods that have been submitted
+          to the site. By enabling this option, you agree that you are of legal
+          age to view pornographic content in your region.
+        </span>
+        <div style="margin-left: 1em">
+          <VueToggles
+            checked-text="NSFW"
+            unchecked-text="SFW"
+            :value="show_nsfw"
+            @click="show_nsfw = !show_nsfw"
+          />
+        </div>
+      </label>
     </section>
     <section class="pad-maker">
       <h3>Theme</h3>
@@ -90,17 +106,21 @@
 
 <script>
 import axios from 'axios'
+import VueToggles from 'vue-toggles'
+
 import ConfirmPopup from '~/components/ui/ConfirmPopup'
 
 export default {
   components: {
     ConfirmPopup,
+    VueToggles,
   },
   fetch() {
     this.username = this.$auth.user.username
     this.name = this.$auth.user.name
     this.email = this.$auth.user.email
     this.bio = this.$auth.user.bio
+    this.nsfw = this.$auth.user.show_nsfw
     this.token = this.$auth.token
   },
   data() {
@@ -111,6 +131,7 @@ export default {
       bio: '',
       token: '',
       confirm_delete: false,
+      show_nsfw: false,
     }
   },
   methods: {
@@ -139,6 +160,7 @@ export default {
           name: this.name,
           email: this.email,
           bio: this.bio,
+          show_nsfw: this.show_nsfw,
         }
 
         await axios.patch(
