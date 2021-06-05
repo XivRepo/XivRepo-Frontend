@@ -397,6 +397,7 @@ export default {
           client_side: this.clientSideType.toLowerCase(),
           server_side: this.serverSideType.toLowerCase(),
           slug: this.mod.slug,
+          is_nsfw: this.mod.is_nsfw,
           license: this.license.short,
           donation_urls: this.donationPlatforms.map((it, index) => {
             return {
