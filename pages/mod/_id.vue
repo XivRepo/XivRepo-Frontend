@@ -190,20 +190,6 @@
             </div>
           </div>
           <div class="stat">
-            <FileTextIcon />
-            <div class="info">
-              <h4>License</h4>
-              <p v-tooltip="mod.license.name" class="value ellipsis">
-                <a
-                  v-if="mod.license.url ? mod.license.url : '#'"
-                  :href="mod.license.url"
-                >
-                  {{ mod.license.id.toUpperCase() }}</a
-                >
-              </p>
-            </div>
-          </div>
-          <div class="stat">
             <CodeIcon />
             <div class="info">
               <h4>Project ID</h4>
@@ -320,7 +306,6 @@ import MFooter from '~/components/layout/MFooter'
 import CalendarIcon from '~/assets/images/utils/calendar.svg?inline'
 import DownloadIcon from '~/assets/images/utils/download.svg?inline'
 import EditIcon from '~/assets/images/utils/edit.svg?inline'
-import FileTextIcon from '~/assets/images/utils/file-text.svg?inline'
 import CodeIcon from '~/assets/images/sidebar/mod.svg?inline'
 import ReportIcon from '~/assets/images/utils/report.svg?inline'
 import FollowIcon from '~/assets/images/utils/heart.svg?inline'
@@ -337,7 +322,6 @@ export default {
     DownloadIcon,
     CalendarIcon,
     EditIcon,
-    FileTextIcon,
     CodeIcon,
     ReportIcon,
     FollowIcon,
