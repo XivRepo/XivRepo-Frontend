@@ -182,31 +182,6 @@
         />
       </label>
     </section>
-    <section class="license">
-      <div class="title">
-        <h3>License</h3>
-      </div>
-      <label>
-        <span>
-          It is really important to choose a proper license for your mod. You
-          may choose one from our list or provide a URL to your own license. URL
-          field will be filled automatically for provided licenses
-        </span>
-        <div class="input-group">
-          <Multiselect
-            v-model="license"
-            placeholder="Select one"
-            track-by="short"
-            label="name"
-            :options="availableLicenses"
-            :searchable="true"
-            :close-on-select="true"
-            :show-labels="false"
-          />
-          <input v-model="license_url" type="url" placeholder="License URL" />
-        </div>
-      </label>
-    </section>
     <section class="donations">
       <div class="title">
         <h3>Donation links</h3>
