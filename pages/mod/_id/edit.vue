@@ -133,7 +133,8 @@
       <label class="form-label">
         <span>
           To help you mod be found easier by users, you can add additional for
-          users to search with here.
+          users to search with here. Don't see the tag you are looking for?
+          Please submit a request <a class="link" href="/request/tag">here</a>.
         </span>
         <multiselect
           id="tags"
@@ -151,10 +152,7 @@
           placeholder="Choose tags"
         />
       </label>
-      <label class="form-label">
-        Don't see the tag you are looking for? Please submit a request&nbsp;
-        <a class="link" href="/request/tag">here</a>.
-      </label>
+      <label class="form-label"> </label>
       <h3>Adult Content</h3>
       <label class="form-label">
         <span>
