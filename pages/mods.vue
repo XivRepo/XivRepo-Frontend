@@ -301,7 +301,7 @@
             >
             </SearchFilter>
           </section>
-          <section v-if="!$auth.user.show_nsfw">
+          <section v-if="!$auth || !$auth.user || !$auth.user.show_nsfw">
             <h3>Adult Content</h3>
             <client-only>
               <VueToggles
