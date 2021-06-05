@@ -301,6 +301,17 @@
             >
             </SearchFilter>
           </section>
+          // TODO: Remove Always Show
+          <!-- <section v-if="!$auth.user.show_nsfw"> -->
+          <section v-if="true">
+            <h3>Adult Content</h3>
+            <VueToggles
+              checked-text="Shown"
+              unchecked-text="Hidden"
+              :value="show_nsfw"
+              @click="show_nsfw = !show_nsfw"
+            />
+          </section>
         </div>
         <m-footer class="footer" hide-small />
       </section>
@@ -309,8 +320,10 @@
 </template>
 
 <script>
-import Multiselect from 'vue-multiselect'
 import axios from 'axios'
+import Multiselect from 'vue-multiselect'
+import VueToggles from 'vue-toggles'
+
 import SearchResult from '~/components/ui/ProjectCard'
 import Pagination from '~/components/ui/Pagination'
 import SearchFilter from '~/components/ui/search/SearchFilter'
@@ -330,6 +343,7 @@ export default {
     SearchFilter,
     SearchIcon,
     ExitIcon,
+    VueToggles,
   },
   async fetch() {
     if (this.$route.query.q) this.query = this.$route.query.q
@@ -392,6 +406,7 @@ export default {
       results: null,
       pages: [],
       currentPage: 1,
+      show_nsfw: false,
 
       sortTypes: [
         { display: 'Relevance', name: 'relevance' },
