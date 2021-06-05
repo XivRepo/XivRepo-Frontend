@@ -436,7 +436,7 @@ export default {
           }
         }
 
-        const res = await axios.get(url)
+        const res = await axios.get(url, this.$auth.headers)
 
         this.versions = res.data
         this.firstRun = false
@@ -582,7 +582,7 @@ export default {
           }
         }
 
-        const res = await axios.get(url)
+        const res = await axios.get(url, this.$auth.headers)
         this.results = res.data.hits
 
         const pageAmount = Math.ceil(res.data.total_hits / res.data.limit)
