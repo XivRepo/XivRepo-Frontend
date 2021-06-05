@@ -22,12 +22,12 @@
       </header>
       <section class="essentials">
         <h3>Name</h3>
-        <label>
+        <label class="form-label">
           <span> Be creative and descriptive with your mod name. </span>
           <input v-model="name" type="text" placeholder="Enter the name" />
         </label>
         <h3>Summary</h3>
-        <label>
+        <label class="form-label">
           <span>
             Give a quick description to your mod. It will appear in the search.
           </span>
@@ -38,7 +38,7 @@
           />
         </label>
         <h3>Categories</h3>
-        <label>
+        <label class="form-label">
           <span>
             Select up to 12 categories. They will help others find your mod.
           </span>
@@ -59,6 +59,23 @@
             :hide-selected="true"
             placeholder="Choose categories"
           />
+        </label>
+        <h3>Adult Content</h3>
+        <label>
+          <span>
+            Does your mod contain adult content? If so please make sure to mark
+            it as NSFW. Mods not marked properly may be subject to remove.
+            <div style="margin-top: 0.7em">
+              <client-only>
+                <VueToggles
+                  checked-text="NSFW"
+                  unchecked-text="SFW"
+                  :value="nsfw"
+                  @click="nsfw = !nsfw"
+                />
+              </client-only>
+            </div>
+          </span>
         </label>
       </section>
       <section class="mod-icon rows">
@@ -137,7 +154,7 @@
             <tr>
               <th>Name</th>
               <th>Version</th>
-              <th>Version Type</th>
+              <th>Release Type</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -151,14 +168,9 @@
               :key="version.id"
             >
               <td>
-                {{ version.name }}
+                {{ version.version_title }}
               </td>
               <td>{{ version.version_number }}</td>
-              <td>
-                <FabricIcon v-if="version.loaders.includes('fabric')" />
-                <ForgeIcon v-if="version.loaders.includes('forge')" />
-              </td>
-              <td>{{ version.game_versions.join(', ') }}</td>
               <td>
                 <span
                   v-if="version.release_channel === 'release'"
@@ -212,7 +224,7 @@
           </div>
           <div class="main">
             <h3>Name</h3>
-            <label>
+            <label class="form-label">
               <span>
                 This is what users will see first. Will default to version
                 number
@@ -224,7 +236,7 @@
               />
             </label>
             <h3>Number</h3>
-            <label>
+            <label class="form-label">
               <span>
                 That's how your version will appear in mod lists and in URLs
               </span>
@@ -235,7 +247,7 @@
               />
             </label>
             <h3>Channel</h3>
-            <label>
+            <label class="form-label">
               <span>
                 It is important to notify players and pack makers if the version
                 is stable
@@ -251,7 +263,7 @@
               />
             </label>
             <h3>Files</h3>
-            <label>
+            <label class="form-label">
               <span>
                 You should upload a single archive file. However, you are
                 allowed to upload multiple
@@ -263,6 +275,42 @@
                 @change="updateVersionFiles"
               />
             </label>
+            <div class="uploader">
+              <client-only>
+                <FileUpload
+                  ref="upload"
+                  v-model="versions[currentVersionIndex].files"
+                  extensions="zip,rar,7z,7zip,tar.gz,ttmp,ttmp2"
+                  accept="image/png,image/gif,image/jpeg,image/webp"
+                  :multiple="true"
+                  :size="1024 * 1024 * 10"
+                  :post-action="
+                    api_base +
+                    '/api/v1/version/' +
+                    versions[currentVersionIndex] +
+                    '/file'
+                  "
+                  @input-filter="inputFilter"
+                  @input-file="inputFile"
+                >
+                  Choose Files
+                </FileUpload>
+              </client-only>
+            </div>
+            <ul class="file-list">
+              <li
+                v-for="file in versions[currentVersionIndex].files"
+                :key="file.id"
+              >
+                <span>{{ file.name }}</span> -
+                <span>{{ file.size | formatSize }}</span> -
+                <span v-if="file.error">{{ file.error }}</span>
+                <span v-else-if="file.success">success</span>
+                <span v-else-if="file.active">active</span>
+                <span v-else-if="!!file.error">{{ file.error }}</span>
+                <span v-else></span>
+              </li>
+            </ul>
           </div>
           <div class="changelog">
             <h3>Changelog</h3>
@@ -318,7 +366,7 @@
           <h3>License</h3>
           <i>— this section is optional</i>
         </div>
-        <label>
+        <label class="form-label">
           <span>
             It is really important to choose a proper license for your mod. You
             may choose one from our list or provide a URL to your own license.
@@ -397,20 +445,34 @@
 <script>
 import axios from 'axios'
 import Multiselect from 'vue-multiselect'
+import VueToggles from 'vue-toggles'
+import FileUpload from 'vue-upload-component/dist/vue-upload-component.part.js'
+import 'vue-upload-component/dist/vue-upload-component.part.css'
 
 import FileInput from '~/components/ui/FileInput'
 import MFooter from '~/components/layout/MFooter'
-
-import ForgeIcon from '~/assets/images/categories/forge.svg?inline'
-import FabricIcon from '~/assets/images/categories/fabric.svg?inline'
 
 export default {
   components: {
     MFooter,
     FileInput,
     Multiselect,
-    ForgeIcon,
-    FabricIcon,
+    VueToggles,
+    FileUpload,
+  },
+  filters: {
+    formatSize(size) {
+      if (size > 1024 * 1024 * 1024 * 1024) {
+        return (size / 1024 / 1024 / 1024 / 1024).toFixed(2) + ' TB'
+      } else if (size > 1024 * 1024 * 1024) {
+        return (size / 1024 / 1024 / 1024).toFixed(2) + ' GB'
+      } else if (size > 1024 * 1024) {
+        return (size / 1024 / 1024).toFixed(2) + ' MB'
+      } else if (size > 1024) {
+        return (size / 1024).toFixed(2) + ' KB'
+      }
+      return size.toString() + ' B'
+    },
   },
   async asyncData(data) {
     const [
@@ -443,8 +505,11 @@ export default {
       compiledBody: '',
       releaseChannels: ['beta', 'alpha', 'release'],
       currentVersionIndex: -1,
+      filePost: '',
+      filePut: '',
 
       cdn: process.env.cdnUrl,
+      api_base: process.env.API_URL,
       name: '',
       slug: '',
       draft: false,
@@ -459,6 +524,7 @@ export default {
       icon: null,
       license: null,
       license_url: null,
+      nsfw: false,
 
       sideTypes: ['Required', 'Optional', 'Unsupported'],
       clientSideType: 'Required',
@@ -490,6 +556,7 @@ export default {
       this.draft = true
       await this.createMod()
     },
+
     async createMod() {
       this.$nuxt.$loading.start()
 
@@ -527,6 +594,7 @@ export default {
           license_id: this.license ? this.license.short : 'arr',
           license_url: this.license_url,
           is_draft: this.draft,
+          is_nsfw: this.nsfw,
           donation_urls: this.donationPlatforms.map((it, index) => {
             return {
               id: it.short,
@@ -623,8 +691,9 @@ export default {
       this.versions.push({
         raw_files: [],
         file_parts: [],
-        version_number: '',
-        version_title: '',
+        files: [],
+        version_number: '1.0.0',
+        version_title: 'Initial Release',
         version_body: '',
         dependencies: [],
         game_versions: [],
@@ -639,6 +708,30 @@ export default {
     deleteVersion() {
       this.versions.splice(this.currentVersionIndex, 1)
       this.currentVersionIndex = -1
+    },
+
+    inputFilter(newFile, oldFile, prevent) {
+      if (newFile && !oldFile) {
+        if (/(\/|^)(Thumbs\.db|desktop\.ini|\..+)$/.test(newFile.name)) {
+          return prevent()
+        }
+
+        if (/\.(php5?|html?|jsx?)$/i.test(newFile.name)) {
+          return prevent()
+        }
+      }
+    },
+
+    inputFile(newFile, oldFile) {
+      if (newFile && !oldFile) {
+        console.log('add', newFile)
+      }
+      if (newFile && oldFile) {
+        console.log('update', newFile)
+      }
+      if (!newFile && oldFile) {
+        console.log('remove', oldFile)
+      }
     },
   },
 }
@@ -676,6 +769,7 @@ export default {
     'mod-icon     mod-icon    mod-icon' auto
     'game-sides   game-sides  game-sides' auto
     'description  description description' auto
+    'files         files        files' auto
     'versions     versions    versions' auto
     'extra-links  extra-links extra-links' auto
     'license      license     license' auto
@@ -690,6 +784,7 @@ export default {
       'essentials   essentials  mod-icon' auto
       'game-sides   game-sides  game-sides' auto
       'description  description description' auto
+      'files         files        files' auto
       'versions     versions    versions' auto
       'extra-links  license     license' auto
       'donations    donations   .' auto
@@ -783,6 +878,18 @@ section.description {
   }
 }
 
+section.files {
+  grid-area: files;
+
+  .initial-release {
+    display: grid;
+    grid-template:
+      'main changelog' auto
+      / 5fr 4fr;
+    column-gap: var(--spacing-card-md);
+  }
+}
+
 section.versions {
   grid-area: versions;
 
@@ -809,8 +916,8 @@ section.versions {
     th,
     td {
       &:first-child {
-        text-align: center;
-        width: 7%;
+        text-align: left;
+        width: 30%;
 
         svg {
           color: var(--color-text);
@@ -823,7 +930,7 @@ section.versions {
       }
 
       &:nth-child(2),
-      &:nth-child(5) {
+      &:nth-child(3) {
         padding-left: 0;
         width: 12%;
       }
@@ -883,6 +990,23 @@ section.versions {
 
       .textarea-wrapper {
         flex: 1;
+      }
+    }
+
+    .uploader {
+      margin-top: 1em;
+      label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: var(--spacing-card-sm) var(--spacing-card-md);
+      }
+
+      span {
+        border: 2px dashed var(--color-divider-dark);
+        border-radius: var(--size-rounded-control);
+        padding: var(--spacing-card-md) var(--spacing-card-lg);
       }
     }
   }

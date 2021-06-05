@@ -28,14 +28,14 @@
     </header>
     <section class="essentials">
       <h3>Name</h3>
-      <label>
+      <label class="form-label">
         <span>
           Be creative. TechCraft v7 won't be searchable and won't be clicked on
         </span>
         <input v-model="mod.title" type="text" placeholder="Enter the name" />
       </label>
       <h3>Summary</h3>
-      <label>
+      <label class="form-label">
         <span>
           Give a quick description to your mod. It will appear in the search
         </span>
@@ -46,7 +46,7 @@
         />
       </label>
       <h3>Categories</h3>
-      <label>
+      <label class="form-label">
         <span>
           Select up to 3 categories. They will help to find your mod
         </span>
@@ -67,6 +67,23 @@
           placeholder="Choose categories"
         />
       </label>
+      <h3>Adult Content</h3>
+      <label class="form-label">
+        <span>
+          Does your mod contain adult content? If so please make sure to mark it
+          as NSFW. Mods not marked properly may be subject to remove.
+        </span>
+      </label>
+      <div style="margin-top: 0.7em">
+        <client-only>
+          <VueToggles
+            checked-text="NSFW"
+            unchecked-text="SFW"
+            :value="mod.is_nsfw"
+            @click="mod.is_nsfw = !mod.is_nsfw"
+          />
+        </client-only>
+      </div>
     </section>
     <section class="mod-icon rows">
       <h3>Icon</h3>
@@ -245,6 +262,7 @@
 <script>
 import axios from 'axios'
 import Multiselect from 'vue-multiselect'
+import VueToggles from 'vue-toggles'
 
 import FileInput from '~/components/ui/FileInput'
 
@@ -252,6 +270,7 @@ export default {
   components: {
     FileInput,
     Multiselect,
+    VueToggles,
   },
   async asyncData(data) {
     try {
@@ -378,6 +397,7 @@ export default {
           client_side: this.clientSideType.toLowerCase(),
           server_side: this.serverSideType.toLowerCase(),
           slug: this.mod.slug,
+          is_nsfw: this.mod.is_nsfw,
           license: this.license.short,
           donation_urls: this.donationPlatforms.map((it, index) => {
             return {

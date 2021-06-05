@@ -182,6 +182,14 @@
             </div>
           </div>
           <div class="stat">
+            <InfoIcon />
+            <div class="info">
+              <h4>Rating</h4>
+              <p v-if="mod.is_nsfw" class="value">NSFW</p>
+              <p v-else class="value">SFW</p>
+            </div>
+          </div>
+          <div class="stat">
             <FileTextIcon />
             <div class="info">
               <h4>License</h4>
@@ -316,6 +324,7 @@ import FileTextIcon from '~/assets/images/utils/file-text.svg?inline'
 import CodeIcon from '~/assets/images/sidebar/mod.svg?inline'
 import ReportIcon from '~/assets/images/utils/report.svg?inline'
 import FollowIcon from '~/assets/images/utils/heart.svg?inline'
+import InfoIcon from '~/assets/images/utils/info.svg?inline'
 
 import ExternalIcon from '~/assets/images/utils/external.svg?inline'
 
@@ -332,6 +341,7 @@ export default {
     CodeIcon,
     ReportIcon,
     FollowIcon,
+    InfoIcon,
   },
   props: {
     cdn: {
