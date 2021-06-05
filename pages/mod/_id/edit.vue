@@ -74,14 +74,16 @@
           as NSFW. Mods not marked properly may be subject to remove.
         </span>
       </label>
-      <client-only>
-        <VueToggles
-          checked-text="NSFW"
-          unchecked-text="SFW"
-          :value="mod.is_nsfw"
-          @click="mod.is_nsfw = !mod.is_nsfw"
-        />
-      </client-only>
+      <div style="margin-top: 0.7em">
+        <client-only>
+          <VueToggles
+            checked-text="NSFW"
+            unchecked-text="SFW"
+            :value="mod.is_nsfw"
+            @click="mod.is_nsfw = !mod.is_nsfw"
+          />
+        </client-only>
+      </div>
     </section>
     <section class="mod-icon rows">
       <h3>Icon</h3>
