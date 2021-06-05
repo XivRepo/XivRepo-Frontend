@@ -185,7 +185,7 @@
             <InfoIcon />
             <div class="info">
               <h4>Rating</h4>
-              <p v-if="mod.nsfw" class="value">NSFW</p>
+              <p v-if="mod.is_nsfw" class="value">NSFW</p>
               <p v-else class="value">SFW</p>
             </div>
           </div>
