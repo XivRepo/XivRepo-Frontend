@@ -201,6 +201,11 @@ svg {
 a {
   color: inherit;
   text-decoration: none;
+
+  &.link {
+    text-decoration: underline;
+    font-weight: bold;
+  }
 }
 
 h2 {

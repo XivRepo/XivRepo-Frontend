@@ -40,7 +40,7 @@
         <h3>Categories</h3>
         <label class="form-label">
           <span>
-            Select up to 12 categories. They will help others find your mod.
+            Select up to 3 categories. They will help others find your mod.
           </span>
           <multiselect
             id="categories"
@@ -54,28 +54,10 @@
             :close-on-select="false"
             :clear-on-select="false"
             :show-labels="true"
-            :max="12"
-            :limit="8"
+            :max="3"
             :hide-selected="true"
             placeholder="Choose categories"
           />
-        </label>
-        <h3>Adult Content</h3>
-        <label>
-          <span>
-            Does your mod contain adult content? If so please make sure to mark
-            it as NSFW. Mods not marked properly may be subject to remove.
-            <div style="margin-top: 0.7em">
-              <client-only>
-                <VueToggles
-                  checked-text="NSFW"
-                  unchecked-text="SFW"
-                  :value="nsfw"
-                  @click="nsfw = !nsfw"
-                />
-              </client-only>
-            </div>
-          </span>
         </label>
       </section>
       <section class="mod-icon rows">
@@ -327,6 +309,49 @@
           </div>
         </div>
       </section>
+      <section class="additional-information">
+        <h3>Tags</h3>
+        <label class="form-label">
+          <span>
+            To help you mod be found easier by users, you can add additional for
+            users to search with here. Don't see the tag you are looking for?
+            Please submit a request&nbsp;
+            <a class="link" href="/request/tag">here</a>.
+          </span>
+          <multiselect
+            id="tags"
+            v-model="tags"
+            :options="availableTags"
+            :custom-label="versionLabels"
+            :loading="availableTags.length === 0"
+            :multiple="true"
+            :searchable="true"
+            :show-no-results="false"
+            :close-on-select="false"
+            :clear-on-select="false"
+            :show-labels="true"
+            :hide-selected="true"
+            placeholder="Choose tags"
+          />
+        </label>
+        <h3>Adult Content</h3>
+        <label>
+          <span>
+            Does your mod contain adult content? If so please make sure to mark
+            it as NSFW. Mods not marked properly may be subject to remove.
+            <div style="margin-top: 0.7em">
+              <client-only>
+                <VueToggles
+                  checked-text="NSFW"
+                  unchecked-text="SFW"
+                  :value="nsfw"
+                  @click="nsfw = !nsfw"
+                />
+              </client-only>
+            </div>
+          </span>
+        </label>
+      </section>
       <section class="extra-links">
         <div class="title">
           <h3>External links</h3>
@@ -451,12 +476,14 @@ export default {
   async asyncData(data) {
     const [
       availableCategories,
+      availableTags,
       availableLoaders,
       availableGameVersions,
       availableLicenses,
       availableDonationPlatforms,
     ] = (
       await Promise.all([
+        axios.get(`${data.env.apiUrl}/api/v1/tag/category`),
         axios.get(`${data.env.apiUrl}/api/v1/tag/category`),
         axios.get(`${data.env.apiUrl}/api/v1/tag/loader`),
         axios.get(`${data.env.apiUrl}/api/v1/tag/game_version`),
@@ -467,6 +494,7 @@ export default {
 
     return {
       availableCategories,
+      availableTags,
       availableLoaders,
       availableGameVersions,
       availableLicenses,
@@ -491,13 +519,17 @@ export default {
       body: '',
       versions: [],
       categories: [],
+      tags: [],
       issues_url: null,
       source_url: null,
       wiki_url: null,
       discord_url: null,
       icon: null,
-      license: null,
-      license_url: null,
+      license: {
+        short: 'custom',
+        name: 'Custom License',
+      },
+      license_url: 'https://google.com/',
       nsfw: false,
 
       sideTypes: ['Required', 'Optional', 'Unsupported'],
@@ -559,6 +591,7 @@ export default {
             },
           ],
           categories: this.categories,
+          tags: this.tags,
           issues_url: this.issues_url,
           source_url: this.source_url,
           wiki_url: this.wiki_url,
@@ -745,8 +778,8 @@ export default {
     'description  description description' auto
     'files         files        files' auto
     'versions     versions    versions' auto
+    'additional-information additional-information additional-information' auto
     'extra-links  extra-links extra-links' auto
-    'license      license     license' auto
     'donations    donations   donations' auto
     'footer       footer      footer' auto
     / 4fr 1fr 4fr;
@@ -760,7 +793,7 @@ export default {
       'description  description description' auto
       'files         files        files' auto
       'versions     versions    versions' auto
-      'extra-links  license     license' auto
+      'additional-information additional-information extra-links' auto
       'donations    donations   .' auto
       'footer       footer      footer' auto
       / 4fr 1fr 4fr;
@@ -862,6 +895,10 @@ section.files {
       / 5fr 4fr;
     column-gap: var(--spacing-card-md);
   }
+}
+
+section.additional-information {
+  grid-area: additional-information;
 }
 
 section.versions {
