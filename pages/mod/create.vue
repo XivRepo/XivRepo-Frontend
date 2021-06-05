@@ -22,12 +22,12 @@
       </header>
       <section class="essentials">
         <h3>Name</h3>
-        <label>
+        <label class="form-label">
           <span> Be creative and descriptive with your mod name. </span>
           <input v-model="name" type="text" placeholder="Enter the name" />
         </label>
         <h3>Summary</h3>
-        <label>
+        <label class="form-label">
           <span>
             Give a quick description to your mod. It will appear in the search.
           </span>
@@ -38,7 +38,7 @@
           />
         </label>
         <h3>Categories</h3>
-        <label>
+        <label class="form-label">
           <span>
             Select up to 12 categories. They will help others find your mod.
           </span>
@@ -59,6 +59,21 @@
             :hide-selected="true"
             placeholder="Choose categories"
           />
+        </label>
+        <h3>Adult Content</h3>
+        <label>
+          <span>
+            Does your mod contain adult content? If so please make sure to mark
+            it as NSFW. Mods found violating this may be subject to remove.
+            <div style="margin-top: 0.7em">
+              <VueToggles
+                checked-text="NSFW"
+                unchecked-text="SFW"
+                :value="nsfw"
+                @click="nsfw = !nsfw"
+              />
+            </div>
+          </span>
         </label>
       </section>
       <section class="mod-icon rows">
@@ -207,7 +222,7 @@
           </div>
           <div class="main">
             <h3>Name</h3>
-            <label>
+            <label class="form-label">
               <span>
                 This is what users will see first. Will default to version
                 number
@@ -219,7 +234,7 @@
               />
             </label>
             <h3>Number</h3>
-            <label>
+            <label class="form-label">
               <span>
                 That's how your version will appear in mod lists and in URLs
               </span>
@@ -230,7 +245,7 @@
               />
             </label>
             <h3>Channel</h3>
-            <label>
+            <label class="form-label">
               <span>
                 It is important to notify players and pack makers if the version
                 is stable
@@ -246,7 +261,7 @@
               />
             </label>
             <h3>Files</h3>
-            <label>
+            <label class="form-label">
               <span>
                 You should upload a single archive file. However, you are
                 allowed to upload multiple
@@ -342,7 +357,7 @@
           <h3>License</h3>
           <i>— this section is optional</i>
         </div>
-        <label>
+        <label class="form-label">
           <span>
             It is really important to choose a proper license for your mod. You
             may choose one from our list or provide a URL to your own license.
@@ -422,6 +437,7 @@
 import axios from 'axios'
 import Multiselect from 'vue-multiselect'
 import FileUpload from 'vue-upload-component'
+import VueToggles from 'vue-toggles'
 
 import FileInput from '~/components/ui/FileInput'
 import MFooter from '~/components/layout/MFooter'
@@ -432,6 +448,7 @@ export default {
     FileInput,
     Multiselect,
     FileUpload,
+    VueToggles,
   },
   filters: {
     formatSize(size) {
@@ -496,6 +513,7 @@ export default {
       icon: null,
       license: null,
       license_url: null,
+      nsfw: false,
 
       sideTypes: ['Required', 'Optional', 'Unsupported'],
       clientSideType: 'Required',
@@ -565,6 +583,7 @@ export default {
           license_id: this.license ? this.license.short : 'arr',
           license_url: this.license_url,
           is_draft: this.draft,
+          is_nsfw: this.nsfw,
           donation_urls: this.donationPlatforms.map((it, index) => {
             return {
               id: it.short,
