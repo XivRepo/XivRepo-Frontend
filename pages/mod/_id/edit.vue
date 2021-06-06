@@ -275,9 +275,6 @@ export default {
         mod,
         availableCategories,
         availableTags,
-        availableLoaders,
-        availableGameVersions,
-        availableLicenses,
         availableDonationPlatforms,
       ] = (
         await Promise.all([
@@ -287,18 +284,9 @@ export default {
           ),
           axios.get(`${data.env.apiUrl}/api/v1/tag/category`),
           axios.get(`${data.env.apiUrl}/api/v1/tag/category`),
-          axios.get(`${data.env.apiUrl}/api/v1/tag/loader`),
-          axios.get(`${data.env.apiUrl}/api/v1/tag/game_version`),
-          axios.get(`${data.env.apiUrl}/api/v1/tag/license`),
           axios.get(`${data.env.apiUrl}/api/v1/tag/donation_platform`),
         ])
       ).map((it) => it.data)
-
-      mod.license = {
-        short: mod.license.id,
-        name: mod.license.name,
-        url: mod.license.url,
-      }
 
       if (mod.body_url && !mod.body) {
         mod.body = (await axios.get(mod.body_url)).data
@@ -319,18 +307,8 @@ export default {
 
       return {
         mod,
-        clientSideType: mod.client_side.charAt(0) + mod.client_side.slice(1),
-        serverSideType: mod.server_side.charAt(0) + mod.server_side.slice(1),
         availableCategories,
         availableTags,
-        availableLoaders,
-        availableGameVersions,
-        availableLicenses,
-        license: {
-          short: mod.license.id,
-          name: mod.license.name,
-        },
-        license_url: mod.license.url,
         availableDonationPlatforms,
         donationPlatforms,
         donationLinks,
@@ -353,23 +331,6 @@ export default {
 
       sideTypes: ['Required', 'Optional', 'Unsupported'],
     }
-  },
-  watch: {
-    license(newValue, oldValue) {
-      if (newValue == null) {
-        this.license_url = ''
-        return
-      }
-
-      switch (newValue.short) {
-        case 'custom':
-          this.license_url = ''
-          break
-        default:
-          this.license_url =
-            process.env.cdnUrl + `/data/licenses/${newValue.short}.txt`
-      }
-    },
   },
   created() {
     this.$emit('update:link-bar', [['Edit', 'edit']])
@@ -394,12 +355,8 @@ export default {
           wiki_url: this.mod.wiki_url,
           license_url: this.license_url,
           discord_url: this.mod.discord_url,
-          license_id: this.license.short,
-          client_side: this.clientSideType.toLowerCase(),
-          server_side: this.serverSideType.toLowerCase(),
           slug: this.mod.slug,
           is_nsfw: this.mod.is_nsfw,
-          license: this.license.short,
           donation_urls: this.donationPlatforms.map((it, index) => {
             return {
               id: it.short,
