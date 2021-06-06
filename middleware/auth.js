@@ -37,7 +37,7 @@ export default async function (context) {
 
   if (!context.$auth.user) {
     return context.redirect(
-      `${process.env.APIURL}/api/v1/auth/init?url=${process.env.WEBSITEURL}${context.route.fullPath}`
+      `${process.env.apiUrl}/api/v1/auth/init?url=${process.env.siteUrl}${context.route.fullPath}`
     )
   }
 }

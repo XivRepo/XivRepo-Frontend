@@ -27,6 +27,9 @@
               <NuxtLink to="/mods" class="tab">
                 <span>Mods</span>
               </NuxtLink>
+              <NuxtLink to="/mod/random" class="tab">
+                <span>Random</span>
+              </NuxtLink>
               <div v-if="this.$auth.user" class="section">
                 <NuxtLink to="/dashboard/projects" class="tab">
                   <span>Dashboard</span>
