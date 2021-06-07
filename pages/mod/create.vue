@@ -91,6 +91,9 @@
           />
         </div>
       </section>
+      <section class="preview">
+        <h3>Preview Images</h3>
+      </section>
       <section class="description">
         <h3>
           <label
@@ -777,6 +780,7 @@ export default {
     'essentials   essentials  essentials' auto
     'mod-icon     mod-icon    mod-icon' auto
     'game-sides   game-sides  game-sides' auto
+    'preview      preview     preview' auto
     'description  description description' auto
     'files         files        files' auto
     'versions     versions    versions' auto
@@ -792,6 +796,7 @@ export default {
       'advert       advert      advert' auto
       'essentials   essentials  mod-icon' auto
       'game-sides   game-sides  game-sides' auto
+      'preview      preview     preview' auto
       'description  description description' auto
       'files         files        files' auto
       'versions     versions    versions' auto
@@ -828,233 +833,236 @@ header {
 
 section {
   @extend %card;
-
   padding: var(--spacing-card-md) var(--spacing-card-lg);
-}
 
-section.essentials {
-  grid-area: essentials;
-}
-
-section.mod-icon {
-  grid-area: mod-icon;
-
-  img {
-    align-self: flex-start;
-    max-width: 50%;
-    margin-left: var(--spacing-card-lg);
+  &.preview {
+    grid-area: preview;
   }
-}
 
-section.game-sides {
-  grid-area: game-sides;
+  &.essentials {
+    grid-area: essentials;
+  }
 
-  .columns {
-    flex-wrap: wrap;
+  &.mod-icon {
+    grid-area: mod-icon;
 
-    span {
-      flex: 2;
-    }
-
-    .labeled-control {
-      flex: 2;
+    img {
+      align-self: flex-start;
+      max-width: 50%;
       margin-left: var(--spacing-card-lg);
     }
   }
-}
 
-section.description {
-  grid-area: description;
+  &.game-sides {
+    grid-area: game-sides;
 
-  span a {
-    text-decoration: underline;
-  }
+    .columns {
+      flex-wrap: wrap;
 
-  & > .columns {
-    align-items: stretch;
-    min-height: 10rem;
-    max-height: 40rem;
+      span {
+        flex: 2;
+      }
 
-    & > * {
-      flex: 1;
-      max-width: 50%;
+      .labeled-control {
+        flex: 2;
+        margin-left: var(--spacing-card-lg);
+      }
     }
   }
 
-  .markdown-body {
-    overflow-y: auto;
-    padding: 0 var(--spacing-card-sm);
-  }
-}
+  &.description {
+    grid-area: description;
 
-section.files {
-  grid-area: files;
-
-  .initial-release {
-    display: grid;
-    grid-template:
-      'main changelog' auto
-      / 5fr 4fr;
-    column-gap: var(--spacing-card-md);
-  }
-}
-
-section.additional-information {
-  grid-area: additional-information;
-}
-
-section.versions {
-  grid-area: versions;
-
-  table {
-    border-collapse: collapse;
-    margin-bottom: var(--spacing-card-md);
-    background: var(--color-raised-bg);
-    border-radius: var(--size-rounded-card);
-    table-layout: fixed;
-    width: 100%;
-
-    * {
-      text-align: left;
+    span a {
+      text-decoration: underline;
     }
 
-    tr:not(:last-child),
-    tr:first-child {
-      th,
-      td {
-        border-bottom: 1px solid var(--color-divider);
+    & > .columns {
+      align-items: stretch;
+      min-height: 10rem;
+      max-height: 40rem;
+
+      & > * {
+        flex: 1;
+        max-width: 50%;
       }
     }
 
-    th,
-    td {
-      &:first-child {
+    .markdown-body {
+      overflow-y: auto;
+      padding: 0 var(--spacing-card-sm);
+    }
+  }
+
+  &.files {
+    grid-area: files;
+
+    .initial-release {
+      display: grid;
+      grid-template:
+        'main changelog' auto
+        / 5fr 4fr;
+      column-gap: var(--spacing-card-md);
+    }
+  }
+
+  &.additional-information {
+    grid-area: additional-information;
+  }
+
+  &.versions {
+    grid-area: versions;
+
+    table {
+      border-collapse: collapse;
+      margin-bottom: var(--spacing-card-md);
+      background: var(--color-raised-bg);
+      border-radius: var(--size-rounded-card);
+      table-layout: fixed;
+      width: 100%;
+
+      * {
         text-align: left;
-        width: 30%;
+      }
 
-        svg {
-          color: var(--color-text);
-
-          &:hover,
-          &:focus {
-            color: var(--color-text-hover);
-          }
+      tr:not(:last-child),
+      tr:first-child {
+        th,
+        td {
+          border-bottom: 1px solid var(--color-divider);
         }
       }
 
-      &:nth-child(2),
-      &:nth-child(3) {
-        padding-left: 0;
-        width: 12%;
+      th,
+      td {
+        &:first-child {
+          text-align: left;
+          width: 30%;
+
+          svg {
+            color: var(--color-text);
+
+            &:hover,
+            &:focus {
+              color: var(--color-text-hover);
+            }
+          }
+        }
+
+        &:nth-child(2),
+        &:nth-child(3) {
+          padding-left: 0;
+          width: 12%;
+        }
+      }
+
+      th {
+        color: var(--color-heading);
+        font-size: 0.8rem;
+        letter-spacing: 0.02rem;
+        margin-bottom: 0.5rem;
+        margin-top: 1.5rem;
+        padding: 0.75rem 1rem;
+        text-transform: uppercase;
+      }
+
+      td {
+        overflow: hidden;
+        padding: 0.75rem 1rem;
+
+        img {
+          height: 3rem;
+          width: 3rem;
+        }
       }
     }
 
-    th {
-      color: var(--color-heading);
-      font-size: 0.8rem;
-      letter-spacing: 0.02rem;
-      margin-bottom: 0.5rem;
-      margin-top: 1.5rem;
-      padding: 0.75rem 1rem;
-      text-transform: uppercase;
+    hr {
+      background-color: var(--color-divider);
+      border: none;
+      color: var(--color-divider);
+      height: 2px;
+      margin: 0.5rem 0;
     }
 
-    td {
-      overflow: hidden;
-      padding: 0.75rem 1rem;
+    .new-version {
+      display: grid;
+      grid-template:
+        'controls controls' auto
+        'main changelog' auto
+        / 5fr 4fr;
+      column-gap: var(--spacing-card-md);
 
-      img {
-        height: 3rem;
-        width: 3rem;
+      .controls {
+        grid-area: controls;
+        display: flex;
+        flex-direction: row-reverse;
+      }
+
+      .main {
+        grid-area: main;
+      }
+
+      .changelog {
+        grid-area: changelog;
+        display: flex;
+        flex-direction: column;
+
+        .textarea-wrapper {
+          flex: 1;
+        }
+      }
+
+      .uploader {
+        margin-top: 1em;
+        label {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding: var(--spacing-card-sm) var(--spacing-card-md);
+        }
+
+        span {
+          border: 2px dashed var(--color-divider-dark);
+          border-radius: var(--size-rounded-control);
+          padding: var(--spacing-card-md) var(--spacing-card-lg);
+        }
       }
     }
   }
 
-  hr {
-    background-color: var(--color-divider);
-    border: none;
-    color: var(--color-divider);
-    height: 2px;
-    margin: 0.5rem 0;
-  }
+  &.extra-links {
+    grid-area: extra-links;
 
-  .new-version {
-    display: grid;
-    grid-template:
-      'controls controls' auto
-      'main changelog' auto
-      / 5fr 4fr;
-    column-gap: var(--spacing-card-md);
+    label {
+      align-items: center;
+      margin-top: var(--spacing-card-sm);
 
-    .controls {
-      grid-area: controls;
-      display: flex;
-      flex-direction: row-reverse;
-    }
-
-    .main {
-      grid-area: main;
-    }
-
-    .changelog {
-      grid-area: changelog;
-      display: flex;
-      flex-direction: column;
-
-      .textarea-wrapper {
+      span {
         flex: 1;
       }
     }
+  }
 
-    .uploader {
-      margin-top: 1em;
-      label {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: var(--spacing-card-sm) var(--spacing-card-md);
-      }
+  &.license {
+    grid-area: license;
+
+    label {
+      margin-top: var(--spacing-card-sm);
+    }
+  }
+
+  &.donations {
+    grid-area: donations;
+
+    label {
+      align-items: center;
+      margin-top: var(--spacing-card-sm);
 
       span {
-        border: 2px dashed var(--color-divider-dark);
-        border-radius: var(--size-rounded-control);
-        padding: var(--spacing-card-md) var(--spacing-card-lg);
+        flex: 1;
       }
-    }
-  }
-}
-
-section.extra-links {
-  grid-area: extra-links;
-
-  label {
-    align-items: center;
-    margin-top: var(--spacing-card-sm);
-
-    span {
-      flex: 1;
-    }
-  }
-}
-
-section.license {
-  grid-area: license;
-
-  label {
-    margin-top: var(--spacing-card-sm);
-  }
-}
-
-section.donations {
-  grid-area: donations;
-
-  label {
-    align-items: center;
-    margin-top: var(--spacing-card-sm);
-
-    span {
-      flex: 1;
     }
   }
 }
