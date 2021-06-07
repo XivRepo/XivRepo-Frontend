@@ -91,6 +91,52 @@
           />
         </div>
       </section>
+      <section class="preview">
+        <h3>Preview Images</h3>
+        <div class="columns">
+          <div class="column-grow-1 rows">
+            <file-input
+              accept="image/png,image/jpeg,image/gif,image/webp"
+              class="choose-image"
+              prompt="Choose images or drag them here"
+              multiple
+              @change="showPreviewGalleryImages"
+            />
+            <ul class="row-grow-1">
+              <li>Minimum size is 100x100</li>
+              <li>Acceptable formats are PNG, JPEG, GIF and WEBP</li>
+            </ul>
+            <button
+              class="transparent-button"
+              @click="
+                previews = null
+                galleryImages = null
+              "
+            >
+              Reset Images
+            </button>
+          </div>
+          <div class="column-grow-1 rows">
+            <div v-if="galleryImages == null">
+              <span>Nothing here yet!</span>
+            </div>
+            <div v-else>
+              <VueSlickCarousel
+                :arrows="true"
+                :dots="true"
+                v-if="galleryImages.length"
+              >
+                <div v-for="(image, index) in galleryImages" :key="index">
+                  <img :src="image" alt="" />
+                  <h1>
+                    {{ index + 1 }}
+                  </h1>
+                </div>
+              </VueSlickCarousel>
+            </div>
+          </div>
+        </div>
+      </section>
       <section class="description">
         <h3>
           <label
@@ -444,8 +490,12 @@
 <script>
 import axios from 'axios'
 import Multiselect from 'vue-multiselect'
+import VueSlickCarousel from 'vue-slick-carousel'
 import VueToggles from 'vue-toggles'
 import FileUpload from 'vue-upload-component/dist/vue-upload-component.part.js'
+
+import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
+import 'vue-slick-carousel/dist/vue-slick-carousel.css'
 import 'vue-upload-component/dist/vue-upload-component.part.css'
 
 import FileInput from '~/components/ui/FileInput'
@@ -458,6 +508,7 @@ export default {
     Multiselect,
     VueToggles,
     FileUpload,
+    VueSlickCarousel,
   },
   filters: {
     formatSize(size) {
@@ -504,6 +555,7 @@ export default {
   data() {
     return {
       previewImage: null,
+      galleryImages: null,
       compiledBody: '',
       releaseChannels: ['beta', 'alpha', 'release'],
       currentVersionIndex: -1,
@@ -525,6 +577,7 @@ export default {
       wiki_url: null,
       discord_url: null,
       icon: null,
+      previews: [],
       license: {
         short: 'custom',
         name: 'Custom License',
@@ -681,6 +734,20 @@ export default {
         this.previewImage = event.target.result
         this.cdn = process.env.cdnUrl
       }
+    },
+
+    showPreviewGalleryImages(files) {
+      this.previews = files
+      this.galleryImages = []
+      files.forEach((file) => {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+
+        reader.onload = (event) => {
+          this.galleryImages.push(event.target.result)
+          this.cdn = process.env.cdnUrl
+        }
+      })
     },
 
     updateVersionFiles(files) {
