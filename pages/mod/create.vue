@@ -46,7 +46,7 @@
             id="categories"
             v-model="categories"
             :options="availableCategories"
-            :custom-label="versionLabels"
+            :custom-label="categoryLabels"
             :loading="availableCategories.length === 0"
             :multiple="true"
             :searchable="true"
@@ -57,6 +57,45 @@
             :max="3"
             :hide-selected="true"
             placeholder="Choose categories"
+          />
+        </label>
+        <h3>Races</h3>
+        <label class="form-label">
+          <span> Select the character races this mod applies to. </span>
+          <multiselect
+            id="races"
+            v-model="races"
+            :options="availableRaces"
+            :custom-label="categoryLabels"
+            :loading="availableRaces.length === 0"
+            :multiple="true"
+            :searchable="true"
+            :show-no-results="false"
+            :close-on-select="false"
+            :clear-on-select="false"
+            :show-labels="true"
+            :hide-selected="true"
+            placeholder="Choose races"
+          />
+        </label>
+        <h3>Categories</h3>
+        <label class="form-label">
+          <span> Please select the genders which this mod applied to. </span>
+          <multiselect
+            id="genders"
+            v-model="genders"
+            :options="availableGenders"
+            :custom-label="categoryLabels"
+            :loading="availableGenders.length === 0"
+            :multiple="true"
+            :searchable="false"
+            :show-no-results="false"
+            :close-on-select="false"
+            :clear-on-select="false"
+            :show-labels="true"
+            :max="1"
+            :hide-selected="true"
+            placeholder="Choose genders"
           />
         </label>
       </section>
@@ -322,7 +361,7 @@
             id="tags"
             v-model="tags"
             :options="availableTags"
-            :custom-label="versionLabels"
+            :custom-label="categoryLabels"
             :loading="availableTags.length === 0"
             :multiple="true"
             :searchable="true"
@@ -510,6 +549,19 @@ export default {
       filePost: '',
       filePut: '',
 
+      availableRaces: [
+        'hyur',
+        'elezen',
+        'miqote',
+        'lalafell',
+        'au_ra',
+        'roegadyn',
+        'hrothgar',
+        'viera',
+        'all',
+      ],
+      availableGenders: ['male', 'female', 'unisex'],
+
       cdn: process.env.cdnUrl,
       api_base: process.env.API_URL,
       name: '',
@@ -519,6 +571,8 @@ export default {
       body: '',
       versions: [],
       categories: [],
+      races: [],
+      genders: [],
       tags: [],
       issues_url: null,
       source_url: null,
@@ -591,6 +645,8 @@ export default {
             },
           ],
           categories: this.categories,
+          races: this.races,
+          genders: this.genders,
           tags: this.tags,
           issues_url: this.issues_url,
           source_url: this.source_url,
@@ -658,7 +714,7 @@ export default {
       this.$nuxt.$loading.finish()
     },
 
-    versionLabels(id) {
+    categoryLabels(id) {
       if (id) {
         return this.toProperCase(id.replace(/_/g, ' '))
       } else {
