@@ -506,6 +506,7 @@ export default {
       previewImage: null,
       compiledBody: '',
       releaseChannels: ['beta', 'alpha', 'release'],
+      dependencyDetails: [],
       currentVersionIndex: -1,
       filePost: '',
       filePut: '',
@@ -520,6 +521,7 @@ export default {
       versions: [],
       categories: [],
       tags: [],
+      dependencies: [],
       issues_url: null,
       source_url: null,
       wiki_url: null,
@@ -794,7 +796,7 @@ export default {
       'files         files        files' auto
       'versions     versions    versions' auto
       'additional-information additional-information extra-links' auto
-      'donations    donations   .' auto
+      'additional-information additional-information donations' auto
       'footer       footer      footer' auto
       / 4fr 1fr 4fr;
   }
