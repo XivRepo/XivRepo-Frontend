@@ -199,7 +199,11 @@
         </div>
         <div class="section">
           <h3>Categories</h3>
-          <Categories :categories="mod.categories.concat(mod.loaders)" />
+          <Categories :categories="mod.categories" />
+          <h3>Races</h3>
+          <Categories :categories="mod.races" />
+          <h3>Genders</h3>
+          <Categories :categories="mod.genders" />
         </div>
         <div class="section">
           <h3>Members</h3>
