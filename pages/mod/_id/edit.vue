@@ -71,7 +71,7 @@
         <span> Select the character races this mod applies to. </span>
         <multiselect
           id="races"
-          v-model="this.mod.races"
+          v-model="mod.races"
           :options="availableRaces"
           :custom-label="categoryLabels"
           :loading="availableRaces.length === 0"
@@ -90,7 +90,7 @@
         <span> Please select the genders which this mod applied to. </span>
         <multiselect
           id="genders"
-          v-model="this.mod.genders"
+          v-model="mod.genders"
           :options="availableGenders"
           :custom-label="categoryLabels"
           :loading="availableGenders.length === 0"
