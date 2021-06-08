@@ -29,9 +29,7 @@
     <section class="essentials">
       <h3>Name</h3>
       <label class="form-label">
-        <span>
-          Be creative. TechCraft v7 won't be searchable and won't be clicked on
-        </span>
+        <span> Be creative and descriptive with your mod name </span>
         <input v-model="mod.title" type="text" placeholder="Enter the name" />
       </label>
       <h3>Summary</h3>
@@ -54,7 +52,7 @@
           id="categories"
           v-model="mod.categories"
           :options="availableCategories"
-          :custom-label="versionLabels"
+          :custom-label="categoryLabels"
           :loading="availableCategories.length === 0"
           :multiple="true"
           :searchable="false"
@@ -66,6 +64,45 @@
           :limit="6"
           :hide-selected="true"
           placeholder="Choose categories"
+        />
+      </label>
+      <h3>Races</h3>
+      <label class="form-label">
+        <span> Select the character races this mod applies to. </span>
+        <multiselect
+          id="races"
+          v-model="mod.races"
+          :options="availableRaces"
+          :custom-label="categoryLabels"
+          :loading="availableRaces.length === 0"
+          :multiple="true"
+          :searchable="true"
+          :show-no-results="false"
+          :close-on-select="false"
+          :clear-on-select="false"
+          :show-labels="true"
+          :hide-selected="true"
+          placeholder="Choose races"
+        />
+      </label>
+      <h3>Genders</h3>
+      <label class="form-label">
+        <span> Please select the genders which this mod applied to. </span>
+        <multiselect
+          id="genders"
+          v-model="mod.genders"
+          :options="availableGenders"
+          :custom-label="categoryLabels"
+          :loading="availableGenders.length === 0"
+          :multiple="true"
+          :searchable="false"
+          :show-no-results="false"
+          :close-on-select="false"
+          :clear-on-select="false"
+          :show-labels="true"
+          :max="1"
+          :hide-selected="true"
+          placeholder="Choose genders"
         />
       </label>
     </section>
@@ -140,7 +177,7 @@
           id="tags"
           v-model="mod.tags"
           :options="availableTags"
-          :custom-label="versionLabels"
+          :custom-label="categoryLabels"
           :loading="availableTags.length === 0"
           :multiple="true"
           :searchable="true"
@@ -360,6 +397,18 @@ export default {
       iconChanged: false,
 
       sideTypes: ['Required', 'Optional', 'Unsupported'],
+      availableRaces: [
+        'hyur',
+        'elezen',
+        'miqote',
+        'lalafell',
+        'au_ra',
+        'roegadyn',
+        'hrothgar',
+        'viera',
+        'all',
+      ],
+      availableGenders: ['male', 'female', 'unisex'],
     }
   },
   created() {
@@ -374,10 +423,13 @@ export default {
       this.$nuxt.$loading.start()
 
       try {
+        console.log(this.mod)
         const data = {
           title: this.mod.title,
           description: this.mod.description,
           body: this.mod.body,
+          races: this.mod.races,
+          genders: this.mod.genders,
           dependencies: this.dependencies,
           categories: this.mod.categories,
           tags: this.mod.tags,
@@ -417,10 +469,12 @@ export default {
           )
         }
 
-        await this.$router.replace(
+        await this.$router.push(
           `/mod/${this.mod.slug ? this.mod.slug : this.mod.id}`
         )
+        await this.$nuxt.refresh()
       } catch (err) {
+        console.log(err)
         this.$notify({
           group: 'main',
           title: 'An Error Occurred',
@@ -448,7 +502,7 @@ export default {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
       })
     },
-    versionLabels(id) {
+    categoryLabels(id) {
       if (id) {
         return this.toProperCase(id.replace(/_/g, ' '))
       } else {
