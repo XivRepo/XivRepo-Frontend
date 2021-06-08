@@ -202,6 +202,21 @@
           <Categories :categories="mod.categories.concat(mod.loaders)" />
         </div>
         <div class="section">
+          <h3>Dependencies</h3>
+          <div
+            v-for="dependency in mod.dependencies"
+            :key="dependency.id"
+            class="team-member columns"
+          >
+            <img :src="dependency.icon_url" alt="profile-picture" />
+            <div class="member-info">
+              <nuxt-link :to="'/mod/' + dependency.slug">
+                <h4>{{ dependency.title }}</h4>
+              </nuxt-link>
+            </div>
+          </div>
+        </div>
+        <div class="section">
           <h3>Members</h3>
           <div
             v-for="member in members"
