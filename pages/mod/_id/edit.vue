@@ -177,7 +177,7 @@
           id="tags"
           v-model="mod.tags"
           :options="availableTags"
-          :custom-label="versionLabels"
+          :custom-label="categoryLabels"
           :loading="availableTags.length === 0"
           :multiple="true"
           :searchable="true"
@@ -398,6 +398,8 @@ export default {
           title: this.mod.title,
           description: this.mod.description,
           body: this.mod.body,
+          races: this.mod.races,
+          genders: this.mod.genders,
           categories: this.mod.categories,
           tags: this.mod.tags,
           issues_url: this.mod.issues_url,
@@ -406,7 +408,7 @@ export default {
           license_url: this.license_url,
           discord_url: this.mod.discord_url,
           slug: this.mod.slug,
-          nsfw: this.mod.is_nsfw,
+          is_nsfw: this.mod.is_nsfw,
           donation_urls: this.donationPlatforms.map((it, index) => {
             return {
               id: it.short,
