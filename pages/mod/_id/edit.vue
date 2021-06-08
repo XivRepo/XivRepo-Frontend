@@ -85,7 +85,7 @@
           placeholder="Choose races"
         />
       </label>
-      <h3>Categories</h3>
+      <h3>Genders</h3>
       <label class="form-label">
         <span> Please select the genders which this mod applied to. </span>
         <multiselect
