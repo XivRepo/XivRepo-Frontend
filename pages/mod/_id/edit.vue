@@ -424,6 +424,10 @@ export default {
         return ''
       }
     },
+    navigateToParent() {
+      this.$router.push(`/mod/${this.mod.slug ? this.mod.slug : this.mod.id}`)
+      this.$nuxt.refresh()
+    },
   },
 }
 </script>

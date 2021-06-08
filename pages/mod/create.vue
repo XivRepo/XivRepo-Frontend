@@ -354,6 +354,33 @@
             </div>
           </span>
         </label>
+        <h3>Dependencies</h3>
+        <label class="form-label">
+          <span>
+            Does your mod require another mod to be installed first? If so,
+            please provide the ID of the mod below.
+          </span>
+          <div class="columns">
+            <input
+              v-model="modSearch"
+              type="text"
+              placeholder="Enter the mod id"
+            />
+            <button
+              title="Link"
+              class="button brand-button column"
+              @click="addDependency(modSearch)"
+            >
+              Add
+            </button>
+          </div>
+        </label>
+        <ul v-if="dependencyDetails">
+          <li v-for="mod in dependencyDetails" :key="mod.id">
+            {{ mod.title }}
+            <button @click="removeDependency(mod.id)">Remove</button>
+          </li>
+        </ul>
       </section>
       <section class="extra-links">
         <div class="title">
@@ -511,6 +538,7 @@ export default {
       releaseChannels: ['beta', 'alpha', 'release'],
       dependencyDetails: [],
       currentVersionIndex: -1,
+      modSearch: '',
       filePost: '',
       filePut: '',
 
@@ -595,6 +623,7 @@ export default {
               role: 'Owner',
             },
           ],
+          dependencies: this.dependencies,
           categories: this.categories,
           tags: this.tags,
           issues_url: this.issues_url,
@@ -744,6 +773,39 @@ export default {
       if (!newFile && oldFile) {
         console.log('remove', oldFile)
       }
+    },
+
+    async addDependency(id) {
+      if (!this.dependencies.includes(id)) {
+        try {
+          const dependency = await axios({
+            method: 'get',
+            url: `${process.env.apiUrl}/api/v1/mod/${id}`,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: this.$auth.token,
+            },
+          })
+          if (dependency.data != null) {
+            this.dependencies.push(id)
+            this.dependencyDetails.push(dependency.data)
+            this.modSearch = ''
+          }
+        } catch (e) {
+          this.modSearch = ''
+          this.$swal({
+            title: 'Unable to find mod',
+            text:
+              'The mod ID you entered was invalid. Please try again with a valid ID',
+            icon: 'error',
+          })
+        }
+      }
+    },
+
+    removeDependency(id) {
+      this.dependencies = this.dependencies.filter((e) => e !== id)
+      this.dependencyDetails = this.dependencyDetails.filter((e) => e.id !== id)
     },
   },
 }
@@ -908,6 +970,10 @@ section {
 
   &.additional-information {
     grid-area: additional-information;
+
+    .button {
+      margin: 2px 0 !important;
+    }
   }
 
   &.versions {
