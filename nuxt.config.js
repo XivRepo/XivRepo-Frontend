@@ -119,6 +119,7 @@ export default {
     '@nuxtjs/robots',
     '@nuxtjs/sitemap',
     '@nuxtjs/style-resources',
+    'vue-sweetalert2/nuxt',
     'cookie-universal-nuxt',
     '~/modules/gpt-ads',
     // The analytics module is disabled, as we are using our own solution embedded in the middleware.

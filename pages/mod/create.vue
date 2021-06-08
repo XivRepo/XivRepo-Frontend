@@ -46,7 +46,7 @@
             id="categories"
             v-model="categories"
             :options="availableCategories"
-            :custom-label="versionLabels"
+            :custom-label="categoryLabels"
             :loading="availableCategories.length === 0"
             :multiple="true"
             :searchable="true"
@@ -57,6 +57,45 @@
             :max="3"
             :hide-selected="true"
             placeholder="Choose categories"
+          />
+        </label>
+        <h3>Races</h3>
+        <label class="form-label">
+          <span> Select the character races this mod applies to. </span>
+          <multiselect
+            id="races"
+            v-model="races"
+            :options="availableRaces"
+            :custom-label="categoryLabels"
+            :loading="availableRaces.length === 0"
+            :multiple="true"
+            :searchable="true"
+            :show-no-results="false"
+            :close-on-select="false"
+            :clear-on-select="false"
+            :show-labels="true"
+            :hide-selected="true"
+            placeholder="Choose races"
+          />
+        </label>
+        <h3>Categories</h3>
+        <label class="form-label">
+          <span> Please select the genders which this mod applied to. </span>
+          <multiselect
+            id="genders"
+            v-model="genders"
+            :options="availableGenders"
+            :custom-label="categoryLabels"
+            :loading="availableGenders.length === 0"
+            :multiple="true"
+            :searchable="false"
+            :show-no-results="false"
+            :close-on-select="false"
+            :clear-on-select="false"
+            :show-labels="true"
+            :max="1"
+            :hide-selected="true"
+            placeholder="Choose genders"
           />
         </label>
       </section>
@@ -368,7 +407,7 @@
             id="tags"
             v-model="tags"
             :options="availableTags"
-            :custom-label="versionLabels"
+            :custom-label="categoryLabels"
             :loading="availableTags.length === 0"
             :multiple="true"
             :searchable="true"
@@ -397,6 +436,33 @@
             </div>
           </span>
         </label>
+        <h3>Dependencies</h3>
+        <label class="form-label">
+          <span>
+            Does your mod require another mod to be installed first? If so,
+            please provide the ID of the mod below.
+          </span>
+          <div class="columns">
+            <input
+              v-model="modSearch"
+              type="text"
+              placeholder="Enter the mod id"
+            />
+            <button
+              title="Link"
+              class="button brand-button column"
+              @click="addDependency(modSearch)"
+            >
+              Add
+            </button>
+          </div>
+        </label>
+        <ul v-if="dependencyDetails">
+          <li v-for="mod in dependencyDetails" :key="mod.id">
+            {{ mod.title }}
+            <button @click="removeDependency(mod.id)">Remove</button>
+          </li>
+        </ul>
       </section>
       <section class="extra-links">
         <div class="title">
@@ -558,9 +624,24 @@ export default {
       galleryImages: null,
       compiledBody: '',
       releaseChannels: ['beta', 'alpha', 'release'],
+      dependencyDetails: [],
       currentVersionIndex: -1,
+      modSearch: '',
       filePost: '',
       filePut: '',
+
+      availableRaces: [
+        'hyur',
+        'elezen',
+        'miqote',
+        'lalafell',
+        'au_ra',
+        'roegadyn',
+        'hrothgar',
+        'viera',
+        'all',
+      ],
+      availableGenders: ['male', 'female', 'unisex'],
 
       cdn: process.env.cdnUrl,
       api_base: process.env.API_URL,
@@ -571,7 +652,10 @@ export default {
       body: '',
       versions: [],
       categories: [],
+      races: [],
+      genders: [],
       tags: [],
+      dependencies: [],
       issues_url: null,
       source_url: null,
       wiki_url: null,
@@ -643,7 +727,10 @@ export default {
               role: 'Owner',
             },
           ],
+          dependencies: this.dependencies,
           categories: this.categories,
+          races: this.races,
+          genders: this.genders,
           tags: this.tags,
           issues_url: this.issues_url,
           source_url: this.source_url,
@@ -711,7 +798,7 @@ export default {
       this.$nuxt.$loading.finish()
     },
 
-    versionLabels(id) {
+    categoryLabels(id) {
       if (id) {
         return this.toProperCase(id.replace(/_/g, ' '))
       } else {
@@ -807,6 +894,39 @@ export default {
         console.log('remove', oldFile)
       }
     },
+
+    async addDependency(id) {
+      if (!this.dependencies.includes(id)) {
+        try {
+          const dependency = await axios({
+            method: 'get',
+            url: `${process.env.apiUrl}/api/v1/mod/${id}`,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: this.$auth.token,
+            },
+          })
+          if (dependency.data != null) {
+            this.dependencies.push(id)
+            this.dependencyDetails.push(dependency.data)
+            this.modSearch = ''
+          }
+        } catch (e) {
+          this.modSearch = ''
+          this.$swal({
+            title: 'Unable to find mod',
+            text:
+              'The mod ID you entered was invalid. Please try again with a valid ID',
+            icon: 'error',
+          })
+        }
+      }
+    },
+
+    removeDependency(id) {
+      this.dependencies = this.dependencies.filter((e) => e !== id)
+      this.dependencyDetails = this.dependencyDetails.filter((e) => e.id !== id)
+    },
   },
 }
 </script>
@@ -842,6 +962,7 @@ export default {
     'essentials   essentials  essentials' auto
     'mod-icon     mod-icon    mod-icon' auto
     'game-sides   game-sides  game-sides' auto
+    'preview      preview     preview' auto
     'description  description description' auto
     'files         files        files' auto
     'versions     versions    versions' auto
@@ -857,11 +978,12 @@ export default {
       'advert       advert      advert' auto
       'essentials   essentials  mod-icon' auto
       'game-sides   game-sides  game-sides' auto
+      'preview      preview     preview' auto
       'description  description description' auto
       'files         files        files' auto
       'versions     versions    versions' auto
       'additional-information additional-information extra-links' auto
-      'donations    donations   .' auto
+      'additional-information additional-information donations' auto
       'footer       footer      footer' auto
       / 4fr 1fr 4fr;
   }
@@ -893,233 +1015,240 @@ header {
 
 section {
   @extend %card;
-
   padding: var(--spacing-card-md) var(--spacing-card-lg);
-}
 
-section.essentials {
-  grid-area: essentials;
-}
-
-section.mod-icon {
-  grid-area: mod-icon;
-
-  img {
-    align-self: flex-start;
-    max-width: 50%;
-    margin-left: var(--spacing-card-lg);
+  &.preview {
+    grid-area: preview;
   }
-}
 
-section.game-sides {
-  grid-area: game-sides;
+  &.essentials {
+    grid-area: essentials;
+  }
 
-  .columns {
-    flex-wrap: wrap;
+  &.mod-icon {
+    grid-area: mod-icon;
 
-    span {
-      flex: 2;
-    }
-
-    .labeled-control {
-      flex: 2;
+    img {
+      align-self: flex-start;
+      max-width: 50%;
       margin-left: var(--spacing-card-lg);
     }
   }
-}
 
-section.description {
-  grid-area: description;
+  &.game-sides {
+    grid-area: game-sides;
 
-  span a {
-    text-decoration: underline;
-  }
+    .columns {
+      flex-wrap: wrap;
 
-  & > .columns {
-    align-items: stretch;
-    min-height: 10rem;
-    max-height: 40rem;
+      span {
+        flex: 2;
+      }
 
-    & > * {
-      flex: 1;
-      max-width: 50%;
+      .labeled-control {
+        flex: 2;
+        margin-left: var(--spacing-card-lg);
+      }
     }
   }
 
-  .markdown-body {
-    overflow-y: auto;
-    padding: 0 var(--spacing-card-sm);
-  }
-}
+  &.description {
+    grid-area: description;
 
-section.files {
-  grid-area: files;
-
-  .initial-release {
-    display: grid;
-    grid-template:
-      'main changelog' auto
-      / 5fr 4fr;
-    column-gap: var(--spacing-card-md);
-  }
-}
-
-section.additional-information {
-  grid-area: additional-information;
-}
-
-section.versions {
-  grid-area: versions;
-
-  table {
-    border-collapse: collapse;
-    margin-bottom: var(--spacing-card-md);
-    background: var(--color-raised-bg);
-    border-radius: var(--size-rounded-card);
-    table-layout: fixed;
-    width: 100%;
-
-    * {
-      text-align: left;
+    span a {
+      text-decoration: underline;
     }
 
-    tr:not(:last-child),
-    tr:first-child {
-      th,
-      td {
-        border-bottom: 1px solid var(--color-divider);
+    & > .columns {
+      align-items: stretch;
+      min-height: 10rem;
+      max-height: 40rem;
+
+      & > * {
+        flex: 1;
+        max-width: 50%;
       }
     }
 
-    th,
-    td {
-      &:first-child {
+    .markdown-body {
+      overflow-y: auto;
+      padding: 0 var(--spacing-card-sm);
+    }
+  }
+
+  &.files {
+    grid-area: files;
+
+    .initial-release {
+      display: grid;
+      grid-template:
+        'main changelog' auto
+        / 5fr 4fr;
+      column-gap: var(--spacing-card-md);
+    }
+  }
+
+  &.additional-information {
+    grid-area: additional-information;
+
+    .button {
+      margin: 2px 0 !important;
+    }
+  }
+
+  &.versions {
+    grid-area: versions;
+
+    table {
+      border-collapse: collapse;
+      margin-bottom: var(--spacing-card-md);
+      background: var(--color-raised-bg);
+      border-radius: var(--size-rounded-card);
+      table-layout: fixed;
+      width: 100%;
+
+      * {
         text-align: left;
-        width: 30%;
+      }
 
-        svg {
-          color: var(--color-text);
-
-          &:hover,
-          &:focus {
-            color: var(--color-text-hover);
-          }
+      tr:not(:last-child),
+      tr:first-child {
+        th,
+        td {
+          border-bottom: 1px solid var(--color-divider);
         }
       }
 
-      &:nth-child(2),
-      &:nth-child(3) {
-        padding-left: 0;
-        width: 12%;
+      th,
+      td {
+        &:first-child {
+          text-align: left;
+          width: 30%;
+
+          svg {
+            color: var(--color-text);
+
+            &:hover,
+            &:focus {
+              color: var(--color-text-hover);
+            }
+          }
+        }
+
+        &:nth-child(2),
+        &:nth-child(3) {
+          padding-left: 0;
+          width: 12%;
+        }
+      }
+
+      th {
+        color: var(--color-heading);
+        font-size: 0.8rem;
+        letter-spacing: 0.02rem;
+        margin-bottom: 0.5rem;
+        margin-top: 1.5rem;
+        padding: 0.75rem 1rem;
+        text-transform: uppercase;
+      }
+
+      td {
+        overflow: hidden;
+        padding: 0.75rem 1rem;
+
+        img {
+          height: 3rem;
+          width: 3rem;
+        }
       }
     }
 
-    th {
-      color: var(--color-heading);
-      font-size: 0.8rem;
-      letter-spacing: 0.02rem;
-      margin-bottom: 0.5rem;
-      margin-top: 1.5rem;
-      padding: 0.75rem 1rem;
-      text-transform: uppercase;
+    hr {
+      background-color: var(--color-divider);
+      border: none;
+      color: var(--color-divider);
+      height: 2px;
+      margin: 0.5rem 0;
     }
 
-    td {
-      overflow: hidden;
-      padding: 0.75rem 1rem;
+    .new-version {
+      display: grid;
+      grid-template:
+        'controls controls' auto
+        'main changelog' auto
+        / 5fr 4fr;
+      column-gap: var(--spacing-card-md);
 
-      img {
-        height: 3rem;
-        width: 3rem;
+      .controls {
+        grid-area: controls;
+        display: flex;
+        flex-direction: row-reverse;
+      }
+
+      .main {
+        grid-area: main;
+      }
+
+      .changelog {
+        grid-area: changelog;
+        display: flex;
+        flex-direction: column;
+
+        .textarea-wrapper {
+          flex: 1;
+        }
+      }
+
+      .uploader {
+        margin-top: 1em;
+        label {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding: var(--spacing-card-sm) var(--spacing-card-md);
+        }
+
+        span {
+          border: 2px dashed var(--color-divider-dark);
+          border-radius: var(--size-rounded-control);
+          padding: var(--spacing-card-md) var(--spacing-card-lg);
+        }
       }
     }
   }
 
-  hr {
-    background-color: var(--color-divider);
-    border: none;
-    color: var(--color-divider);
-    height: 2px;
-    margin: 0.5rem 0;
-  }
+  &.extra-links {
+    grid-area: extra-links;
 
-  .new-version {
-    display: grid;
-    grid-template:
-      'controls controls' auto
-      'main changelog' auto
-      / 5fr 4fr;
-    column-gap: var(--spacing-card-md);
+    label {
+      align-items: center;
+      margin-top: var(--spacing-card-sm);
 
-    .controls {
-      grid-area: controls;
-      display: flex;
-      flex-direction: row-reverse;
-    }
-
-    .main {
-      grid-area: main;
-    }
-
-    .changelog {
-      grid-area: changelog;
-      display: flex;
-      flex-direction: column;
-
-      .textarea-wrapper {
+      span {
         flex: 1;
       }
     }
+  }
 
-    .uploader {
-      margin-top: 1em;
-      label {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: var(--spacing-card-sm) var(--spacing-card-md);
-      }
+  &.license {
+    grid-area: license;
+
+    label {
+      margin-top: var(--spacing-card-sm);
+    }
+  }
+
+  &.donations {
+    grid-area: donations;
+
+    label {
+      align-items: center;
+      margin-top: var(--spacing-card-sm);
 
       span {
-        border: 2px dashed var(--color-divider-dark);
-        border-radius: var(--size-rounded-control);
-        padding: var(--spacing-card-md) var(--spacing-card-lg);
+        flex: 1;
       }
-    }
-  }
-}
-
-section.extra-links {
-  grid-area: extra-links;
-
-  label {
-    align-items: center;
-    margin-top: var(--spacing-card-sm);
-
-    span {
-      flex: 1;
-    }
-  }
-}
-
-section.license {
-  grid-area: license;
-
-  label {
-    margin-top: var(--spacing-card-sm);
-  }
-}
-
-section.donations {
-  grid-area: donations;
-
-  label {
-    align-items: center;
-    margin-top: var(--spacing-card-sm);
-
-    span {
-      flex: 1;
     }
   }
 }

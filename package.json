@@ -34,6 +34,7 @@
     "vue-multiselect": "^2.1.6",
     "vue-notification": "^1.3.20",
     "vue-slick-carousel": "^1.0.6",
+    "vue-sweetalert2": "^4.3.1",
     "vue-toggles": "^1.1.3",
     "vue-upload-component": "^2.8.22",
     "xss": "^1.0.8"

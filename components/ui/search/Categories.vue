@@ -1,18 +1,6 @@
 <template>
   <div class="categories">
-    <p v-if="categories.includes('face_mod')">Face Mod</p>
-    <p v-if="categories.includes('hair_mod')">Hair Mod</p>
-    <p v-if="categories.includes('body_mod')">Body Mod</p>
-    <p v-if="categories.includes('skin_mod')">Skin Mod</p>
-    <p v-if="categories.includes('gear_mod')">Gear Mod</p>
-    <p v-if="categories.includes('mount_mod')">Mount Mod</p>
-    <p v-if="categories.includes('minion_mod')">Minion Mod</p>
-    <p v-if="categories.includes('minion_mod')">Furniture Mod</p>
-    <p v-if="categories.includes('racial_scale_mod')">Racial Scale Mod</p>
-    <p v-if="categories.includes('anamnesis_pose')">Anamnesis Pose</p>
-    <p v-if="categories.includes('cmt_pose')">CMT Pose</p>
-    <p v-if="categories.includes('reshade')">Reshade Preset</p>
-    <p v-if="categories.includes('other_mod')">Other Mod</p>
+    <p v-for="item in categories" :key="item">{{ item | categoryLabel }}</p>
   </div>
 </template>
 
@@ -20,6 +8,13 @@
 export default {
   name: 'Categories',
   components: {},
+  filters: {
+    categoryLabel(id) {
+      return id.replace(/_/g, ' ').replace(/(\w)(\w*)/g, function (g0, g1, g2) {
+        return g1.toUpperCase() + g2.toLowerCase()
+      })
+    },
+  },
   props: {
     categories: {
       type: Array,
