@@ -200,9 +200,9 @@
         <div class="section">
           <h3>Categories</h3>
           <Categories :categories="mod.categories" />
-          <h3>Races</h3>
+          <h3 style="padding-top: 0.7em">Races</h3>
           <Categories :categories="mod.races" />
-          <h3>Genders</h3>
+          <h3 style="padding-top: 0.7em">Genders</h3>
           <Categories :categories="mod.genders" />
         </div>
         <div class="section">
