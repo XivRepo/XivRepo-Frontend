@@ -438,11 +438,12 @@ export default {
           )
         }
 
-        await this.$router.replace(
+        await this.$router.push(
           `/mod/${this.mod.slug ? this.mod.slug : this.mod.id}`
         )
         await this.$nuxt.refresh()
       } catch (err) {
+        console.log(err)
         this.$notify({
           group: 'main',
           title: 'An Error Occurred',
