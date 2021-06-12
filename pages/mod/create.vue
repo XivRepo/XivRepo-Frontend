@@ -168,17 +168,26 @@
             title="Add a version"
             class="button"
             :disabled="currentVersionIndex !== -1"
-            @click="createVersion"
+            @click="createVersion('hosted')"
           >
             Add a version
           </button>
+          <button
+            title="Add a version"
+            class="button"
+            :disabled="currentVersionIndex !== -1"
+            @click="createVersion('external')"
+          >
+            Add externally hosted version
+          </button>
         </div>
-        <table>
+        <table v-if="versions.length !== 0">
           <thead>
             <tr>
               <th>Name</th>
               <th>Version</th>
-              <th>Release Type</th>
+              <th>Release Channel</th>
+              <th>Hosting Location</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -214,6 +223,12 @@
                 >
                   Alpha
                 </span>
+              </td>
+              <td v-if="version.type === 'hosted'">
+                <span class="badge green"> Hosted </span>
+              </td>
+              <td v-if="version.type === 'external'">
+                <span class="badge yellow"> External </span>
               </td>
               <td>
                 <button
@@ -286,55 +301,70 @@
                 :allow-empty="false"
               />
             </label>
-            <h3>Files</h3>
-            <label class="form-label">
-              <span>
-                You should upload a single archive file. However, you are
-                allowed to upload multiple
-              </span>
-              <FileInput
-                accept=".zip,.rar,.7z,.7zip,.tar.gz,.ttmp,.ttmp2,.pose,.cmp"
-                multiple
-                prompt="Choose files or drag them here"
-                @change="updateVersionFiles"
-              />
-            </label>
-            <div class="uploader">
-              <client-only>
-                <FileUpload
-                  ref="upload"
-                  v-model="versions[currentVersionIndex].files"
-                  extensions="zip,rar,7z,7zip,tar.gz,ttmp,ttmp2"
-                  accept="image/png,image/gif,image/jpeg,image/webp"
-                  :multiple="true"
-                  :size="1024 * 1024 * 10"
-                  :post-action="
-                    api_base +
-                    '/api/v1/version/' +
-                    versions[currentVersionIndex] +
-                    '/file'
-                  "
-                  @input-filter="inputFilter"
-                  @input-file="inputFile"
+            <div v-if="versions[currentVersionIndex].type === 'hosted'">
+              <h3>Files</h3>
+              <label class="form-label">
+                <span>
+                  You should upload a single archive file. However, you are
+                  allowed to upload multiple
+                </span>
+                <FileInput
+                  accept=".zip,.rar,.7z,.7zip,.tar.gz,.ttmp,.ttmp2,.pose,.cmp"
+                  multiple
+                  prompt="Choose files or drag them here"
+                  @change="updateVersionFiles"
+                />
+              </label>
+              <div class="uploader">
+                <client-only>
+                  <FileUpload
+                    ref="upload"
+                    v-model="versions[currentVersionIndex].files"
+                    extensions="zip,rar,7z,7zip,tar.gz,ttmp,ttmp2"
+                    accept="image/png,image/gif,image/jpeg,image/webp"
+                    :multiple="true"
+                    :size="1024 * 1024 * 10"
+                    :post-action="
+                      api_base +
+                      '/api/v1/version/' +
+                      versions[currentVersionIndex] +
+                      '/file'
+                    "
+                    @input-filter="inputFilter"
+                    @input-file="inputFile"
+                  >
+                    Choose Files
+                  </FileUpload>
+                </client-only>
+              </div>
+              <ul class="file-list">
+                <li
+                  v-for="file in versions[currentVersionIndex].files"
+                  :key="file.id"
                 >
-                  Choose Files
-                </FileUpload>
-              </client-only>
+                  <span>{{ file.name }}</span> -
+                  <span>{{ file.size | formatSize }}</span> -
+                  <span v-if="file.error">{{ file.error }}</span>
+                  <span v-else-if="file.success">success</span>
+                  <span v-else-if="file.active">active</span>
+                  <span v-else-if="!!file.error">{{ file.error }}</span>
+                  <span v-else></span>
+                </li>
+              </ul>
             </div>
-            <ul class="file-list">
-              <li
-                v-for="file in versions[currentVersionIndex].files"
-                :key="file.id"
-              >
-                <span>{{ file.name }}</span> -
-                <span>{{ file.size | formatSize }}</span> -
-                <span v-if="file.error">{{ file.error }}</span>
-                <span v-else-if="file.success">success</span>
-                <span v-else-if="file.active">active</span>
-                <span v-else-if="!!file.error">{{ file.error }}</span>
-                <span v-else></span>
-              </li>
-            </ul>
+            <div v-if="versions[currentVersionIndex].type === 'external'">
+              <h3>External URL</h3>
+              <label class="form-label">
+                <span>
+                  Please provide a link to where you mod is being hosted
+                </span>
+                <input
+                  v-model="versions[currentVersionIndex].external_url"
+                  type="text"
+                  placeholder="Enter a valid URL"
+                />
+              </label>
+            </div>
           </div>
           <div class="changelog">
             <h3>Changelog</h3>
@@ -784,10 +814,9 @@ export default {
       this.versions[this.currentVersionIndex].file_parts = newFileParts
     },
 
-    createVersion() {
-      this.versions.push({
+    createVersion(type) {
+      const version = {
         raw_files: [],
-        file_parts: [],
         files: [],
         version_number: '1.0.0',
         version_title: 'Initial Release',
@@ -797,8 +826,18 @@ export default {
         release_channel: 'release',
         loaders: [],
         featured: false,
-      })
+        type,
+      }
+      switch (type) {
+        case 'hosted':
+          version.file_parts = []
+          break
+        case 'external':
+          version.external_url = ''
+          break
+      }
 
+      this.versions.push(version)
       this.currentVersionIndex = this.versions.length - 1
     },
 
