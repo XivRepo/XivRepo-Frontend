@@ -182,17 +182,11 @@
             </div>
           </div>
           <div class="stat">
-            <FileTextIcon />
+            <InfoIcon />
             <div class="info">
-              <h4>License</h4>
-              <p v-tooltip="mod.license.name" class="value ellipsis">
-                <a
-                  v-if="mod.license.url ? mod.license.url : '#'"
-                  :href="mod.license.url"
-                >
-                  {{ mod.license.id.toUpperCase() }}</a
-                >
-              </p>
+              <h4>Rating</h4>
+              <p v-if="mod.is_nsfw" class="value">NSFW</p>
+              <p v-else class="value">SFW</p>
             </div>
           </div>
           <div class="stat">
@@ -205,7 +199,26 @@
         </div>
         <div class="section">
           <h3>Categories</h3>
-          <Categories :categories="mod.categories.concat(mod.loaders)" />
+          <Categories :categories="mod.categories" />
+          <h3 style="padding-top: 0.7em">Races</h3>
+          <Categories :categories="mod.races" />
+          <h3 style="padding-top: 0.7em">Genders</h3>
+          <Categories :categories="mod.genders" />
+        </div>
+        <div class="section">
+          <h3>Dependencies</h3>
+          <div
+            v-for="dependency in mod.dependencies"
+            :key="dependency.id"
+            class="team-member columns"
+          >
+            <img :src="dependency.icon_url" alt="profile-picture" />
+            <div class="member-info">
+              <nuxt-link :to="'/mod/' + dependency.slug">
+                <h4>{{ dependency.title }}</h4>
+              </nuxt-link>
+            </div>
+          </div>
         </div>
         <div class="section">
           <h3>Members</h3>
@@ -312,10 +325,10 @@ import MFooter from '~/components/layout/MFooter'
 import CalendarIcon from '~/assets/images/utils/calendar.svg?inline'
 import DownloadIcon from '~/assets/images/utils/download.svg?inline'
 import EditIcon from '~/assets/images/utils/edit.svg?inline'
-import FileTextIcon from '~/assets/images/utils/file-text.svg?inline'
 import CodeIcon from '~/assets/images/sidebar/mod.svg?inline'
 import ReportIcon from '~/assets/images/utils/report.svg?inline'
 import FollowIcon from '~/assets/images/utils/heart.svg?inline'
+import InfoIcon from '~/assets/images/utils/info.svg?inline'
 
 import ExternalIcon from '~/assets/images/utils/external.svg?inline'
 
@@ -328,10 +341,10 @@ export default {
     DownloadIcon,
     CalendarIcon,
     EditIcon,
-    FileTextIcon,
     CodeIcon,
     ReportIcon,
     FollowIcon,
+    InfoIcon,
   },
   props: {
     cdn: {

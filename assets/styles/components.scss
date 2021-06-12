@@ -467,14 +467,17 @@
 label {
   display: flex;
   flex-direction: column;
+  padding-top: .3em;
 
   @media screen and (min-width: 1024px) {
     flex-direction: row;
   }
 
-  span {
-    flex: 2;
-    padding-right: var(--spacing-card-lg);
+  &.form-label {
+    span {
+      flex: 2;
+      padding-right: var(--spacing-card-lg);
+    }
   }
 
   input,

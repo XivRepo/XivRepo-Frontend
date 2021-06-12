@@ -28,14 +28,12 @@
     </header>
     <section class="essentials">
       <h3>Name</h3>
-      <label>
-        <span>
-          Be creative. TechCraft v7 won't be searchable and won't be clicked on
-        </span>
+      <label class="form-label">
+        <span> Be creative and descriptive with your mod name </span>
         <input v-model="mod.title" type="text" placeholder="Enter the name" />
       </label>
       <h3>Summary</h3>
-      <label>
+      <label class="form-label">
         <span>
           Give a quick description to your mod. It will appear in the search
         </span>
@@ -46,7 +44,7 @@
         />
       </label>
       <h3>Categories</h3>
-      <label>
+      <label class="form-label">
         <span>
           Select up to 3 categories. They will help to find your mod
         </span>
@@ -54,6 +52,7 @@
           id="categories"
           v-model="mod.categories"
           :options="availableCategories"
+          :custom-label="categoryLabels"
           :loading="availableCategories.length === 0"
           :multiple="true"
           :searchable="false"
@@ -65,6 +64,45 @@
           :limit="6"
           :hide-selected="true"
           placeholder="Choose categories"
+        />
+      </label>
+      <h3>Races</h3>
+      <label class="form-label">
+        <span> Select the character races this mod applies to. </span>
+        <multiselect
+          id="races"
+          v-model="mod.races"
+          :options="availableRaces"
+          :custom-label="categoryLabels"
+          :loading="availableRaces.length === 0"
+          :multiple="true"
+          :searchable="true"
+          :show-no-results="false"
+          :close-on-select="false"
+          :clear-on-select="false"
+          :show-labels="true"
+          :hide-selected="true"
+          placeholder="Choose races"
+        />
+      </label>
+      <h3>Genders</h3>
+      <label class="form-label">
+        <span> Please select the genders which this mod applied to. </span>
+        <multiselect
+          id="genders"
+          v-model="mod.genders"
+          :options="availableGenders"
+          :custom-label="categoryLabels"
+          :loading="availableGenders.length === 0"
+          :multiple="true"
+          :searchable="false"
+          :show-no-results="false"
+          :close-on-select="false"
+          :clear-on-select="false"
+          :show-labels="true"
+          :max="1"
+          :hide-selected="true"
+          placeholder="Choose genders"
         />
       </label>
     </section>
@@ -107,30 +145,95 @@
       </div>
     </section>
     <section class="description">
-      <h3>
-        <label
-          for="body"
-          title="You can type the of the long form of your description here."
-        >
-          Description
-        </label>
-      </h3>
-      <span>
-        You can type the of the long form of your description here. This editor
-        supports markdown. You can find the syntax
-        <a
-          href="https://guides.github.com/features/mastering-markdown/"
-          target="_blank"
-          rel="noopener noreferrer"
-          >here</a
-        >.
-      </span>
+      <h3>Description</h3>
+      <label class="form-label">
+        <span>
+          You can type the of the long form of your description here. This
+          editor supports markdown. You can find the syntax
+          <a
+            href="https://guides.github.com/features/mastering-markdown/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >here</a
+          >.
+        </span>
+      </label>
       <div class="columns">
         <div class="textarea-wrapper">
           <textarea id="body" v-model="mod.body"></textarea>
         </div>
         <div v-compiled-markdown="mod.body" class="markdown-body"></div>
       </div>
+    </section>
+    <section class="additional-information">
+      <h3>Tags</h3>
+      <label class="form-label">
+        <span>
+          To help you mod be found easier by users, you can add additional for
+          users to search with here. Don't see the tag you are looking for?
+          Please submit a request <a class="link" href="/request/tag">here</a>.
+        </span>
+        <multiselect
+          id="tags"
+          v-model="mod.tags"
+          :options="availableTags"
+          :custom-label="categoryLabels"
+          :loading="availableTags.length === 0"
+          :multiple="true"
+          :searchable="true"
+          :show-no-results="false"
+          :close-on-select="false"
+          :clear-on-select="false"
+          :show-labels="true"
+          :hide-selected="true"
+          placeholder="Choose tags"
+        />
+      </label>
+      <label class="form-label"> </label>
+      <h3>Adult Content</h3>
+      <label class="form-label">
+        <span>
+          Does your mod contain adult content? If so please make sure to mark it
+          as NSFW. Mods not marked properly may be subject to remove.
+        </span>
+      </label>
+      <div style="margin-top: 0.7em">
+        <client-only>
+          <VueToggles
+            checked-text="NSFW"
+            unchecked-text="SFW"
+            :value="mod.is_nsfw"
+            @click="mod.is_nsfw = !mod.is_nsfw"
+          />
+        </client-only>
+      </div>
+      <h3>Dependencies</h3>
+      <label class="form-label">
+        <span>
+          Does your mod require another mod to be installed first? If so, please
+          provide the ID of the mod below.
+        </span>
+        <div class="columns">
+          <input
+            v-model="modSearch"
+            type="text"
+            placeholder="Enter the mod id"
+          />
+          <button
+            title="Link"
+            class="button brand-button column"
+            @click="addDependency(modSearch)"
+          >
+            Add
+          </button>
+        </div>
+      </label>
+      <ul v-if="dependencyDetails">
+        <li v-for="dependency in dependencyDetails" :key="dependency.id">
+          {{ dependency.title }}
+          <button @click="removeDependency(dependency.id)">Remove</button>
+        </li>
+      </ul>
     </section>
     <section class="extra-links">
       <div class="title">
@@ -163,31 +266,6 @@
           type="url"
           placeholder="Enter a valid URL"
         />
-      </label>
-    </section>
-    <section class="license">
-      <div class="title">
-        <h3>License</h3>
-      </div>
-      <label>
-        <span>
-          It is really important to choose a proper license for your mod. You
-          may choose one from our list or provide a URL to your own license. URL
-          field will be filled automatically for provided licenses
-        </span>
-        <div class="input-group">
-          <Multiselect
-            v-model="license"
-            placeholder="Select one"
-            track-by="short"
-            label="name"
-            :options="availableLicenses"
-            :searchable="true"
-            :close-on-select="true"
-            :show-labels="false"
-          />
-          <input v-model="license_url" type="url" placeholder="License URL" />
-        </div>
       </label>
     </section>
     <section class="donations">
@@ -245,6 +323,7 @@
 <script>
 import axios from 'axios'
 import Multiselect from 'vue-multiselect'
+import VueToggles from 'vue-toggles'
 
 import FileInput from '~/components/ui/FileInput'
 
@@ -252,15 +331,14 @@ export default {
   components: {
     FileInput,
     Multiselect,
+    VueToggles,
   },
   async asyncData(data) {
     try {
       const [
         mod,
         availableCategories,
-        availableLoaders,
-        availableGameVersions,
-        availableLicenses,
+        availableTags,
         availableDonationPlatforms,
       ] = (
         await Promise.all([
@@ -269,18 +347,10 @@ export default {
             data.$auth.headers
           ),
           axios.get(`${data.env.apiUrl}/api/v1/tag/category`),
-          axios.get(`${data.env.apiUrl}/api/v1/tag/loader`),
-          axios.get(`${data.env.apiUrl}/api/v1/tag/game_version`),
-          axios.get(`${data.env.apiUrl}/api/v1/tag/license`),
+          axios.get(`${data.env.apiUrl}/api/v1/tag/category`),
           axios.get(`${data.env.apiUrl}/api/v1/tag/donation_platform`),
         ])
       ).map((it) => it.data)
-
-      mod.license = {
-        short: mod.license.id,
-        name: mod.license.name,
-        url: mod.license.url,
-      }
 
       if (mod.body_url && !mod.body) {
         mod.body = (await axios.get(mod.body_url)).data
@@ -301,17 +371,8 @@ export default {
 
       return {
         mod,
-        clientSideType: mod.client_side.charAt(0) + mod.client_side.slice(1),
-        serverSideType: mod.server_side.charAt(0) + mod.server_side.slice(1),
         availableCategories,
-        availableLoaders,
-        availableGameVersions,
-        availableLicenses,
-        license: {
-          short: mod.license.id,
-          name: mod.license.name,
-        },
-        license_url: mod.license.url,
+        availableTags,
         availableDonationPlatforms,
         donationPlatforms,
         donationLinks,
@@ -329,28 +390,26 @@ export default {
       previewImage: null,
       compiledBody: '',
 
+      dependencyDetails: [],
+      modSearch: '',
+
       icon: null,
       iconChanged: false,
 
       sideTypes: ['Required', 'Optional', 'Unsupported'],
+      availableRaces: [
+        'hyur',
+        'elezen',
+        'miqote',
+        'lalafell',
+        'au_ra',
+        'roegadyn',
+        'hrothgar',
+        'viera',
+        'all',
+      ],
+      availableGenders: ['male', 'female', 'unisex'],
     }
-  },
-  watch: {
-    license(newValue, oldValue) {
-      if (newValue == null) {
-        this.license_url = ''
-        return
-      }
-
-      switch (newValue.short) {
-        case 'custom':
-          this.license_url = ''
-          break
-        default:
-          this.license_url =
-            process.env.cdnUrl + `/data/licenses/${newValue.short}.txt`
-      }
-    },
   },
   created() {
     this.$emit('update:link-bar', [['Edit', 'edit']])
@@ -364,21 +423,23 @@ export default {
       this.$nuxt.$loading.start()
 
       try {
+        console.log(this.mod)
         const data = {
           title: this.mod.title,
           description: this.mod.description,
           body: this.mod.body,
+          races: this.mod.races,
+          genders: this.mod.genders,
+          dependencies: this.dependencies,
           categories: this.mod.categories,
+          tags: this.mod.tags,
           issues_url: this.mod.issues_url,
           source_url: this.mod.source_url,
           wiki_url: this.mod.wiki_url,
           license_url: this.license_url,
           discord_url: this.mod.discord_url,
-          license_id: this.license.short,
-          client_side: this.clientSideType.toLowerCase(),
-          server_side: this.serverSideType.toLowerCase(),
           slug: this.mod.slug,
-          license: this.license.short,
+          is_nsfw: this.mod.is_nsfw,
           donation_urls: this.donationPlatforms.map((it, index) => {
             return {
               id: it.short,
@@ -408,10 +469,12 @@ export default {
           )
         }
 
-        await this.$router.replace(
+        await this.$router.push(
           `/mod/${this.mod.slug ? this.mod.slug : this.mod.id}`
         )
+        await this.$nuxt.refresh()
       } catch (err) {
+        console.log(err)
         this.$notify({
           group: 'main',
           title: 'An Error Occurred',
@@ -433,6 +496,53 @@ export default {
       reader.onload = (event) => {
         this.previewImage = event.target.result
       }
+    },
+    toProperCase(str) {
+      return str.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+      })
+    },
+    categoryLabels(id) {
+      if (id) {
+        return this.toProperCase(id.replace(/_/g, ' '))
+      } else {
+        return ''
+      }
+    },
+    navigateToParent() {
+      this.$router.push(`/mod/${this.mod.slug ? this.mod.slug : this.mod.id}`)
+      this.$nuxt.refresh()
+    },
+    async addDependency(id) {
+      if (!this.mod.dependencies.includes(id)) {
+        try {
+          const dependency = await axios({
+            method: 'get',
+            url: `${process.env.apiUrl}/api/v1/mod/${id}`,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: this.$auth.token,
+            },
+          })
+          if (dependency.data != null) {
+            this.mod.dependencies.push(id)
+            this.dependencyDetails.push(dependency.data)
+            this.modSearch = ''
+          }
+        } catch (e) {
+          this.modSearch = ''
+          this.$swal({
+            title: 'Unable to find mod',
+            text:
+              'The mod ID you entered was invalid. Please try again with a valid ID',
+            icon: 'error',
+          })
+        }
+      }
+    },
+    removeDependency(id) {
+      this.mod.dependencies = this.mod.dependencies.filter((e) => e !== id)
+      this.dependencyDetails = this.dependencyDetails.filter((e) => e.id !== id)
     },
   },
 }
@@ -496,8 +606,8 @@ label {
     'game-sides   game-sides  game-sides' auto
     'description  description description' auto
     'versions     versions    versions' auto
+    'additional-information additional-information additional-information' auto
     'extra-links  extra-links extra-links' auto
-    'license      license     license' auto
     'donations    donations   donations' auto
     'footer       footer      footer' auto
     / 4fr 1fr 4fr;
@@ -594,6 +704,10 @@ section.extra-links {
       flex: 1;
     }
   }
+}
+
+section.additional-information {
+  grid-area: additional-information;
 }
 
 section.license {

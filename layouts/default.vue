@@ -27,6 +27,9 @@
               <NuxtLink to="/mods" class="tab">
                 <span>Mods</span>
               </NuxtLink>
+              <NuxtLink to="/mod/random" class="tab">
+                <span>Random</span>
+              </NuxtLink>
               <NuxtLink to="/resources" class="tab">
                 <span>Resources</span>
               </NuxtLink>

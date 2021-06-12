@@ -22,12 +22,12 @@
       </header>
       <section class="essentials">
         <h3>Name</h3>
-        <label>
+        <label class="form-label">
           <span> Be creative and descriptive with your mod name. </span>
           <input v-model="name" type="text" placeholder="Enter the name" />
         </label>
         <h3>Summary</h3>
-        <label>
+        <label class="form-label">
           <span>
             Give a quick description to your mod. It will appear in the search.
           </span>
@@ -38,15 +38,15 @@
           />
         </label>
         <h3>Categories</h3>
-        <label>
+        <label class="form-label">
           <span>
-            Select up to 12 categories. They will help others find your mod.
+            Select up to 3 categories. They will help others find your mod.
           </span>
           <multiselect
             id="categories"
             v-model="categories"
             :options="availableCategories"
-            :custom-label="versionLabels"
+            :custom-label="categoryLabels"
             :loading="availableCategories.length === 0"
             :multiple="true"
             :searchable="true"
@@ -54,10 +54,48 @@
             :close-on-select="false"
             :clear-on-select="false"
             :show-labels="true"
-            :max="12"
-            :limit="8"
+            :max="3"
             :hide-selected="true"
             placeholder="Choose categories"
+          />
+        </label>
+        <h3>Races</h3>
+        <label class="form-label">
+          <span> Select the character races this mod applies to. </span>
+          <multiselect
+            id="races"
+            v-model="races"
+            :options="availableRaces"
+            :custom-label="categoryLabels"
+            :loading="availableRaces.length === 0"
+            :multiple="true"
+            :searchable="true"
+            :show-no-results="false"
+            :close-on-select="false"
+            :clear-on-select="false"
+            :show-labels="true"
+            :hide-selected="true"
+            placeholder="Choose races"
+          />
+        </label>
+        <h3>Categories</h3>
+        <label class="form-label">
+          <span> Please select the genders which this mod applied to. </span>
+          <multiselect
+            id="genders"
+            v-model="genders"
+            :options="availableGenders"
+            :custom-label="categoryLabels"
+            :loading="availableGenders.length === 0"
+            :multiple="true"
+            :searchable="false"
+            :show-no-results="false"
+            :close-on-select="false"
+            :clear-on-select="false"
+            :show-labels="true"
+            :max="1"
+            :hide-selected="true"
+            placeholder="Choose genders"
           />
         </label>
       </section>
@@ -91,6 +129,9 @@
             alt="preview-image"
           />
         </div>
+      </section>
+      <section class="preview">
+        <h3>Preview Images</h3>
       </section>
       <section class="description">
         <h3>
@@ -137,7 +178,7 @@
             <tr>
               <th>Name</th>
               <th>Version</th>
-              <th>Version Type</th>
+              <th>Release Type</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -151,14 +192,9 @@
               :key="version.id"
             >
               <td>
-                {{ version.name }}
+                {{ version.version_title }}
               </td>
               <td>{{ version.version_number }}</td>
-              <td>
-                <FabricIcon v-if="version.loaders.includes('fabric')" />
-                <ForgeIcon v-if="version.loaders.includes('forge')" />
-              </td>
-              <td>{{ version.game_versions.join(', ') }}</td>
               <td>
                 <span
                   v-if="version.release_channel === 'release'"
@@ -212,7 +248,7 @@
           </div>
           <div class="main">
             <h3>Name</h3>
-            <label>
+            <label class="form-label">
               <span>
                 This is what users will see first. Will default to version
                 number
@@ -224,7 +260,7 @@
               />
             </label>
             <h3>Number</h3>
-            <label>
+            <label class="form-label">
               <span>
                 That's how your version will appear in mod lists and in URLs
               </span>
@@ -235,7 +271,7 @@
               />
             </label>
             <h3>Channel</h3>
-            <label>
+            <label class="form-label">
               <span>
                 It is important to notify players and pack makers if the version
                 is stable
@@ -251,7 +287,7 @@
               />
             </label>
             <h3>Files</h3>
-            <label>
+            <label class="form-label">
               <span>
                 You should upload a single archive file. However, you are
                 allowed to upload multiple
@@ -263,6 +299,42 @@
                 @change="updateVersionFiles"
               />
             </label>
+            <div class="uploader">
+              <client-only>
+                <FileUpload
+                  ref="upload"
+                  v-model="versions[currentVersionIndex].files"
+                  extensions="zip,rar,7z,7zip,tar.gz,ttmp,ttmp2"
+                  accept="image/png,image/gif,image/jpeg,image/webp"
+                  :multiple="true"
+                  :size="1024 * 1024 * 10"
+                  :post-action="
+                    api_base +
+                    '/api/v1/version/' +
+                    versions[currentVersionIndex] +
+                    '/file'
+                  "
+                  @input-filter="inputFilter"
+                  @input-file="inputFile"
+                >
+                  Choose Files
+                </FileUpload>
+              </client-only>
+            </div>
+            <ul class="file-list">
+              <li
+                v-for="file in versions[currentVersionIndex].files"
+                :key="file.id"
+              >
+                <span>{{ file.name }}</span> -
+                <span>{{ file.size | formatSize }}</span> -
+                <span v-if="file.error">{{ file.error }}</span>
+                <span v-else-if="file.success">success</span>
+                <span v-else-if="file.active">active</span>
+                <span v-else-if="!!file.error">{{ file.error }}</span>
+                <span v-else></span>
+              </li>
+            </ul>
           </div>
           <div class="changelog">
             <h3>Changelog</h3>
@@ -278,6 +350,76 @@
             </div>
           </div>
         </div>
+      </section>
+      <section class="additional-information">
+        <h3>Tags</h3>
+        <label class="form-label">
+          <span>
+            To help you mod be found easier by users, you can add additional for
+            users to search with here. Don't see the tag you are looking for?
+            Please submit a request&nbsp;
+            <a class="link" href="/request/tag">here</a>.
+          </span>
+          <multiselect
+            id="tags"
+            v-model="tags"
+            :options="availableTags"
+            :custom-label="categoryLabels"
+            :loading="availableTags.length === 0"
+            :multiple="true"
+            :searchable="true"
+            :show-no-results="false"
+            :close-on-select="false"
+            :clear-on-select="false"
+            :show-labels="true"
+            :hide-selected="true"
+            placeholder="Choose tags"
+          />
+        </label>
+        <h3>Adult Content</h3>
+        <label>
+          <span>
+            Does your mod contain adult content? If so please make sure to mark
+            it as NSFW. Mods not marked properly may be subject to remove.
+            <div style="margin-top: 0.7em">
+              <client-only>
+                <VueToggles
+                  checked-text="NSFW"
+                  unchecked-text="SFW"
+                  :value="nsfw"
+                  @click="nsfw = !nsfw"
+                />
+              </client-only>
+            </div>
+          </span>
+        </label>
+        <h3>Dependencies</h3>
+        <label class="form-label">
+          <span>
+            Does your mod require another mod to be installed first? If so,
+            please provide the ID of the mod below.
+          </span>
+          <div class="columns">
+            <input
+              v-model="modSearch"
+              type="text"
+              placeholder="Enter the mod id"
+            />
+            <button
+              title="Link"
+              class="button brand-button column"
+              @click="addDependency(modSearch)"
+            >
+              Add
+            </button>
+          </div>
+        </label>
+        <ul v-if="dependencyDetails">
+          <li v-for="mod in dependencyDetails" :key="mod.id">
+            {{ mod.title }}
+            <button @click="removeDependency(mod.id)">Remove</button>
+          </li>
+        </ul>
       </section>
       <section class="extra-links">
         <div class="title">
@@ -311,32 +453,6 @@
             type="url"
             placeholder="Enter a valid URL"
           />
-        </label>
-      </section>
-      <section class="license">
-        <div class="title">
-          <h3>License</h3>
-          <i>— this section is optional</i>
-        </div>
-        <label>
-          <span>
-            It is really important to choose a proper license for your mod. You
-            may choose one from our list or provide a URL to your own license.
-            URL field will be filled automatically for provided licenses
-          </span>
-          <div class="input-group">
-            <Multiselect
-              v-model="license"
-              placeholder="Select one"
-              track-by="short"
-              label="name"
-              :searchable="true"
-              :options="availableLicenses"
-              :close-on-select="true"
-              :show-labels="false"
-            />
-            <input v-model="license_url" type="url" placeholder="License URL" />
-          </div>
         </label>
       </section>
       <section class="donations">
@@ -397,30 +513,46 @@
 <script>
 import axios from 'axios'
 import Multiselect from 'vue-multiselect'
+import VueToggles from 'vue-toggles'
+import FileUpload from 'vue-upload-component/dist/vue-upload-component.part.js'
+import 'vue-upload-component/dist/vue-upload-component.part.css'
 
 import FileInput from '~/components/ui/FileInput'
 import MFooter from '~/components/layout/MFooter'
-
-import ForgeIcon from '~/assets/images/categories/forge.svg?inline'
-import FabricIcon from '~/assets/images/categories/fabric.svg?inline'
 
 export default {
   components: {
     MFooter,
     FileInput,
     Multiselect,
-    ForgeIcon,
-    FabricIcon,
+    VueToggles,
+    FileUpload,
+  },
+  filters: {
+    formatSize(size) {
+      if (size > 1024 * 1024 * 1024 * 1024) {
+        return (size / 1024 / 1024 / 1024 / 1024).toFixed(2) + ' TB'
+      } else if (size > 1024 * 1024 * 1024) {
+        return (size / 1024 / 1024 / 1024).toFixed(2) + ' GB'
+      } else if (size > 1024 * 1024) {
+        return (size / 1024 / 1024).toFixed(2) + ' MB'
+      } else if (size > 1024) {
+        return (size / 1024).toFixed(2) + ' KB'
+      }
+      return size.toString() + ' B'
+    },
   },
   async asyncData(data) {
     const [
       availableCategories,
+      availableTags,
       availableLoaders,
       availableGameVersions,
       availableLicenses,
       availableDonationPlatforms,
     ] = (
       await Promise.all([
+        axios.get(`${data.env.apiUrl}/api/v1/tag/category`),
         axios.get(`${data.env.apiUrl}/api/v1/tag/category`),
         axios.get(`${data.env.apiUrl}/api/v1/tag/loader`),
         axios.get(`${data.env.apiUrl}/api/v1/tag/game_version`),
@@ -431,6 +563,7 @@ export default {
 
     return {
       availableCategories,
+      availableTags,
       availableLoaders,
       availableGameVersions,
       availableLicenses,
@@ -442,9 +575,27 @@ export default {
       previewImage: null,
       compiledBody: '',
       releaseChannels: ['beta', 'alpha', 'release'],
+      dependencyDetails: [],
       currentVersionIndex: -1,
+      modSearch: '',
+      filePost: '',
+      filePut: '',
+
+      availableRaces: [
+        'hyur',
+        'elezen',
+        'miqote',
+        'lalafell',
+        'au_ra',
+        'roegadyn',
+        'hrothgar',
+        'viera',
+        'all',
+      ],
+      availableGenders: ['male', 'female', 'unisex'],
 
       cdn: process.env.cdnUrl,
+      api_base: process.env.API_URL,
       name: '',
       slug: '',
       draft: false,
@@ -452,13 +603,21 @@ export default {
       body: '',
       versions: [],
       categories: [],
+      races: [],
+      genders: [],
+      tags: [],
+      dependencies: [],
       issues_url: null,
       source_url: null,
       wiki_url: null,
       discord_url: null,
       icon: null,
-      license: null,
-      license_url: null,
+      license: {
+        short: 'custom',
+        name: 'Custom License',
+      },
+      license_url: 'https://google.com/',
+      nsfw: false,
 
       sideTypes: ['Required', 'Optional', 'Unsupported'],
       clientSideType: 'Required',
@@ -490,6 +649,7 @@ export default {
       this.draft = true
       await this.createMod()
     },
+
     async createMod() {
       this.$nuxt.$loading.start()
 
@@ -517,7 +677,11 @@ export default {
               role: 'Owner',
             },
           ],
+          dependencies: this.dependencies,
           categories: this.categories,
+          races: this.races,
+          genders: this.genders,
+          tags: this.tags,
           issues_url: this.issues_url,
           source_url: this.source_url,
           wiki_url: this.wiki_url,
@@ -527,6 +691,7 @@ export default {
           license_id: this.license ? this.license.short : 'arr',
           license_url: this.license_url,
           is_draft: this.draft,
+          is_nsfw: this.nsfw,
           donation_urls: this.donationPlatforms.map((it, index) => {
             return {
               id: it.short,
@@ -583,7 +748,7 @@ export default {
       this.$nuxt.$loading.finish()
     },
 
-    versionLabels(id) {
+    categoryLabels(id) {
       if (id) {
         return this.toProperCase(id.replace(/_/g, ' '))
       } else {
@@ -623,8 +788,9 @@ export default {
       this.versions.push({
         raw_files: [],
         file_parts: [],
-        version_number: '',
-        version_title: '',
+        files: [],
+        version_number: '1.0.0',
+        version_title: 'Initial Release',
         version_body: '',
         dependencies: [],
         game_versions: [],
@@ -639,6 +805,63 @@ export default {
     deleteVersion() {
       this.versions.splice(this.currentVersionIndex, 1)
       this.currentVersionIndex = -1
+    },
+
+    inputFilter(newFile, oldFile, prevent) {
+      if (newFile && !oldFile) {
+        if (/(\/|^)(Thumbs\.db|desktop\.ini|\..+)$/.test(newFile.name)) {
+          return prevent()
+        }
+
+        if (/\.(php5?|html?|jsx?)$/i.test(newFile.name)) {
+          return prevent()
+        }
+      }
+    },
+
+    inputFile(newFile, oldFile) {
+      if (newFile && !oldFile) {
+        console.log('add', newFile)
+      }
+      if (newFile && oldFile) {
+        console.log('update', newFile)
+      }
+      if (!newFile && oldFile) {
+        console.log('remove', oldFile)
+      }
+    },
+
+    async addDependency(id) {
+      if (!this.dependencies.includes(id)) {
+        try {
+          const dependency = await axios({
+            method: 'get',
+            url: `${process.env.apiUrl}/api/v1/mod/${id}`,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: this.$auth.token,
+            },
+          })
+          if (dependency.data != null) {
+            this.dependencies.push(id)
+            this.dependencyDetails.push(dependency.data)
+            this.modSearch = ''
+          }
+        } catch (e) {
+          this.modSearch = ''
+          this.$swal({
+            title: 'Unable to find mod',
+            text:
+              'The mod ID you entered was invalid. Please try again with a valid ID',
+            icon: 'error',
+          })
+        }
+      }
+    },
+
+    removeDependency(id) {
+      this.dependencies = this.dependencies.filter((e) => e !== id)
+      this.dependencyDetails = this.dependencyDetails.filter((e) => e.id !== id)
     },
   },
 }
@@ -675,10 +898,12 @@ export default {
     'essentials   essentials  essentials' auto
     'mod-icon     mod-icon    mod-icon' auto
     'game-sides   game-sides  game-sides' auto
+    'preview      preview     preview' auto
     'description  description description' auto
+    'files         files        files' auto
     'versions     versions    versions' auto
+    'additional-information additional-information additional-information' auto
     'extra-links  extra-links extra-links' auto
-    'license      license     license' auto
     'donations    donations   donations' auto
     'footer       footer      footer' auto
     / 4fr 1fr 4fr;
@@ -689,10 +914,12 @@ export default {
       'advert       advert      advert' auto
       'essentials   essentials  mod-icon' auto
       'game-sides   game-sides  game-sides' auto
+      'preview      preview     preview' auto
       'description  description description' auto
+      'files         files        files' auto
       'versions     versions    versions' auto
-      'extra-links  license     license' auto
-      'donations    donations   .' auto
+      'additional-information additional-information extra-links' auto
+      'additional-information additional-information donations' auto
       'footer       footer      footer' auto
       / 4fr 1fr 4fr;
   }
@@ -724,200 +951,240 @@ header {
 
 section {
   @extend %card;
-
   padding: var(--spacing-card-md) var(--spacing-card-lg);
-}
 
-section.essentials {
-  grid-area: essentials;
-}
-
-section.mod-icon {
-  grid-area: mod-icon;
-
-  img {
-    align-self: flex-start;
-    max-width: 50%;
-    margin-left: var(--spacing-card-lg);
+  &.preview {
+    grid-area: preview;
   }
-}
 
-section.game-sides {
-  grid-area: game-sides;
+  &.essentials {
+    grid-area: essentials;
+  }
 
-  .columns {
-    flex-wrap: wrap;
+  &.mod-icon {
+    grid-area: mod-icon;
 
-    span {
-      flex: 2;
-    }
-
-    .labeled-control {
-      flex: 2;
+    img {
+      align-self: flex-start;
+      max-width: 50%;
       margin-left: var(--spacing-card-lg);
     }
   }
-}
 
-section.description {
-  grid-area: description;
+  &.game-sides {
+    grid-area: game-sides;
 
-  span a {
-    text-decoration: underline;
-  }
+    .columns {
+      flex-wrap: wrap;
 
-  & > .columns {
-    align-items: stretch;
-    min-height: 10rem;
-    max-height: 40rem;
+      span {
+        flex: 2;
+      }
 
-    & > * {
-      flex: 1;
-      max-width: 50%;
+      .labeled-control {
+        flex: 2;
+        margin-left: var(--spacing-card-lg);
+      }
     }
   }
 
-  .markdown-body {
-    overflow-y: auto;
-    padding: 0 var(--spacing-card-sm);
-  }
-}
+  &.description {
+    grid-area: description;
 
-section.versions {
-  grid-area: versions;
-
-  table {
-    border-collapse: collapse;
-    margin-bottom: var(--spacing-card-md);
-    background: var(--color-raised-bg);
-    border-radius: var(--size-rounded-card);
-    table-layout: fixed;
-    width: 100%;
-
-    * {
-      text-align: left;
+    span a {
+      text-decoration: underline;
     }
 
-    tr:not(:last-child),
-    tr:first-child {
-      th,
-      td {
-        border-bottom: 1px solid var(--color-divider);
+    & > .columns {
+      align-items: stretch;
+      min-height: 10rem;
+      max-height: 40rem;
+
+      & > * {
+        flex: 1;
+        max-width: 50%;
       }
     }
 
-    th,
-    td {
-      &:first-child {
-        text-align: center;
-        width: 7%;
+    .markdown-body {
+      overflow-y: auto;
+      padding: 0 var(--spacing-card-sm);
+    }
+  }
 
-        svg {
-          color: var(--color-text);
+  &.files {
+    grid-area: files;
 
-          &:hover,
-          &:focus {
-            color: var(--color-text-hover);
-          }
+    .initial-release {
+      display: grid;
+      grid-template:
+        'main changelog' auto
+        / 5fr 4fr;
+      column-gap: var(--spacing-card-md);
+    }
+  }
+
+  &.additional-information {
+    grid-area: additional-information;
+
+    .button {
+      margin: 2px 0 !important;
+    }
+  }
+
+  &.versions {
+    grid-area: versions;
+
+    table {
+      border-collapse: collapse;
+      margin-bottom: var(--spacing-card-md);
+      background: var(--color-raised-bg);
+      border-radius: var(--size-rounded-card);
+      table-layout: fixed;
+      width: 100%;
+
+      * {
+        text-align: left;
+      }
+
+      tr:not(:last-child),
+      tr:first-child {
+        th,
+        td {
+          border-bottom: 1px solid var(--color-divider);
         }
       }
 
-      &:nth-child(2),
-      &:nth-child(5) {
-        padding-left: 0;
-        width: 12%;
+      th,
+      td {
+        &:first-child {
+          text-align: left;
+          width: 30%;
+
+          svg {
+            color: var(--color-text);
+
+            &:hover,
+            &:focus {
+              color: var(--color-text-hover);
+            }
+          }
+        }
+
+        &:nth-child(2),
+        &:nth-child(3) {
+          padding-left: 0;
+          width: 12%;
+        }
+      }
+
+      th {
+        color: var(--color-heading);
+        font-size: 0.8rem;
+        letter-spacing: 0.02rem;
+        margin-bottom: 0.5rem;
+        margin-top: 1.5rem;
+        padding: 0.75rem 1rem;
+        text-transform: uppercase;
+      }
+
+      td {
+        overflow: hidden;
+        padding: 0.75rem 1rem;
+
+        img {
+          height: 3rem;
+          width: 3rem;
+        }
       }
     }
 
-    th {
-      color: var(--color-heading);
-      font-size: 0.8rem;
-      letter-spacing: 0.02rem;
-      margin-bottom: 0.5rem;
-      margin-top: 1.5rem;
-      padding: 0.75rem 1rem;
-      text-transform: uppercase;
+    hr {
+      background-color: var(--color-divider);
+      border: none;
+      color: var(--color-divider);
+      height: 2px;
+      margin: 0.5rem 0;
     }
 
-    td {
-      overflow: hidden;
-      padding: 0.75rem 1rem;
+    .new-version {
+      display: grid;
+      grid-template:
+        'controls controls' auto
+        'main changelog' auto
+        / 5fr 4fr;
+      column-gap: var(--spacing-card-md);
 
-      img {
-        height: 3rem;
-        width: 3rem;
+      .controls {
+        grid-area: controls;
+        display: flex;
+        flex-direction: row-reverse;
+      }
+
+      .main {
+        grid-area: main;
+      }
+
+      .changelog {
+        grid-area: changelog;
+        display: flex;
+        flex-direction: column;
+
+        .textarea-wrapper {
+          flex: 1;
+        }
+      }
+
+      .uploader {
+        margin-top: 1em;
+        label {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding: var(--spacing-card-sm) var(--spacing-card-md);
+        }
+
+        span {
+          border: 2px dashed var(--color-divider-dark);
+          border-radius: var(--size-rounded-control);
+          padding: var(--spacing-card-md) var(--spacing-card-lg);
+        }
       }
     }
   }
 
-  hr {
-    background-color: var(--color-divider);
-    border: none;
-    color: var(--color-divider);
-    height: 2px;
-    margin: 0.5rem 0;
-  }
+  &.extra-links {
+    grid-area: extra-links;
 
-  .new-version {
-    display: grid;
-    grid-template:
-      'controls controls' auto
-      'main changelog' auto
-      / 5fr 4fr;
-    column-gap: var(--spacing-card-md);
+    label {
+      align-items: center;
+      margin-top: var(--spacing-card-sm);
 
-    .controls {
-      grid-area: controls;
-      display: flex;
-      flex-direction: row-reverse;
-    }
-
-    .main {
-      grid-area: main;
-    }
-
-    .changelog {
-      grid-area: changelog;
-      display: flex;
-      flex-direction: column;
-
-      .textarea-wrapper {
+      span {
         flex: 1;
       }
     }
   }
-}
 
-section.extra-links {
-  grid-area: extra-links;
+  &.license {
+    grid-area: license;
 
-  label {
-    align-items: center;
-    margin-top: var(--spacing-card-sm);
-
-    span {
-      flex: 1;
+    label {
+      margin-top: var(--spacing-card-sm);
     }
   }
-}
 
-section.license {
-  grid-area: license;
+  &.donations {
+    grid-area: donations;
 
-  label {
-    margin-top: var(--spacing-card-sm);
-  }
-}
+    label {
+      align-items: center;
+      margin-top: var(--spacing-card-sm);
 
-section.donations {
-  grid-area: donations;
-
-  label {
-    align-items: center;
-    margin-top: var(--spacing-card-sm);
-
-    span {
-      flex: 1;
+      span {
+        flex: 1;
+      }
     }
   }
 }

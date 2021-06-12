@@ -17,7 +17,7 @@
     </div>
     <section>
       <h3>Username</h3>
-      <label>
+      <label class="form-label">
         <span>
           The username used on the XIVMods site to identify yourself. This must
           be unique.
@@ -29,7 +29,7 @@
         />
       </label>
       <h3>Name</h3>
-      <label>
+      <label class="form-label">
         <span>
           Your display name on your XIVMods profile. This does not have to be
           unique, can be set to anything, and is optional.
@@ -37,7 +37,7 @@
         <input v-model="name" type="text" placeholder="Enter your name" />
       </label>
       <h3>Email</h3>
-      <label>
+      <label class="form-label">
         <span>
           The email for your account. This is private information which is not
           displayed in any API routes or your profile. It is also optional.
@@ -45,16 +45,34 @@
         <input v-model="email" type="email" placeholder="Enter your email" />
       </label>
       <h3>Bio</h3>
-      <label>
+      <label class="form-label">
         <span>
           A description of yourself which other users can see on your profile.
         </span>
         <input v-model="bio" type="text" placeholder="Enter your bio" />
       </label>
+      <h3>Adult Content</h3>
+      <label>
+        <span>
+          This setting will allow you to view 18+ mods that have been submitted
+          to the site. By enabling this option, you agree that you are of legal
+          age to view pornographic content in your region.
+        </span>
+        <div style="margin-left: 1em">
+          <client-only>
+            <VueToggles
+              checked-text="Shown"
+              unchecked-text="Hidden"
+              :value="show_nsfw"
+              @click="show_nsfw = !show_nsfw"
+            />
+          </client-only>
+        </div>
+      </label>
     </section>
     <section class="pad-maker">
       <h3>Theme</h3>
-      <label>
+      <label class="form-label">
         <span
           >Change the global site theme of XIVMods. You can choose from light
           mode and dark mode. You can switch it using this button or anywhere by
@@ -90,17 +108,21 @@
 
 <script>
 import axios from 'axios'
+import VueToggles from 'vue-toggles'
+
 import ConfirmPopup from '~/components/ui/ConfirmPopup'
 
 export default {
   components: {
     ConfirmPopup,
+    VueToggles,
   },
   fetch() {
     this.username = this.$auth.user.username
     this.name = this.$auth.user.name
     this.email = this.$auth.user.email
     this.bio = this.$auth.user.bio
+    this.show_nsfw = this.$auth.user.show_nsfw
     this.token = this.$auth.token
   },
   data() {
@@ -111,6 +133,7 @@ export default {
       bio: '',
       token: '',
       confirm_delete: false,
+      show_nsfw: false,
     }
   },
   methods: {
@@ -139,6 +162,7 @@ export default {
           name: this.name,
           email: this.email,
           bio: this.bio,
+          show_nsfw: this.show_nsfw,
         }
 
         await axios.patch(
