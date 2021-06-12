@@ -78,7 +78,7 @@
             placeholder="Choose races"
           />
         </label>
-        <h3>Categories</h3>
+        <h3>Genders</h3>
         <label class="form-label">
           <span> Please select the genders which this mod applied to. </span>
           <multiselect
@@ -851,8 +851,7 @@ export default {
           this.modSearch = ''
           this.$swal({
             title: 'Unable to find mod',
-            text:
-              'The mod ID you entered was invalid. Please try again with a valid ID',
+            text: 'The mod ID you entered was invalid. Please try again with a valid ID',
             icon: 'error',
           })
         }
