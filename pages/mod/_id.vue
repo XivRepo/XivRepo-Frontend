@@ -205,7 +205,7 @@
           <h3 style="padding-top: 0.7em">Genders</h3>
           <Categories :categories="mod.genders" />
         </div>
-        <div class="section">
+        <div v-if="mod.dependencies" class="section">
           <h3>Dependencies</h3>
           <div
             v-for="dependency in mod.dependencies"
