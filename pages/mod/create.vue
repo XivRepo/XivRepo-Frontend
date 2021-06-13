@@ -224,11 +224,19 @@
                   Alpha
                 </span>
               </td>
-              <td v-if="version.type === 'hosted'">
-                <span class="badge green"> Hosted </span>
-              </td>
-              <td v-if="version.type === 'external'">
-                <span class="badge yellow"> External </span>
+              <td>
+                <span
+                  v-if="version.hosting_location === 'hosted'"
+                  class="badge green"
+                >
+                  Hosted
+                </span>
+                <span
+                  v-if="version.hosting_location === 'external'"
+                  class="badge yellow"
+                >
+                  External
+                </span>
               </td>
               <td>
                 <button
@@ -320,8 +328,8 @@
                   <FileUpload
                     ref="upload"
                     v-model="versions[currentVersionIndex].files"
-                    extensions="zip,rar,7z,7zip,tar.gz,ttmp,ttmp2"
-                    accept="image/png,image/gif,image/jpeg,image/webp"
+                    extensions="zip,rar,7z,7zip,tar.gz,ttmp,ttmp2,pose,cma"
+                    accept="application/zip,application/gzip,application/vnd.rar,application/x-7z-compressed,text/plain"
                     :multiple="true"
                     :size="1024 * 1024 * 10"
                     :post-action="
@@ -826,7 +834,7 @@ export default {
         release_channel: 'release',
         loaders: [],
         featured: false,
-        type,
+        hosting_location: type,
       }
       switch (type) {
         case 'hosted':

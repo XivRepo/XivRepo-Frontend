@@ -49,19 +49,34 @@
             :allow-empty="false"
           />
         </label>
-        <h3>Files</h3>
-        <label>
-          <span>
-            You should upload a single archive file. However, you are allowed to
-            upload multiple
-          </span>
-          <FileInput
-            accept=".zip,.rar,.7z,.7zip,.tar.gz,.ttmp,.ttmp2,.pose,.cmp"
-            multiple
-            prompt="Choose files or drag them here"
-            @change="updateVersionFiles"
-          />
-        </label>
+        <div v-if="this.$router.currentRoute.query['location'] === 'hosted'">
+          <h3>Files</h3>
+          <label>
+            <span>
+              You should upload a single archive file. However, you are allowed
+              to upload multiple
+            </span>
+            <FileInput
+              accept="application/zip,application/gzip,application/vnd.rar,application/x-7z-compressed,text/plain"
+              multiple
+              prompt="Choose files or drag them here"
+              @change="updateVersionFiles"
+            />
+          </label>
+        </div>
+        <div v-if="this.$router.currentRoute.query['location'] === 'external'">
+          <h3>External URL</h3>
+          <label class="form-label">
+            <span>
+              Please provide a link to where you mod is being hosted
+            </span>
+            <input
+              v-model="createdVersion.external_url"
+              type="text"
+              placeholder="Enter a valid URL"
+            />
+          </label>
+        </div>
       </div>
       <div class="changelog">
         <h3>Changelog</h3>
