@@ -24,14 +24,14 @@
         <section ref="nav" class="right-group columns">
           <section class="column-grow-5 nav">
             <div class="tabs">
+              <NuxtLink to="/resources" class="tab">
+                <span>Resources</span>
+              </NuxtLink>
               <NuxtLink to="/mods" class="tab">
                 <span>Mods</span>
               </NuxtLink>
               <NuxtLink to="/mod/random" class="tab">
                 <span>Random</span>
-              </NuxtLink>
-              <NuxtLink to="/resources" class="tab">
-                <span>Resources</span>
               </NuxtLink>
               <div v-if="this.$auth.user" class="section">
                 <NuxtLink to="/dashboard/projects" class="tab">

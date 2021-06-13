@@ -3,6 +3,11 @@
   border-radius: var(--size-rounded-card);
 }
 
+%card-spaced-m {
+  @extend %card;
+  margin: var(--spacing-card-md)
+}
+
 %card-spaced-b {
   @extend %card;
   margin-bottom: var(--spacing-card-md);
