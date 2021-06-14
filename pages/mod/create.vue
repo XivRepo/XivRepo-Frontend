@@ -851,7 +851,8 @@ export default {
           this.modSearch = ''
           this.$swal({
             title: 'Unable to find mod',
-            text: 'The mod ID you entered was invalid. Please try again with a valid ID',
+            text:
+              'The mod ID you entered was invalid. Please try again with a valid ID',
             icon: 'error',
           })
         }
