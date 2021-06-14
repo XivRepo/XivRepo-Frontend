@@ -249,7 +249,6 @@
 </template>
 
 <script>
-/* eslint-disable prettier/prettier */
 import axios from 'axios'
 
 import ConfirmPopup from '~/components/ui/ConfirmPopup'
@@ -403,7 +402,7 @@ export default {
         if (index !== 0) {
           categories += ', '
         }
-        categories += `${item}`
+        categories += `${item.replaceAll('_', ' ')}`
       })
 
       const message = `:white_medium_small_square: **Name**: ${this.mod.title} • **Ver.**: ${latestVersion.version_number}
@@ -415,7 +414,7 @@ export default {
 :white_small_square: **Tags**:
 :white_small_square: **Comments**: ${this.mod.description}
 :white_small_square: **Preview**: ${process.env.apiUrl}/mod/${this.mod.slug}
-:white_small_square: **Download**: ${latestVersion.files[0].url.replaceAll(" ", '%20')}
+:white_small_square: **Download**: <${process.env.apiUrl}/mod/${this.mod.slug}/version/${latestVersion.id}>
 `
       this.$copyText(message)
     },
