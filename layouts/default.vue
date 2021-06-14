@@ -24,6 +24,9 @@
         <section ref="nav" class="right-group columns">
           <section class="column-grow-5 nav">
             <div class="tabs">
+              <NuxtLink to="/resources" class="tab">
+                <span>Resources</span>
+              </NuxtLink>
               <NuxtLink to="/mods" class="tab">
                 <span>Mods</span>
               </NuxtLink>
