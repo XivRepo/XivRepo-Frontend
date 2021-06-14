@@ -414,9 +414,18 @@ export default {
 :white_small_square: **Tags**:
 :white_small_square: **Comments**: ${this.mod.description}
 :white_small_square: **Preview**: ${process.env.apiUrl}/mod/${this.mod.slug}
-:white_small_square: **Download**: <${process.env.apiUrl}/mod/${this.mod.slug}/version/${latestVersion.id}>
-`
-      this.$copyText(message)
+:white_small_square: **Download**: <${process.env.apiUrl}/mod/${this.mod.slug}/version/${latestVersion.id}>`
+      const context = this
+      this.$copyText(message).then(function (e) {
+        context.displayAlert(
+          'Message copied',
+          'Your mod listing has now been copied to your clipboard for easy sharing via discord. Happy sharing!',
+          'success'
+        )
+      })
+    },
+    displayAlert(title, message, type) {
+      this.$swal(title, message, type)
     },
   },
 }
