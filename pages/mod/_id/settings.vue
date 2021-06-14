@@ -25,12 +25,21 @@
         </span>
         <nuxt-link class="button" to="newversion">Create Version</nuxt-link>
       </label>
+      <h3>Discord Message Export</h3>
+      <label>
+        <span>
+          Want to share your mod on discord? Press the button and we'll copy a
+          pre-formatted message with the details of your mod to your clipboard
+          for easy sharing.
+        </span>
+        <div class="button" @click="discordMessage">Copy Message</div>
+      </label>
       <h3>Delete Mod</h3>
       <label>
         <span>
           Clicking on this WILL delete your mod. Do not click on this unless you
           want your mod deleted. If you delete your mod, all versions and any
-          attatched data will be removed from our servers. This may break other
+          attached data will be removed from our servers. This may break other
           projects, so be careful!
         </span>
         <div
@@ -240,10 +249,10 @@
 </template>
 
 <script>
+/* eslint-disable prettier/prettier */
 import axios from 'axios'
 
 import ConfirmPopup from '~/components/ui/ConfirmPopup'
-
 import DropdownIcon from '~/assets/images/utils/dropdown.svg?inline'
 
 export default {
@@ -251,6 +260,12 @@ export default {
   props: {
     mod: {
       type: Object,
+      default() {
+        return {}
+      },
+    },
+    versions: {
+      type: Array,
       default() {
         return {}
       },
@@ -379,6 +394,30 @@ export default {
         text: 'Your mod has been successfully deleted.',
         type: 'success',
       })
+    },
+    discordMessage() {
+      const author = this.members.find((e) => e.role === 'Owner')
+      const latestVersion = this.versions[this.versions.length - 1]
+      let categories = ''
+      this.mod.categories.forEach((item, index) => {
+        if (index !== 0) {
+          categories += ', '
+        }
+        categories += `${item}`
+      })
+
+      const message = `:white_medium_small_square: **Name**: ${this.mod.title} • **Ver.**: ${latestVersion.version_number}
+:white_small_square: **Author**: ${author.name}
+:white_small_square: **Affects**:
+:white_small_square: **Categories**: ${categories}
+:white_small_square: **Races**:
+:white_small_square: **Genders**:
+:white_small_square: **Tags**:
+:white_small_square: **Comments**: ${this.mod.description}
+:white_small_square: **Preview**: ${process.env.apiUrl}/mod/${this.mod.slug}
+:white_small_square: **Download**: ${latestVersion.files[0].url.replaceAll(" ", '%20')}
+`
+      this.$copyText(message)
     },
   },
 }

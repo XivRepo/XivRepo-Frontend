@@ -85,6 +85,7 @@ export default {
    ** https://nuxtjs.org/guide/plugins
    */
   plugins: [
+    '~/plugins/vue-clipboard.js',
     '~/plugins/vue-tooltip.js',
     '~/plugins/vue-toggles.js',
     '~/plugins/vue-notification.js',
