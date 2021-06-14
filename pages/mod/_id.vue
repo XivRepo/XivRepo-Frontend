@@ -4,14 +4,13 @@
       <div class="content">
         <div class="header">
           <div class="icon">
-            <img
-              :src="
-                mod.icon_url
-                  ? mod.icon_url
-                  : cdn + '/data/placeholder.svg?inline'
-              "
-              alt="mod - icon"
-            />
+            <button href="#" class="previous round" @click="previousImage">
+              &#8249;
+            </button>
+            <img :src="previews[currentImageIndex]" alt="mod - icon" />
+            <button href="#" class="next round" @click="nextImage">
+              &#8250;
+            </button>
           </div>
           <div class="info">
             <h1 class="title">{{ mod.title }}</h1>
@@ -416,6 +415,12 @@ export default {
   data() {
     return {
       finishedLoading: false,
+      previews: [
+        'https://placekitten.com/1920/1080',
+        'https://placekitten.com/1920/1081',
+        'https://placekitten.com/1921/1080',
+      ],
+      currentImageIndex: 0,
     }
   },
   methods: {
@@ -461,6 +466,20 @@ export default {
       )
 
       this.userFollows.splice(this.userFollows.indexOf(this.mod.id), 1)
+    },
+    nextImage() {
+      if (this.currentImageIndex === this.previews.length - 1) {
+        this.currentImageIndex = 0
+      } else {
+        this.currentImageIndex += 1
+      }
+    },
+    previousImage() {
+      if (this.currentImageIndex === 0) {
+        this.currentImageIndex = this.previews.length - 1
+      } else {
+        this.currentImageIndex -= 1
+      }
     },
   },
   head() {
@@ -522,10 +541,13 @@ export default {
 
   @extend %card-spaced-b;
   width: 100%;
+
   .icon {
     margin: auto 0;
     width: 100%;
     background: black;
+    position: relative;
+
     img {
       width: 100%;
       height: 100%;
@@ -533,6 +555,34 @@ export default {
       margin: 0;
       border-radius: var(--size-rounded-icon);
       object-fit: contain;
+    }
+    button {
+      text-decoration: none;
+      display: inline-block;
+      padding: 8px 16px;
+      color: black;
+    }
+
+    button:hover {
+      background-color: #ddd;
+    }
+
+    .previous {
+      background-color: #f1f1f1;
+      position: absolute;
+      left: 0%;
+      top: 50%;
+    }
+
+    .next {
+      background-color: #f1f1f1;
+      position: absolute;
+      right: 0%;
+      top: 50%;
+    }
+
+    .round {
+      border-radius: 50%;
     }
   }
   .info {

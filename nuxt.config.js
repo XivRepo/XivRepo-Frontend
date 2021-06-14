@@ -88,7 +88,6 @@ export default {
     '~/plugins/vue-tooltip.js',
     '~/plugins/vue-toggles.js',
     '~/plugins/vue-notification.js',
-    '~/plugins/vue-swiper.js',
     '~/plugins/vue-upload-component.js',
     '~/plugins/compiled-markdown-directive.js',
     '~/plugins/vue-syntax.js',
