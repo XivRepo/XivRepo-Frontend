@@ -121,17 +121,17 @@
             <li>Minimum size is 100x100</li>
             <li>Acceptable formats are PNG, JPEG, GIF and WEBP</li>
           </ul>
-          <button
-            class="transparent-button"
-            @click="
-              icon = null
-              previewImage = null
-              iconChanged = true
-            "
-          >
-            Reset icon
-          </button>
         </div>
+        <button
+          class="transparent-button"
+          @click="
+            icon = null
+            previewImage = null
+            iconChanged = true
+          "
+        >
+          Reset icon
+        </button>
         <img
           :src="
             previewImage
@@ -142,6 +142,47 @@
           "
           alt="preview-image"
         />
+      </div>
+    </section>
+    <section class="preview">
+      <h3>Preview Images</h3>
+      <div class="instructions">
+        <span>
+          Upload some images to show off your mod! These images will show on
+          your mod's listing page and must follow the following guidelines:
+        </span>
+        <ul class="row-grow-1">
+          <li>Max of 10 Images</li>
+          <li>Suggested Size: 1920x1080</li>
+          <li>Acceptable formats are PNG, JPEG, GIF and WEBP</li>
+        </ul>
+      </div>
+      <div class="add-image">
+        <label class="button" @drop.prevent="addImage" @dragover.prevent>
+          <span>Add image</span>
+          <input
+            type="file"
+            accept="image/png,image/jpeg,image/gif,image/webp"
+            @change="addImage"
+          />
+        </label>
+      </div>
+      <div v-if="galleryImages.length" class="images">
+        <div
+          v-for="(image, index) in galleryImages"
+          :id="`${index}_${image}`"
+          :key="index"
+          class="preview"
+        >
+          <img :src="image" />
+          <button
+            title="Remove Image"
+            class="button"
+            @click="removeImage(index)"
+          >
+            Remove
+          </button>
+        </div>
       </div>
     </section>
     <section class="description">
@@ -388,12 +429,14 @@ export default {
     return {
       isProcessing: false,
       previewImage: null,
+      galleryImages: [],
       compiledBody: '',
 
       dependencyDetails: [],
       modSearch: '',
 
       icon: null,
+      previews: [],
       iconChanged: false,
 
       sideTypes: ['Required', 'Optional', 'Unsupported'],
@@ -533,7 +576,8 @@ export default {
           this.modSearch = ''
           this.$swal({
             title: 'Unable to find mod',
-            text: 'The mod ID you entered was invalid. Please try again with a valid ID',
+            text:
+              'The mod ID you entered was invalid. Please try again with a valid ID',
             icon: 'error',
           })
         }
@@ -602,6 +646,7 @@ label {
     'advert       advert      advert' auto
     'essentials   essentials  essentials' auto
     'mod-icon     mod-icon    mod-icon' auto
+    'preview      preview     preview' auto
     'game-sides   game-sides  game-sides' auto
     'description  description description' auto
     'versions     versions    versions' auto

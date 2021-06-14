@@ -4,14 +4,6 @@
       <header class="columns">
         <h3 class="column-grow-1">Create a mod</h3>
         <button
-          title="Save draft"
-          class="button column"
-          :disabled="!this.$nuxt.$loading"
-          @click="createDraft"
-        >
-          Save draft
-        </button>
-        <button
           title="Create"
           class="brand-button column"
           :disabled="!this.$nuxt.$loading"
@@ -101,78 +93,68 @@
       </section>
       <section class="mod-icon rows">
         <h3>Icon</h3>
-        <div class="columns row-grow-1">
-          <div class="column-grow-1 rows">
-            <file-input
-              accept="image/png,image/jpeg,image/gif,image/webp"
-              class="choose-image"
-              prompt="Choose image or drag it here"
-              @change="showPreviewImage"
-            />
-            <ul class="row-grow-1">
-              <li>Must be a square</li>
-              <li>Minimum size is 100x100</li>
-              <li>Acceptable formats are PNG, JPEG, GIF and WEBP</li>
-            </ul>
-            <button
-              class="transparent-button"
-              @click="
-                icon = null
-                previewImage = null
-              "
-            >
-              Reset icon
-            </button>
-          </div>
-          <img
-            :src="previewImage ? previewImage : cdn + '/data/placeholder.svg'"
-            alt="preview-image"
+        <div>
+          <span>
+            Upload an image to serve as the preview icon. This icon will be
+            shown in the mod listings page as well as be the embed image when
+            shared on site like twitter and discord.
+          </span>
+          <ul class="row-grow-1">
+            <li>Must be a square</li>
+            <li>Minimum size is 100x100</li>
+            <li>Acceptable formats are PNG, JPEG, GIF and WEBP</li>
+          </ul>
+          <file-input
+            accept="image/png,image/jpeg,image/gif,image/webp"
+            class="choose-image"
+            prompt="Choose image or drag it here"
+            @change="showPreviewImage"
           />
         </div>
+        <img
+          v-if="icon"
+          :src="previewIcon ? previewIcon : cdn + '/data/placeholder.svg'"
+          alt="preview-image"
+        />
       </section>
       <section class="preview">
         <h3>Preview Images</h3>
-        <div class="columns">
-          <div class="column-grow-1 rows">
-            <file-input
+        <div class="instructions">
+          <span>
+            Upload some images to show off your mod! These images will show on
+            your mod's listing page and must follow the following guidelines:
+          </span>
+          <ul class="row-grow-1">
+            <li>Max of 10 Images</li>
+            <li>Suggested Size: 1920x1080</li>
+            <li>Acceptable formats are PNG, JPEG, GIF and WEBP</li>
+          </ul>
+        </div>
+        <div class="add-image">
+          <label class="button" @drop.prevent="addImage" @dragover.prevent>
+            <span>Add image</span>
+            <input
+              type="file"
               accept="image/png,image/jpeg,image/gif,image/webp"
-              class="choose-image"
-              prompt="Choose images or drag them here"
-              multiple
-              @change="showPreviewGalleryImages"
+              @change="addImage"
             />
-            <ul class="row-grow-1">
-              <li>Minimum size is 100x100</li>
-              <li>Acceptable formats are PNG, JPEG, GIF and WEBP</li>
-            </ul>
+          </label>
+        </div>
+        <div v-if="galleryImages.length" class="images">
+          <div
+            v-for="(image, index) in galleryImages"
+            :id="`${index}_${image}`"
+            :key="index"
+            class="preview"
+          >
+            <img :src="image" />
             <button
-              class="transparent-button"
-              @click="
-                previews = null
-                galleryImages = null
-              "
+              title="Remove Image"
+              class="button"
+              @click="removeImage(index)"
             >
-              Reset Images
+              Remove
             </button>
-          </div>
-          <div class="column-grow-1 rows">
-            <div v-if="galleryImages == null">
-              <span>Nothing here yet!</span>
-            </div>
-            <div v-else>
-              <VueSlickCarousel
-                :arrows="true"
-                :dots="true"
-                v-if="galleryImages.length"
-              >
-                <div v-for="(image, index) in galleryImages" :key="index">
-                  <img :src="image" alt="" />
-                  <h1>
-                    {{ index + 1 }}
-                  </h1>
-                </div>
-              </VueSlickCarousel>
-            </div>
           </div>
         </div>
       </section>
@@ -403,38 +385,39 @@
             Please submit a request&nbsp;
             <a class="link" href="/request/tag">here</a>.
           </span>
-          <multiselect
-            id="tags"
-            v-model="tags"
-            :options="availableTags"
-            :custom-label="categoryLabels"
-            :loading="availableTags.length === 0"
-            :multiple="true"
-            :searchable="true"
-            :show-no-results="false"
-            :close-on-select="false"
-            :clear-on-select="false"
-            :show-labels="true"
-            :hide-selected="true"
-            placeholder="Choose tags"
-          />
         </label>
+        <multiselect
+          id="tags"
+          v-model="tags"
+          style="margin-top: 0.7em"
+          :options="availableTags"
+          :custom-label="categoryLabels"
+          :loading="availableTags.length === 0"
+          :multiple="true"
+          :searchable="true"
+          :show-no-results="false"
+          :close-on-select="false"
+          :clear-on-select="false"
+          :show-labels="true"
+          :hide-selected="true"
+          placeholder="Choose tags"
+        />
         <h3>Adult Content</h3>
         <label>
           <span>
             Does your mod contain adult content? If so please make sure to mark
             it as NSFW. Mods not marked properly may be subject to remove.
-            <div style="margin-top: 0.7em">
-              <client-only>
-                <VueToggles
-                  checked-text="NSFW"
-                  unchecked-text="SFW"
-                  :value="nsfw"
-                  @click="nsfw = !nsfw"
-                />
-              </client-only>
-            </div>
           </span>
+          <div>
+            <client-only>
+              <VueToggles
+                checked-text="NSFW"
+                unchecked-text="SFW"
+                :value="nsfw"
+                @click="nsfw = !nsfw"
+              />
+            </client-only>
+          </div>
         </label>
         <h3>Dependencies</h3>
         <label class="form-label">
@@ -442,21 +425,21 @@
             Does your mod require another mod to be installed first? If so,
             please provide the ID of the mod below.
           </span>
-          <div class="columns">
-            <input
-              v-model="modSearch"
-              type="text"
-              placeholder="Enter the mod id"
-            />
-            <button
-              title="Link"
-              class="button brand-button column"
-              @click="addDependency(modSearch)"
-            >
-              Add
-            </button>
-          </div>
         </label>
+        <div class="columns" style="margin-top: 0.7em">
+          <input
+            v-model="modSearch"
+            type="text"
+            placeholder="Enter the mod id"
+          />
+          <button
+            title="Link"
+            class="button brand-button column"
+            @click="addDependency(modSearch)"
+          >
+            Add
+          </button>
+        </div>
         <ul v-if="dependencyDetails">
           <li v-for="mod in dependencyDetails" :key="mod.id">
             {{ mod.title }}
@@ -556,12 +539,9 @@
 <script>
 import axios from 'axios'
 import Multiselect from 'vue-multiselect'
-import VueSlickCarousel from 'vue-slick-carousel'
 import VueToggles from 'vue-toggles'
 import FileUpload from 'vue-upload-component/dist/vue-upload-component.part.js'
 
-import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
-import 'vue-slick-carousel/dist/vue-slick-carousel.css'
 import 'vue-upload-component/dist/vue-upload-component.part.css'
 
 import FileInput from '~/components/ui/FileInput'
@@ -574,7 +554,6 @@ export default {
     Multiselect,
     VueToggles,
     FileUpload,
-    VueSlickCarousel,
   },
   filters: {
     formatSize(size) {
@@ -620,8 +599,8 @@ export default {
   },
   data() {
     return {
-      previewImage: null,
-      galleryImages: null,
+      previewIcon: null,
+      galleryImages: [],
       compiledBody: '',
       releaseChannels: ['beta', 'alpha', 'release'],
       dependencyDetails: [],
@@ -756,6 +735,10 @@ export default {
         formData.append('icon', new Blob([this.icon]), this.icon.name)
       }
 
+      if (this.previews) {
+        formData.append('previews', this.previews)
+      }
+
       for (const version of this.versions) {
         for (let i = 0; i < version.raw_files.length; i++) {
           formData.append(
@@ -818,9 +801,24 @@ export default {
       reader.readAsDataURL(this.icon)
 
       reader.onload = (event) => {
-        this.previewImage = event.target.result
+        this.previewIcon = event.target.result
         this.cdn = process.env.cdnUrl
       }
+    },
+
+    addImage(input) {
+      this.previews.push(input.target.files[0])
+      const reader = new FileReader()
+      reader.readAsDataURL(input.target.files[0])
+
+      reader.onload = (event) => {
+        this.galleryImages.push(event.target.result)
+      }
+    },
+
+    removeImage(index) {
+      this.galleryImages.splice(index, 1)
+      this.previews.splice(index, 1)
     },
 
     showPreviewGalleryImages(files) {
@@ -915,7 +913,8 @@ export default {
           this.modSearch = ''
           this.$swal({
             title: 'Unable to find mod',
-            text: 'The mod ID you entered was invalid. Please try again with a valid ID',
+            text:
+              'The mod ID you entered was invalid. Please try again with a valid ID',
             icon: 'error',
           })
         }
@@ -960,7 +959,6 @@ export default {
     'advert       advert      advert' auto
     'essentials   essentials  essentials' auto
     'mod-icon     mod-icon    mod-icon' auto
-    'game-sides   game-sides  game-sides' auto
     'preview      preview     preview' auto
     'description  description description' auto
     'files         files        files' auto
@@ -975,16 +973,14 @@ export default {
     grid-template:
       'header       header      header' auto
       'advert       advert      advert' auto
-      'essentials   essentials  mod-icon' auto
-      'game-sides   game-sides  game-sides' auto
-      'preview      preview     preview' auto
+      'essentials   essentials  additional-information' auto
+      'preview      preview     mod-icon' auto
       'description  description description' auto
-      'files         files        files' auto
+      'files        files       files' auto
       'versions     versions    versions' auto
-      'additional-information additional-information extra-links' auto
-      'additional-information additional-information donations' auto
+      'extra-links  extra-links donations' auto
       'footer       footer      footer' auto
-      / 4fr 1fr 4fr;
+      / fit-content(40%) fit-content(10%) fit-content(40%);
   }
 
   column-gap: var(--spacing-card-md);
@@ -1018,6 +1014,49 @@ section {
 
   &.preview {
     grid-area: preview;
+
+    .add-image {
+      label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: var(--spacing-card-sm) var(--spacing-card-md);
+      }
+
+      span {
+        border: 2px dashed var(--color-divider-dark);
+        border-radius: var(--size-rounded-control);
+        padding: var(--spacing-card-md) var(--spacing-card-lg);
+      }
+
+      input {
+        display: none;
+      }
+    }
+
+    .images {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      .preview {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex-basis: 48%;
+        padding: 1em 0;
+
+        img {
+          max-width: 100%;
+          max-height: 200px;
+          padding-bottom: 1em;
+        }
+      }
+    }
   }
 
   &.essentials {
@@ -1028,9 +1067,9 @@ section {
     grid-area: mod-icon;
 
     img {
-      align-self: flex-start;
-      max-width: 50%;
-      margin-left: var(--spacing-card-lg);
+      align-self: center;
+      padding-top: 1em;
+      max-height: 250px;
     }
   }
 
