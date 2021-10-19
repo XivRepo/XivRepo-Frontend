@@ -28,6 +28,15 @@
         <span v-if="version.version_type === 'alpha'" class="badge red">
           Alpha
         </span>
+        <span v-if="version.hosting_location === 'hosted'" class="badge green">
+          Hosted
+        </span>
+        <span
+          v-if="version.hosting_location === 'external'"
+          class="badge yellow"
+        >
+          External
+        </span>
         <span>
           {{ version.version_number }}
         </span>

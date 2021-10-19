@@ -6,7 +6,9 @@
           <th></th>
           <th>Name</th>
           <th>Version</th>
+          <th>Files</th>
           <th>Status</th>
+          <th>Location</th>
           <th>Downloads</th>
           <th>Date Published</th>
         </tr>
@@ -15,6 +17,7 @@
         <tr v-for="version in versions" :key="version.id">
           <td>
             <a
+              v-if="version.hosting_location === 'hosted'"
               :href="$parent.findPrimary(version).filename"
               class="download"
               :download="$parent.findPrimary(version).filename"
@@ -28,9 +31,17 @@
             >
               <DownloadIcon />
             </a>
+            <a
+              v-if="version.hosting_location === 'external'"
+              :href="version.external_url"
+              class="download"
+            >
+              <DownloadIcon />
+            </a>
           </td>
           <td>
             <nuxt-link
+              v-if="version.hosting_location === 'hosted'"
               :to="
                 '/mod/' +
                 (mod.slug ? mod.slug : mod.id) +
@@ -40,9 +51,16 @@
             >
               {{ version.name ? version.name : version.version_number }}
             </nuxt-link>
+            <a
+              v-if="version.hosting_location === 'external'"
+              :href="version.external_url"
+            >
+              {{ version.name ? version.name : version.version_number }}
+            </a>
           </td>
           <td>
             <nuxt-link
+              v-if="version.hosting_location === 'hosted'"
               :to="
                 '/mod/' +
                 (mod.slug ? mod.slug : mod.id) +
@@ -52,6 +70,26 @@
             >
               {{ version.version_number }}
             </nuxt-link>
+            <a
+              v-if="version.hosting_location === 'external'"
+              :href="version.external_url"
+            >
+              {{ version.version_number }}
+            </a>
+          </td>
+          <td>
+            <nuxt-link
+              v-if="version.hosting_location === 'hosted'"
+              :to="
+                '/mod/' +
+                (mod.slug ? mod.slug : mod.id) +
+                '/version/' +
+                version.id
+              "
+            >
+              {{ version.files.length }}
+            </nuxt-link>
+            <span v-else>Unknown</span>
           </td>
           <td>
             <span v-if="version.version_type === 'release'" class="badge green">
@@ -64,14 +102,45 @@
               Alpha
             </span>
           </td>
-          <td>{{ version.downloads }}</td>
+          <td>
+            <span
+              v-if="version.hosting_location === 'hosted'"
+              class="badge green"
+            >
+              Hosted
+            </span>
+            <span
+              v-if="version.hosting_location === 'external'"
+              class="badge yellow"
+            >
+              External
+            </span>
+          </td>
+          <td>
+            <span v-if="version.hosting_location === 'hosted'">
+              {{ version.downloads }}
+            </span>
+            <span v-else>Unknown</span>
+          </td>
           <td>{{ $dayjs(version.date_published).format('YYYY-MM-DD') }}</td>
         </tr>
       </tbody>
     </table>
     <div class="new-version">
-      <nuxt-link v-if="currentMember" to="newversion" class="button">
+      <nuxt-link
+        v-if="currentMember"
+        :to="{ path: 'newversion', query: { location: 'hosted' } }"
+        class="button"
+        style="margin-right: 1em"
+      >
         New Version
+      </nuxt-link>
+      <nuxt-link
+        v-if="currentMember"
+        :to="{ path: 'newversion', query: { location: 'external' } }"
+        class="button"
+      >
+        New Externally Hosted Version
       </nuxt-link>
     </div>
   </div>
@@ -135,7 +204,7 @@ table {
   td {
     &:first-child {
       text-align: center;
-      width: 7%;
+      width: 5%;
 
       svg {
         color: var(--color-text);
@@ -148,7 +217,7 @@ table {
     }
 
     &:nth-child(2),
-    &:nth-child(5) {
+    &:nth-child(8) {
       padding-left: 0;
       width: 12%;
     }
